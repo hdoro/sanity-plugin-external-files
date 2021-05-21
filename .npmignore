@@ -1,0 +1,6 @@
+.git
+src/*
+clearLib.js
+.prettierignore
+.prettierrc
+tsconfig.json

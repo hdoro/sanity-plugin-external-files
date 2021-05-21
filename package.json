@@ -1,0 +1,51 @@
+{
+  "name": "sanity-plugin-firebase-dam",
+  "version": "0.1.0",
+  "description": "Store Sanity media files in Firebase",
+  "main": "lib/index.js",
+  "scripts": {
+    "format": "prettier --write .",
+    "clear-lib": "node clearLib.js",
+    "build": "npm run format && npm run clear-lib && tsc",
+    "dev": "tsc -w",
+    "prepublish": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/hdoro/sanity-plugin-firebase-dam.git"
+  },
+  "keywords": [
+    "sanity.io",
+    "sanity",
+    "data migration",
+    "sanity-plugin"
+  ],
+  "author": "Henrique Doro <opensource@hdoro.dev>",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@sanity/base": ">= 2.5.0",
+    "@sanity/ui": ">= 0.33.9",
+    "@xstate/react": "^1.3.3",
+    "firebase": "^8.6.1",
+    "mime": "^2.5.2",
+    "nanoid": "^3.1.23",
+    "react-dropzone": "^11.3.2",
+    "xstate": "^4.19.1"
+  },
+  "devDependencies": {
+    "@types/mime": "^2.0.3",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "@types/styled-components": "^5.1.9",
+    "@xstate/inspect": "^0.4.1",
+    "prettier": "^2.2.1",
+    "typescript": "^4.2.2"
+  },
+  "peerDependencies": {
+    "styled-components": ">= 5.0.0"
+  },
+  "bugs": {
+    "url": "https://github.com/hdoro/sanity-plugin-firebase-dam/issues"
+  },
+  "homepage": "https://github.com/hdoro/sanity-plugin-firebase-dam#readme"
+}

@@ -1,0 +1,5 @@
+declare module '*.module.css'
+declare module 'part:*'
+declare module '@sanity/base/lib/change-indicators/ChangeIndicator'
+declare module '@sanity/ui'
+declare module '@sanity/util/paths'
