@@ -18,6 +18,11 @@ interface Context {
    */
   videoScreenshot?: Blob
   audioWaveform?: any
+  error?: {
+    error?: Error
+    title?: string
+    subtitle?: string
+  }
 }
 
 export type UploadEvent =
@@ -25,6 +30,7 @@ export type UploadEvent =
   | { type: 'RETRY' }
   | { type: 'RESET_UPLOAD' }
   | { type: 'CANCEL_INPUT' }
+  | { type: 'FIREBASE_ERROR'; error: firebase.storage.FirebaseStorageError }
   | { type: 'FIREBASE_PROGRESS'; data: number }
   | { type: 'FIREBASE_DONE'; data: FirebaseUpload }
   | { type: 'SANITY_DONE'; data: SanityUpload }
@@ -40,42 +46,12 @@ const uploadMachine = createMachine<Context, UploadEvent>(
     initial: 'idle',
     context: INITIAL_CONTEXT,
     states: {
-      idle: {
-        on: {
-          SELECT_FILE: [
-            {
-              target: 'extractingVideoMetadata',
-              cond: (_context, event) =>
-                event.file?.type?.includes('video') || false,
-              actions: [
-                assign({
-                  file: (_context, event) => event.file,
-                }),
-              ],
-            },
-            {
-              target: 'extractingAudioMetadata',
-              cond: (_context, event) =>
-                event.file?.type?.includes('audio') || false,
-              actions: [
-                assign({
-                  file: (_context, event) => event.file,
-                }),
-              ],
-            },
-            {
-              // Else, show a toast
-              actions: 'invalidFileToast',
-            },
-          ],
-        },
-      },
+      idle: {},
       extractingVideoMetadata: {
         invoke: {
           id: 'ExtractVideoMetadata',
           src: async (context) => {
-            return new Promise((resolve, reject) => {
-              // @TODO: catch & reject
+            return new Promise((resolve) => {
               const videoEl = document.createElement('video')
               videoEl.setAttribute('src', URL.createObjectURL(context.file))
 
@@ -126,6 +102,10 @@ const uploadMachine = createMachine<Context, UploadEvent>(
               }),
             ],
           },
+          onError: {
+            // If we can't generate a screenshot, that's okay - proceed to uploadingToFirebase
+            target: 'uploadingToFirebase',
+          },
         },
       },
       extractingAudioMetadata: {
@@ -137,7 +117,6 @@ const uploadMachine = createMachine<Context, UploadEvent>(
                 reject()
                 return
               }
-              // @TODO: catch & reject
               const audioEl = document.createElement('audio')
               audioEl.setAttribute('src', URL.createObjectURL(context.file))
 
@@ -157,6 +136,10 @@ const uploadMachine = createMachine<Context, UploadEvent>(
                 fileMetadata: (_context, event) => event.data.metadata,
               }),
             ],
+          },
+          onError: {
+            // If we can't generate a waveform, that's okay - proceed to uploadingToFirebase
+            target: 'uploadingToFirebase',
           },
         },
       },
@@ -183,6 +166,19 @@ const uploadMachine = createMachine<Context, UploadEvent>(
               ],
             },
           ],
+          FIREBASE_ERROR: {
+            target: 'failure',
+            actions: assign({
+              error: (context, event) => ({
+                error: event.error,
+                title: 'Failed to upload',
+                subtitle:
+                  context.retries > 1
+                    ? "Make sure the right credentials are set in the plugins' settings."
+                    : event.error.message,
+              }),
+            }),
+          },
         },
       },
       uploadingToSanity: {
@@ -199,6 +195,16 @@ const uploadMachine = createMachine<Context, UploadEvent>(
           },
           onError: {
             target: 'failure',
+            actions: assign({
+              error: (context, event) => ({
+                error: event.data,
+                title: 'Failed to save to library',
+                subtitle:
+                  context.retries > 0
+                    ? "Try again in a few minutes, and if this still doesn't work reach a developer for help."
+                    : 'This is probably due to a network error, please try again.',
+              }),
+            }),
           },
         },
       },
@@ -236,6 +242,36 @@ const uploadMachine = createMachine<Context, UploadEvent>(
       CANCEL_INPUT: {
         target: 'idle',
       },
+      SELECT_FILE: [
+        {
+          target: 'extractingVideoMetadata',
+          cond: (_context, event, { state }) =>
+            (['idle', 'failure'].some(state.matches) &&
+              event.file?.type?.includes('video')) ||
+            false,
+          actions: [
+            assign({
+              file: (_context, event) => event.file,
+            }),
+          ],
+        },
+        {
+          target: 'extractingAudioMetadata',
+          cond: (_context, event, { state }) =>
+            (['idle', 'failure'].some(state.matches) &&
+              event.file?.type?.includes('audio')) ||
+            false,
+          actions: [
+            assign({
+              file: (_context, event) => event.file,
+            }),
+          ],
+        },
+        {
+          // Else, show a toast
+          actions: 'invalidFileToast',
+        },
+      ],
     },
   },
   {

@@ -4,6 +4,7 @@ import { gray, red, green } from '@sanity/color'
 import { UploadIcon, CloseIcon, RestoreIcon } from '@sanity/icons'
 
 import { useUploadReturn } from './useUpload'
+import { Heading } from '@sanity/ui'
 
 interface UploadBox extends useUploadReturn {
   onUploadClick: () => void
@@ -47,15 +48,19 @@ const UploadBox: React.FC<UploadBox> = (props) => {
         ref={inputRef}
         id="drop-file"
         {...getInputProps()}
-        disabled={!['idle', 'retry'].includes(state.value as any)}
+        disabled={!['idle', 'retry', 'failure'].includes(state.value as any)}
       />
       <Stack space={3}>
         {state.value === 'failure' && (
           <>
-            <Text weight="bold" muted>
-              Failed to upload
-            </Text>
-            <Inline space={2}>
+            {console.log(state.context.error)}
+            <Heading size={2}>
+              {state.context.error?.title || 'Failed to upload'}
+            </Heading>
+            {state.context.error?.subtitle && (
+              <Text>{state.context.error.subtitle}</Text>
+            )}
+            <Inline space={2} style={{ marginTop: '0.75rem' }}>
               <Button
                 icon={RestoreIcon}
                 fontSize={2}
@@ -63,7 +68,12 @@ const UploadBox: React.FC<UploadBox> = (props) => {
                 mode="ghost"
                 text="Retry"
                 tone="primary"
-                onClick={retry}
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  retry()
+                }}
+                style={{ position: 'relative', zIndex: 20 }}
               />
               <Button
                 icon={UploadIcon}

@@ -73,8 +73,10 @@ const useUpload = ({
             callback({ type: 'FIREBASE_PROGRESS', data: progress })
           },
           (error) => {
-            // @TODO: Deal with error
-            console.error({ UploadError: error })
+            callback({
+              type: 'FIREBASE_ERROR',
+              error,
+            })
           },
           async () => {
             const downloadURL = await uploadTask.snapshot.ref.getDownloadURL()
@@ -105,41 +107,44 @@ const useUpload = ({
         return new Promise(async (resolve, reject) => {
           let screenshot: SanityImageAssetDocument | undefined
           if (context.videoScreenshot?.type === 'image/png') {
-            screenshot = await sanityClient.assets.upload(
-              'image',
-              context.videoScreenshot,
-              {
-                source: { id: 'firebase-dam', name: 'Firebase DAM' },
-                filename: getFileRef({
-                  file: context.file as File,
-                  storeOriginalFilename,
-                }),
-              },
-            )
+            try {
+              screenshot = await sanityClient.assets.upload(
+                'image',
+                context.videoScreenshot,
+                {
+                  source: { id: 'firebase-dam', name: 'Firebase DAM' },
+                  filename: getFileRef({
+                    file: context.file as File,
+                    storeOriginalFilename,
+                  }),
+                },
+              )
+            } catch (error) {
+              reject('Failed to save image')
+            }
           }
-          const document = await sanityClient.create({
-            _type: 'firebase.storedFile',
-            screenshot: screenshot
-              ? {
-                  _type: 'image',
-                  asset: {
-                    _type: 'reference',
-                    _ref: screenshot?._id,
-                  },
-                }
-              : undefined,
-            // @TODO: consider having a custom id based on the file's fullPath
-            // _id: `firebase-media-${context.firebaseUpload?.fullPath.replace(
-            //   /\./g,
-            //   '-',
-            // )}`,
-            firebase: {
-              ...context.firebaseUpload,
-            },
-            metadata: context.fileMetadata,
-          })
+          try {
+            const document = await sanityClient.create({
+              _type: 'firebase.storedFile',
+              screenshot: screenshot
+                ? {
+                    _type: 'image',
+                    asset: {
+                      _type: 'reference',
+                      _ref: screenshot?._id,
+                    },
+                  }
+                : undefined,
+              firebase: {
+                ...context.firebaseUpload,
+              },
+              metadata: context.fileMetadata,
+            })
 
-          resolve(document)
+            resolve(document)
+          } catch (error) {
+            reject('Failed to create document')
+          }
         })
       },
     },
@@ -172,7 +177,6 @@ const useUpload = ({
 
   React.useEffect(() => {
     if (state.value === 'success' && state.context.sanityUpload && onSuccess) {
-      // @TODO: catch error if sanityUpload not defined
       onSuccess(state.context.sanityUpload)
       send('RESET_UPLOAD')
     }
