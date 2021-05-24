@@ -1,29 +1,34 @@
-import React from 'react'
+import { SearchIcon, UploadIcon, CogIcon } from '@sanity/icons'
 import {
-  studioTheme,
-  ThemeProvider,
-  Container,
-  Card,
   Button,
-  Grid,
-  Flex,
+  Card,
+  Box,
+  Container,
   Dialog,
-  TextInput,
-  Text,
+  Inline,
+  Flex,
+  Grid,
   Spinner,
   Stack,
+  studioTheme,
+  Text,
+  TextInput,
+  ThemeProvider,
+  Tooltip,
 } from '@sanity/ui'
-import { UploadIcon, SearchIcon } from '@sanity/icons'
 import { useMachine } from '@xstate/react'
+import React from 'react'
+import { DEFAULT_ACCEPT } from '../../config'
 
-import useFirebaseClient from '../../scripts/useFirebaseClient'
-import browserMachine from './browserMachine'
-import { SanityUpload } from '../../types'
-import FilePreview from './FilePreview'
-import FileDetails from './FileDetails'
-import sanityClient from '../../scripts/sanityClient'
 import parseAccept from '../../scripts/parseAccept'
+import sanityClient from '../../scripts/sanityClient'
+import { SanityUpload } from '../../types'
+import ConfigureCredentials from '../Credentials/ConfigureCredentials'
+import useVendorClient from '../Credentials/useVendorClient'
 import Uploader, { UploaderProps } from '../Uploader/Uploader'
+import browserMachine from './browserMachine'
+import FileDetails from './FileDetails'
+import FilePreview from './FilePreview'
 
 interface BrowserProps {
   onSelect?: (file: SanityUpload) => void
@@ -38,7 +43,7 @@ function getFilterForExtension(extension: string) {
 }
 
 const Browser: React.FC<BrowserProps> = (props) => {
-  const { onSelect, accept = ['video/*', 'audio/*'] } = props
+  const { onSelect, accept = DEFAULT_ACCEPT } = props
   const [state, send] = useMachine(browserMachine, {
     services: {
       fetchFiles: () => {
@@ -62,7 +67,7 @@ const Browser: React.FC<BrowserProps> = (props) => {
       },
     },
   })
-  const { firebaseClient } = useFirebaseClient()
+  const { vendorClient } = useVendorClient()
 
   return (
     <ThemeProvider theme={studioTheme}>
@@ -89,16 +94,34 @@ const Browser: React.FC<BrowserProps> = (props) => {
                 }
                 placeholder="Search files"
               />
-              {firebaseClient && (
-                <Button
-                  icon={UploadIcon}
-                  mode="ghost"
-                  tone="primary"
-                  text="Upload new file"
-                  fontSize={2}
-                  onClick={() => send('OPEN_UPLOAD')}
-                />
-              )}
+              <Inline space={2}>
+
+                {vendorClient && (
+                  <Button
+                    icon={UploadIcon}
+                    mode="ghost"
+                    tone="primary"
+                    text="Upload new file"
+                    fontSize={2}
+                    onClick={() => send('OPEN_UPLOAD')}
+                  />
+                )}
+                <Tooltip
+                  content={
+                    <Box padding={3}>
+                      <Text>Plugin settings</Text>
+                    </Box>
+                  }
+                >
+                  <Button
+                    icon={CogIcon}
+                    mode="ghost"
+                    tone="default"
+                    fontSize={2}
+                    onClick={() => send('OPEN_SETTINGS')}
+                  />
+                </Tooltip>
+              </Inline>
             </Flex>
             {state.context.searchTerm ? (
               <Stack space={3} style={{ margin: '2rem 0 -1rem' }}>
@@ -145,17 +168,18 @@ const Browser: React.FC<BrowserProps> = (props) => {
                   ))
                 : null}
             </Grid>
-            {state.matches('uploading') && firebaseClient && (
+            {state.matches('uploading') && vendorClient && (
               <Dialog
                 header="Upload new file"
                 zOffset={600000}
                 id="upload-dialog"
                 onClose={() => send('CLOSE_UPLOAD')}
+                onClickOutside={() => send('CLOSE_UPLOAD')}
                 width={1}
               >
                 <Card padding={3}>
                   <Uploader
-                    firebaseClient={firebaseClient}
+                    vendorClient={vendorClient}
                     sanityClient={sanityClient}
                     accept={accept}
                     onSuccess={(document) =>
@@ -171,9 +195,9 @@ const Browser: React.FC<BrowserProps> = (props) => {
             )}
             {state.matches('editingFile') &&
               state.context.fileToEdit &&
-              firebaseClient && (
+              vendorClient && (
                 <FileDetails
-                  firebaseClient={firebaseClient}
+                  firebaseClient={vendorClient}
                   closeDialog={() => send('CLEAR_FILE')}
                   file={state.context.fileToEdit}
                   onSelect={onSelect}
@@ -191,6 +215,22 @@ const Browser: React.FC<BrowserProps> = (props) => {
                   }
                 />
               )}
+            {state.matches('editingSettings') && (
+              <Dialog
+                header="Edit settings"
+                zOffset={600000}
+                id="settings-dialog"
+                onClose={() => send('CLOSE_SETTINGS')}
+                onClickOutside={() => send('CLOSE_SETTINGS')}
+                width={1}
+              >
+                <ConfigureCredentials
+                  onCredentialsSaved={(success) =>
+                    success && send('CLOSE_SETTINGS')
+                  }
+                />
+              </Dialog>
+            )}
           </Container>
         )}
       </Flex>

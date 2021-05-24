@@ -8,61 +8,66 @@ import {
   Stack,
   Text,
   TextInput,
-  useToast,
 } from '@sanity/ui'
 import DefaultFormField from 'part:@sanity/components/formfields/default'
 import React from 'react'
 
-import sanityClient from '../../scripts/sanityClient'
+import { CredentialsContext } from './CredentialsProvider'
 
-const ConfigureCredentials: React.FC = () => {
-  const toast = useToast()
+const ConfigureCredentials: React.FC<{
+  onCredentialsSaved?: (success: boolean) => void
+}> = (props) => {
+  const { saveCredentials, credentials } = React.useContext(CredentialsContext)
+  const [isLoading, setIsLoading] = React.useState(false)
+
+  // Form values:
   const [storageBucket, setStorageBucket] = React.useState('')
   const [apiKey, setApiKey] = React.useState('')
-  const [isLoading, setIsLoading] = React.useState(false)
 
   async function submitCredentials(e: React.FormEvent) {
     e.preventDefault()
     setIsLoading(true)
-    if (!storageBucket || !apiKey) {
-      toast.push({
-        title: 'Missing credentials',
-        status: 'error',
-      })
-      return
-    }
-    try {
-      await sanityClient.createOrReplace({
-        _id: 'firebase.credentials',
-        _type: 'firebase.credentials',
-        apiKey,
-        storageBucket,
-      })
-      toast.push({
-        title: 'Credentials successfully saved!',
-        status: 'success',
-      })
-      setIsLoading(false)
-    } catch (error) {
-      setIsLoading(false)
-      toast.push({
-        title: "Couldn't create credentials",
-        status: 'error',
-      })
+    const success = await saveCredentials({
+      apiKey,
+      storageBucket,
+    })
+    setIsLoading(false)
+    if (props.onCredentialsSaved) {
+      props.onCredentialsSaved(success)
     }
   }
+
+  React.useEffect(() => {
+    if (credentials?.apiKey) {
+      setApiKey(credentials.apiKey)
+    }
+    if (credentials?.storageBucket) {
+      setStorageBucket(credentials.storageBucket)
+    }
+  }, [])
 
   return (
     <Card padding={4} border>
       <Stack space={3}>
-        <Label size={2} muted>
-          Firebase media library
-        </Label>
-        <Heading size={3}>First time set-up</Heading>
-        <Text size={2}>
-          In order to communicate with Firebase to upload videos & audio, you’ll
-          have to set-up credentials below:
-        </Text>
+        {credentials?.apiKey ? (
+          <>
+            <Heading size={3}>Edit settings</Heading>
+            <Text size={2}>
+              Be careful when editing these changes as they can be destructive.
+            </Text>
+          </>
+        ) : (
+          <>
+            <Label size={2} muted>
+              Firebase media library
+            </Label>
+            <Heading size={3}>First time set-up</Heading>
+            <Text size={2}>
+              In order to communicate with Firebase to upload videos & audio,
+              you’ll have to set-up credentials below:
+            </Text>
+          </>
+        )}
         <form style={{ marginTop: '1.5rem' }} onSubmit={submitCredentials}>
           <Stack space={3}>
             <DefaultFormField label={'Storage bucket URL'} level={0}>
@@ -88,7 +93,11 @@ const ConfigureCredentials: React.FC = () => {
               />
             </DefaultFormField>
             <Button
-              text="Set-up credentials"
+              text={
+                credentials?.apiKey
+                  ? 'Update credentials'
+                  : 'Set-up credentials'
+              }
               icon={UploadIcon}
               iconRight={isLoading && Spinner}
               tone="positive"

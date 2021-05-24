@@ -9,6 +9,8 @@ import PatchEvent, { set, unset } from 'part:@sanity/form-builder/patch-event'
 import UploaderWithConfig from '../Uploader/UploaderWithConfig'
 import Browser from '../Browser/Browser'
 import { AssetReference, SanityUpload } from '../../types'
+import CredentialsProvider from '../Credentials/CredentialsProvider'
+import { DEFAULT_ACCEPT } from '../../config'
 
 export interface InputProps {}
 
@@ -81,57 +83,59 @@ class FirebaseMediaInput extends React.Component<
 
   render() {
     const { value, type } = this.props
-    const { accept, storeOriginalFilename = true } = type?.options || {}
+    const { accept = DEFAULT_ACCEPT, storeOriginalFilename = true } = type?.options || {}
 
     return (
-      <ThemeProvider theme={studioTheme}>
-        <ChangeIndicatorCompareValueProvider
-          value={value?.asset?._ref}
-          compareValue={this.props.compareValue?.asset?._ref}
-        >
-          <DefaultFormField
-            label={type.title || type.name}
-            description={type.description}
-            level={this.props.level}
-            // Necessary for validation warnings to show up contextually
-            markers={this.props.markers}
-            // Necessary for presence indication
-            presence={this.props.presence}
+      <CredentialsProvider>
+        <ThemeProvider theme={studioTheme}>
+          <ChangeIndicatorCompareValueProvider
+            value={value?.asset?._ref}
+            compareValue={this.props.compareValue?.asset?._ref}
           >
-            <UploaderWithConfig
-              accept={accept}
-              storeOriginalFilename={storeOriginalFilename}
-              onSuccess={this.updateValue}
-              chosenFile={this.state.uploadedFile || value}
-              removeFile={this.removeFile}
-              openBrowser={this.toggleBrowser}
-            />
-          </DefaultFormField>
-        </ChangeIndicatorCompareValueProvider>
-        {this.state.browserOpen &&
-          ReactDOM.createPortal(
-            <Dialog
-              header="Select File"
-              zOffset={600000}
-              id="file-browser"
-              onClose={this.toggleBrowser}
-              onClickOutside={this.toggleBrowser}
-              width={5}
-              position="fixed"
-              style={{
-                left: 0,
-                top: 0,
-                width: '100%',
-                height: '100%',
-                padding: '0 1rem',
-                boxSizing: 'border-box',
-              }}
+            <DefaultFormField
+              label={type.title || type.name}
+              description={type.description}
+              level={this.props.level}
+              // Necessary for validation warnings to show up contextually
+              markers={this.props.markers}
+              // Necessary for presence indication
+              presence={this.props.presence}
             >
-              <Browser onSelect={this.updateValue} accept={accept} />
-            </Dialog>,
-            document.getElementsByTagName('body')[0],
-          )}
-      </ThemeProvider>
+              <UploaderWithConfig
+                accept={accept}
+                storeOriginalFilename={storeOriginalFilename}
+                onSuccess={this.updateValue}
+                chosenFile={this.state.uploadedFile || value}
+                removeFile={this.removeFile}
+                openBrowser={this.toggleBrowser}
+              />
+            </DefaultFormField>
+          </ChangeIndicatorCompareValueProvider>
+          {this.state.browserOpen &&
+            ReactDOM.createPortal(
+              <Dialog
+                header="Select File"
+                zOffset={600000}
+                id="file-browser"
+                onClose={this.toggleBrowser}
+                onClickOutside={this.toggleBrowser}
+                width={5}
+                position="fixed"
+                style={{
+                  left: 0,
+                  top: 0,
+                  width: '100%',
+                  height: '100%',
+                  padding: '0 1rem',
+                  boxSizing: 'border-box',
+                }}
+              >
+                <Browser onSelect={this.updateValue} accept={accept} />
+              </Dialog>,
+              document.getElementsByTagName('body')[0],
+            )}
+        </ThemeProvider>
+      </CredentialsProvider>
     )
   }
 }

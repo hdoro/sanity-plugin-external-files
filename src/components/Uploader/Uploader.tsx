@@ -10,7 +10,7 @@ import UploadBox from './UploadBox'
 import MediaPreview from '../MediaPreview'
 
 export interface UploaderProps {
-  firebaseClient: firebase.app.App
+  vendorClient: firebase.app.App
   sanityClient: SanityClient
   onSuccess: (document: SanityUpload) => void
 

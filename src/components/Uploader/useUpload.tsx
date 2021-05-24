@@ -34,7 +34,7 @@ export interface useUploadReturn {
 
 const useUpload = ({
   accept,
-  firebaseClient,
+  vendorClient,
   sanityClient,
   storeOriginalFilename = true,
   onSuccess,
@@ -50,11 +50,11 @@ const useUpload = ({
     },
     services: {
       uploadToFirebase: (context) => (callback) => {
-        if (!context.file?.name || !firebaseClient) {
+        if (!context.file?.name || !vendorClient) {
           callback({ type: 'CANCEL_INPUT' })
           return
         }
-        const ref = firebaseClient
+        const ref = vendorClient
           .storage()
           .ref(getFileRef({ file: context.file, storeOriginalFilename }))
         const uploadTask = ref.put(context.file, {

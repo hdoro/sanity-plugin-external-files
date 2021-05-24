@@ -68,9 +68,18 @@ export default {
   ],
   preview: {
     select: {
-      title: 'firebase.name',
-      subtitle: 'firebase.downloadURL',
+      title: 'title',
+      fileName: 'firebase.name',
+      description: 'description',
+      downloadURL: 'firebase.downloadURL',
       media: 'screenshot',
+    },
+    prepare: ({ media, downloadURL, fileName, title, description }: any) => {
+      return {
+        title: title || fileName || 'Untitled file',
+        subtitle: description || downloadURL,
+        media,
+      }
     },
   },
 }

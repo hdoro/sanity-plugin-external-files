@@ -10,6 +10,7 @@ interface Context {
 
 type BrowserEvent =
   // BROWSING
+  | { type: 'OPEN_SETTINGS' }
   | { type: 'OPEN_UPLOAD' }
   | { type: 'EDIT_FILE'; file: SanityUpload }
   | { type: 'SEARCH_TERM'; term: string }
@@ -20,6 +21,8 @@ type BrowserEvent =
   | { type: 'CLEAR_FILE' }
   | { type: 'PERSIST_FILE_SAVE'; file: SanityUpload }
   | { type: 'PERSIST_FILE_DELETION'; file: SanityUpload }
+  // EDITING SETTINGS DIALOG
+  | { type: 'CLOSE_SETTINGS' }
 
 const browserMachine = createMachine<Context, BrowserEvent>(
   {
@@ -56,6 +59,7 @@ const browserMachine = createMachine<Context, BrowserEvent>(
             }),
           },
           OPEN_UPLOAD: 'uploading',
+          OPEN_SETTINGS: 'editingSettings'
         },
       },
       uploading: {
@@ -88,6 +92,13 @@ const browserMachine = createMachine<Context, BrowserEvent>(
             actions: assign({
               fileToEdit: (_context) => undefined,
             }),
+          },
+        },
+      },
+      editingSettings: {
+        on: {
+          CLOSE_SETTINGS: {
+            target: 'browsing',
           },
         },
       },

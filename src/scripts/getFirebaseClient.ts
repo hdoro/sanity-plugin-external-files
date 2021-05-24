@@ -7,19 +7,20 @@ export interface FirebaseCredentials {
 }
 
 function getFirebaseClient({ apiKey, storageBucket }: FirebaseCredentials) {
+  const appName = `${apiKey}-${storageBucket}`
   try {
     firebase.initializeApp(
       {
         apiKey,
         storageBucket,
       },
-      apiKey,
+      appName,
     )
   } catch (error) {
     // console.info('Skipped Firebase initialization error - already initialized')
   }
 
-  return firebase.app(apiKey)
+  return firebase.app(appName)
 }
 
 export default getFirebaseClient
