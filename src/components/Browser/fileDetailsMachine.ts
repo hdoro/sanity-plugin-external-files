@@ -5,6 +5,7 @@ import { SanityUpload } from '../../types'
 interface Context {
   file?: SanityUpload
   references?: SanityDocument[]
+  referencesLoaded: boolean
   modified: boolean
 }
 
@@ -29,6 +30,7 @@ const fileDetailsMachine = createMachine<Context, FileDetailsEvent>(
     id: 'file-details',
     context: {
       modified: false,
+      referencesLoaded: false,
     },
     type: 'parallel',
     states: {
@@ -49,15 +51,23 @@ const fileDetailsMachine = createMachine<Context, FileDetailsEvent>(
             },
           },
           references_tab: {
-            // invoke: {
-            //   id: 'FetchReferences',
-            //   src: 'fetchReferences',
-            //   onDone: {
-            //     actions: assign({
-            //       references: (_context, event) => event.data,
-            //     }),
-            //   },
-            // },
+            initial: 'loading',
+            states: {
+              loading: {
+                invoke: {
+                  id: 'FetchReferences',
+                  src: 'fetchReferences',
+                  onDone: {
+                    target: 'loaded',
+                    actions: assign({
+                      references: (_context, event) => event.data,
+                      referencesLoaded: (_context) => true,
+                    }),
+                  },
+                },
+              },
+              loaded: {},
+            },
             on: {
               OPEN_DETAILS: 'details_tab',
             },
@@ -69,8 +79,35 @@ const fileDetailsMachine = createMachine<Context, FileDetailsEvent>(
         states: {
           idle: {},
           deleting: {
-            initial: 'confirm',
+            initial: 'checkingReferences',
             states: {
+              checkingReferences: {
+                invoke: {
+                  id: 'FetchReferences',
+                  src: 'fetchReferences',
+                  onDone: {
+                    target: 'canDelete',
+                    actions: assign({
+                      references: (_context, event) => event.data,
+                      referencesLoaded: (_context) => true,
+                    }),
+                  },
+                },
+              },
+              canDelete: {
+                on: {
+                  '': [
+                    {
+                      target: 'confirm',
+                      cond: (context) => !context.references?.length,
+                    },
+                    {
+                      target: 'cantDelete',
+                    },
+                  ],
+                },
+              },
+              cantDelete: {},
               confirm: {
                 on: {
                   CONFIRM: 'processing_deletion',
@@ -86,7 +123,6 @@ const fileDetailsMachine = createMachine<Context, FileDetailsEvent>(
                   },
                   onError: {
                     target: 'error_deleting',
-                    actions: [console.log],
                   },
                 },
               },

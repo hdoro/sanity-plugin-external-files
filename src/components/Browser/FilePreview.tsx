@@ -35,17 +35,39 @@ const FilePreview: React.FC<FilePreviewProps> = ({
   }
   return (
     <Card border padding={2} sizing="border-box" radius={2}>
-      <Stack space={3} height="fill">
+      <Stack
+        space={3}
+        height="fill"
+        style={{
+          gridTemplateRows: 'min-content min-content 1fr',
+        }}
+      >
         <MediaPreview file={file} context="browser" />
-        <Stack space={2} flex={1}>
-          <Text size={1} weight="bold" muted>
-            {file.title || file.firebase?.name}
-          </Text>
-          {file.description && (
-            <Text size={1} muted>
-              {file.description}
+        <Stack space={2}>
+          <Stack space={2}>
+            <Text size={1} weight="bold" muted>
+              {file.title || file.firebase?.name}
             </Text>
-          )}
+            {file.description && (
+              <p
+                style={
+                  {
+                    fontFamily: 'inherit',
+                    margin: 0,
+                    fontSize: '0.8125rem',
+                    lineHeight: '1.0625rem',
+                    color: 'var(--card-muted-fg-color)',
+                    display: '-webkit-box',
+                    WebkitBoxOrient: 'vertical',
+                    WebkitLineClamp: 2,
+                    overflow: 'hidden',
+                  } as React.CSSProperties
+                }
+              >
+                {file.description}
+              </p>
+            )}
+          </Stack>
           <Inline space={3}>
             {file.metadata?.duration && (
               <IconInfo
@@ -65,7 +87,15 @@ const FilePreview: React.FC<FilePreviewProps> = ({
             />
           </Inline>
         </Stack>
-        <Inline space={2} width="fill">
+        <div
+          style={{
+            display: 'flex',
+            width: '100%',
+            alignItems: 'flex-end',
+            justifyContent: 'flex-start',
+            gap: '.35rem',
+          }}
+        >
           {onSelect && (
             <Button
               icon={CheckmarkIcon}
@@ -87,7 +117,7 @@ const FilePreview: React.FC<FilePreviewProps> = ({
             style={{ flex: 1 }}
             onClick={edit}
           />
-        </Inline>
+        </div>
       </Stack>
     </Card>
   )

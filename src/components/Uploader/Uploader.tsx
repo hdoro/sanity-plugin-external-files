@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Container, Inline, Stack } from '@sanity/ui'
+import { Button, Container, Stack } from '@sanity/ui'
 import { SanityClient } from '@sanity/client'
 import { SearchIcon, UploadIcon, TrashIcon } from '@sanity/icons'
 import firebase from 'firebase/app'
@@ -59,7 +59,15 @@ const Uploader: React.FC<UploaderProps> = (props) => {
         ) : (
           <UploadBox {...uploadProps} onUploadClick={onUploadClick} />
         )}
-        <Inline space={2} width="fill">
+        <div
+          style={{
+            display: 'flex',
+            width: '100%',
+            alignItems: 'flex-end',
+            justifyContent: 'flex-start',
+            gap: '.5rem',
+          }}
+        >
           <Button
             icon={UploadIcon}
             fontSize={2}
@@ -92,7 +100,7 @@ const Uploader: React.FC<UploaderProps> = (props) => {
               onClick={props.removeFile}
             />
           )}
-        </Inline>
+        </div>
       </Stack>
     </Container>
   )

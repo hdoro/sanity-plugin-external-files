@@ -53,7 +53,6 @@ const UploadBox: React.FC<UploadBox> = (props) => {
       <Stack space={3}>
         {state.value === 'failure' && (
           <>
-            {console.log(state.context.error)}
             <Heading size={2}>
               {state.context.error?.title || 'Failed to upload'}
             </Heading>

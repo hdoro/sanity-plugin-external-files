@@ -21,15 +21,17 @@ const UploaderWithConfig: React.FC<UploaderWithConfigProps> = (props) => {
         border
         style={{
           paddingBottom: '56.25%',
-          position: 'relative'
+          position: 'relative',
         }}
       >
-        <Box style={{
-          position: 'absolute',
-          left: '50%',
-          top: '50%',
-          transform: 'translate(-50%,-50%)'
-        }}>
+        <Box
+          style={{
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%,-50%)',
+          }}
+        >
           <Spinner />
         </Box>
       </Card>

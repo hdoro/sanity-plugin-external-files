@@ -83,7 +83,8 @@ class FirebaseMediaInput extends React.Component<
 
   render() {
     const { value, type } = this.props
-    const { accept = DEFAULT_ACCEPT, storeOriginalFilename = true } = type?.options || {}
+    const { accept = DEFAULT_ACCEPT, storeOriginalFilename = true } =
+      type?.options || {}
 
     return (
       <CredentialsProvider>

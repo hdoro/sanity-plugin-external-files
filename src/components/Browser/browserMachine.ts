@@ -59,7 +59,7 @@ const browserMachine = createMachine<Context, BrowserEvent>(
             }),
           },
           OPEN_UPLOAD: 'uploading',
-          OPEN_SETTINGS: 'editingSettings'
+          OPEN_SETTINGS: 'editingSettings',
         },
       },
       uploading: {

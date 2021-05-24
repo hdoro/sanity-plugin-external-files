@@ -1,12 +1,11 @@
-import { Spinner, Card, Box } from '@sanity/ui'
-import { PlayIcon } from '@sanity/icons'
 import { blue } from '@sanity/color'
+import { PlayIcon } from '@sanity/icons'
+import { Box, Card, Heading, Spinner, Stack } from '@sanity/ui'
 import React from 'react'
-
 import sanityClient, { imageBuilder } from '../scripts/sanityClient'
 import { MediaFile, SanityUpload } from '../types'
-import VideoIcon from './VideoIcon'
 import AudioIcon from './AudioIcon'
+import VideoIcon from './VideoIcon'
 
 export interface MediaPreview {
   file: MediaFile
@@ -19,14 +18,24 @@ const Player: React.FC<SanityUpload> = (props) => {
   }
   if (props.firebase.contentType?.includes('audio')) {
     return (
-      <audio src={props.firebase.downloadURL} controls={true} autoPlay={true} />
+      <audio
+        src={props.firebase.downloadURL}
+        controls={true}
+        autoPlay={true}
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'contain',
+        }}
+      />
     )
   }
   return (
     <video
       style={{
         width: '100%',
-        height: 'auto',
+        height: '100%',
+        objectFit: 'contain',
       }}
       src={props.firebase.downloadURL}
       controls={true}
@@ -35,9 +44,15 @@ const Player: React.FC<SanityUpload> = (props) => {
   )
 }
 
-const WrappingCard: React.FC<Pick<MediaPreview, 'context'>> = ({
+const WrappingCard: React.FC<
+  Pick<MediaPreview, 'context'> & {
+    paddingBottom?: string
+  }
+> = ({
   children,
   context,
+  // 16:9 aspect ratio
+  paddingBottom = '56.25%',
 }) => {
   return (
     <Card
@@ -48,8 +63,7 @@ const WrappingCard: React.FC<Pick<MediaPreview, 'context'>> = ({
         textAlign: 'center',
         width: '100%',
         position: 'relative',
-        // 16:9 aspect ratio
-        paddingBottom: '56.25%',
+        paddingBottom,
       }}
       sizing="border"
     >
@@ -94,28 +108,57 @@ const MediaPreview: React.FC<MediaPreview> = (props) => {
   if (!fullFile) {
     return (
       <WrappingCard context={props.context}>
-        <Spinner />
+        <Box
+          style={{
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%,-50%)',
+          }}
+        >
+          <Spinner />
+        </Box>
       </WrappingCard>
     )
   }
 
   const imgUrl =
     fullFile.screenshot &&
-    imageBuilder.image(fullFile.screenshot).width(600).url()
+    imageBuilder
+      .image(fullFile.screenshot)
+      .width(props.context === 'browser' ? 300 : 600)
+      .url()
   const mediaType = fullFile.firebase.contentType?.includes('audio')
     ? 'audio'
     : 'video'
 
   const allowPlayback = props.context !== 'browser'
   return (
-    <WrappingCard context={props.context}>
+    <WrappingCard
+      context={props.context}
+      paddingBottom={
+        fullFile.metadata?.dimensions?.height
+          ? `${
+              (fullFile.metadata.dimensions.height /
+                fullFile.metadata.dimensions.width) *
+              100
+            }%`
+          : undefined
+      }
+    >
       {playing ? (
         <Player {...fullFile} />
       ) : (
         <>
           {imgUrl ? (
             <img
-              style={{ width: '100%', borderRadius: '.3rem' }}
+              style={{
+                width: '100%',
+                borderRadius: '.3rem',
+                height: '100%',
+                objectFit: 'contain',
+                color: 'transparent',
+              }}
               src={imgUrl}
               alt={`Video's thumbnail`}
             />
@@ -124,10 +167,8 @@ const MediaPreview: React.FC<MediaPreview> = (props) => {
               padding={0}
               sizing="border"
               style={{
-                width: '100%',
                 position: 'relative',
-                // 16:9 aspect ratio
-                paddingBottom: '56.25%',
+                height: '100%',
               }}
               tone="primary"
             >
@@ -172,6 +213,43 @@ const MediaPreview: React.FC<MediaPreview> = (props) => {
             >
               <PlayIcon />
             </button>
+          )}
+          {props.context === 'input' && (
+            <Box
+              padding={3}
+              style={{
+                position: 'absolute',
+                left: '50%',
+                bottom: '2rem',
+                transform: 'translate(-50%)',
+                maxWidth: '100%',
+              }}
+            >
+              <Stack space={2}>
+                <Heading size={1}>
+                  {fullFile.title || fullFile.firebase?.name}
+                </Heading>
+                {fullFile.description && (
+                  <p
+                    style={
+                      {
+                        fontFamily: 'inherit',
+                        margin: 0,
+                        fontSize: '0.8125rem',
+                        lineHeight: '1.0625rem',
+                        color: 'var(--card-muted-fg-color)',
+                        display: '-webkit-box',
+                        WebkitBoxOrient: 'vertical',
+                        WebkitLineClamp: 2,
+                        overflow: 'hidden',
+                      } as React.CSSProperties
+                    }
+                  >
+                    {fullFile.description}
+                  </p>
+                )}
+              </Stack>
+            </Box>
           )}
         </>
       )}

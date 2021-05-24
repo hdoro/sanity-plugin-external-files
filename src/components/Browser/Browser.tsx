@@ -67,19 +67,26 @@ const Browser: React.FC<BrowserProps> = (props) => {
       },
     },
   })
-  const { vendorClient } = useVendorClient()
+  const { vendorClient, status } = useVendorClient()
 
   return (
     <ThemeProvider theme={studioTheme}>
       <Flex
         direction="column"
         gap={2}
-        style={{ background: 'white', padding: '2rem', minHeight: '300px' }}
+        style={{
+          background: 'white',
+          padding: '2rem',
+          minHeight: onSelect ? '300px' : '100%',
+          boxSizing: 'border-box',
+        }}
       >
         {state.matches('loading') ? (
           <Flex flex={1} justify="center" align="center">
             <Spinner />
           </Flex>
+        ) : status === 'missingCredentials' ? (
+          <ConfigureCredentials />
         ) : (
           <Container padding={2} width={3} sizing="border-box" flex={1}>
             <Flex justify="space-between" align="center">
@@ -95,7 +102,6 @@ const Browser: React.FC<BrowserProps> = (props) => {
                 placeholder="Search files"
               />
               <Inline space={2}>
-
                 {vendorClient && (
                   <Button
                     icon={UploadIcon}
@@ -197,7 +203,7 @@ const Browser: React.FC<BrowserProps> = (props) => {
               state.context.fileToEdit &&
               vendorClient && (
                 <FileDetails
-                  firebaseClient={vendorClient}
+                  vendorClient={vendorClient}
                   closeDialog={() => send('CLEAR_FILE')}
                   file={state.context.fileToEdit}
                   onSelect={onSelect}

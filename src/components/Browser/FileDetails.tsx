@@ -1,49 +1,49 @@
 import {
   CalendarIcon,
+  CheckmarkIcon,
   ClockIcon,
   DownloadIcon,
   EditIcon,
+  ErrorOutlineIcon,
+  RevertIcon,
   SearchIcon,
   TrashIcon,
-  CheckmarkIcon,
-  RevertIcon,
-  ErrorOutlineIcon,
 } from '@sanity/icons'
-import { TextInput } from '@sanity/ui'
 import {
+  Button,
   Card,
   Dialog,
   Flex,
+  Heading,
+  Spinner,
   Stack,
   Tab,
   TabList,
   TabPanel,
-  useToast,
-  Button,
   Text,
+  TextInput,
+  useToast,
 } from '@sanity/ui'
-import { useMachine } from '@xstate/react'
 import firebase from 'firebase/app'
-import React from 'react'
+import { useMachine } from '@xstate/react'
 import DefaultFormField from 'part:@sanity/components/formfields/default'
-
+import React from 'react'
 import formatBytes from '../../scripts/formatBytes'
 import formatSeconds from '../../scripts/formatSeconds'
 import sanityClient from '../../scripts/sanityClient'
 import { SanityUpload } from '../../types'
 import IconInfo from '../IconInfo'
 import MediaPreview from '../MediaPreview'
+import SpinnerBox from '../SpinnerBox'
 import fileDetailsMachine from './fileDetailsMachine'
 import FileReferences from './FileReferences'
-import { Spinner } from '@sanity/ui'
-import { Heading } from '@sanity/ui'
 
 interface FileDetailsProps {
   onSelect?: (file: SanityUpload) => void
   persistFileSave: (file: SanityUpload) => void
   persistFileDeletion: (file: SanityUpload) => void
   closeDialog: () => void
-  firebaseClient: firebase.app.App
+  vendorClient: firebase.app.App
   file: SanityUpload
 }
 
@@ -69,7 +69,7 @@ const AssetInput: React.FC<{
 
 const FileDetails: React.FC<FileDetailsProps> = (props) => {
   const toast = useToast()
-  const { closeDialog, firebaseClient } = props
+  const { closeDialog, vendorClient: firebaseClient } = props
   const [state, send] = useMachine(fileDetailsMachine, {
     actions: {
       closeDialog: () => closeDialog(),
@@ -84,8 +84,22 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
         context.file?._id && props.persistFileDeletion(context.file),
     },
     services: {
+      fetchReferences: (context) =>
+        new Promise(async (resolve, reject) => {
+          if (context.references) {
+            resolve(context.references)
+          }
+          try {
+            const references = await sanityClient.fetch('*[references($id)]', {
+              id: context.file?._id,
+            })
+            resolve(references)
+          } catch (error) {
+            reject(error)
+          }
+        }),
       deleteFile: (context) =>
-        new Promise(async (res, reject) => {
+        new Promise(async (resolve, reject) => {
           try {
             const sanityDelete = await sanityClient.delete<SanityUpload>(
               context.file?._id as string,
@@ -95,11 +109,16 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
                 .storage()
                 .ref(context.file?.firebase?.fullPath)
                 .delete()
-              res('Success!')
+              resolve('Success!')
             } catch (error) {
-              // Before returning an error to the user, let's re-create the sanity document to prevent an unlinked reference in firebase
-              await sanityClient.createOrReplace(sanityDelete)
-              reject(error)
+              if (error?.code === 'storage/object-not-found') {
+                // If file not found in Firebase, we're good!
+                resolve('Success!')
+              } else {
+                // Before returning an error to the user, let's re-create the sanity document to prevent an unlinked reference in firebase
+                await sanityClient.createOrReplace(context.file || sanityDelete)
+                reject(error)
+              }
             }
           } catch (error) {
             reject(error)
@@ -182,9 +201,11 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
                   text="Delete file"
                   tone="critical"
                   onClick={() => send('CONFIRM')}
-                  disabled={state.matches(
+                  disabled={[
                     'interactions.deleting.processing_deletion',
-                  )}
+                    'interactions.deleting.checkingReferences',
+                    'interactions.deleting.cantDelete',
+                  ].some(state.matches)}
                 />
               </Flex>
             </Card>
@@ -200,6 +221,29 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
             }}
           >
             <Stack style={{ textAlign: 'center' }} space={3}>
+              {state.matches('interactions.deleting.checkingReferences') && (
+                <>
+                  <Heading size={2}>Checking if file can be deleted</Heading>
+                  <SpinnerBox />
+                </>
+              )}
+              {state.matches('interactions.deleting.cantDelete') && (
+                <>
+                  <Heading size={2}>File can't be deleted</Heading>
+                  <Text size={2}>
+                    There are {state.context.references?.length} documents
+                    pointing to this file. Edit or delete them before deleting
+                    this file.
+                  </Text>
+                  {state.context.file?._id && (
+                    <FileReferences
+                      fileId={state.context.file._id}
+                      references={state.context.references}
+                      isLoaded={state.context.referencesLoaded}
+                    />
+                  )}
+                </>
+              )}
               {state.matches('interactions.deleting.confirm') && (
                 <>
                   <Heading size={2}>
@@ -211,6 +255,7 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
               {state.matches('interactions.deleting.processing_deletion') && (
                 <>
                   <Heading size={2}>Deleting file...</Heading>
+                  <SpinnerBox />
                 </>
               )}
               {state.matches('interactions.deleting.error_deleting') && (
@@ -219,9 +264,6 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
                   <Text size={2}>
                     Try deleting the file again by clicking the button below
                   </Text>
-                  {state.context.file?._id && (
-                    <FileReferences fileId={state.context.file._id} />
-                  )}
                 </>
               )}
             </Stack>
@@ -373,7 +415,11 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
               id="references-panel"
               hidden={!state.matches('tab.references_tab')}
             >
-              <FileReferences fileId={file._id} />
+              <FileReferences
+                fileId={file._id}
+                references={state.context.references}
+                isLoaded={state.context.referencesLoaded}
+              />
             </TabPanel>
           </Stack>
         </Flex>
