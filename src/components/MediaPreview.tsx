@@ -1,11 +1,13 @@
 import { blue } from '@sanity/color'
 import { PlayIcon } from '@sanity/icons'
-import { Box, Card, Heading, Spinner, Stack } from '@sanity/ui'
+import { Box, Card, Spinner } from '@sanity/ui'
 import React from 'react'
 import sanityClient, { imageBuilder } from '../scripts/sanityClient'
 import { MediaFile, SanityUpload } from '../types'
 import AudioIcon from './AudioIcon'
+import FileMetadata from './FileMetadata'
 import VideoIcon from './VideoIcon'
+import WaveformDisplay from './WaveformDisplay'
 
 export interface MediaPreview {
   file: MediaFile
@@ -133,11 +135,12 @@ const MediaPreview: React.FC<MediaPreview> = (props) => {
     : 'video'
 
   const allowPlayback = props.context !== 'browser'
+
   return (
     <WrappingCard
       context={props.context}
       paddingBottom={
-        fullFile.metadata?.dimensions?.height
+        fullFile.metadata && 'dimensions' in fullFile.metadata
           ? `${
               (fullFile.metadata.dimensions.height /
                 fullFile.metadata.dimensions.width) *
@@ -179,10 +182,40 @@ const MediaPreview: React.FC<MediaPreview> = (props) => {
                   top: '50%',
                   transform: 'translate(-50%,-50%)',
                   color: blue[800].hex,
+                  height: mediaType === 'audio' && '60%',
+                  width: mediaType === 'audio' && '90%',
                 }}
               >
                 {mediaType === 'audio' ? (
-                  <AudioIcon style={{ width: '50%', maxHeight: '70%' }} />
+                  <>
+                    <AudioIcon
+                      style={{
+                        width: '50%',
+                        maxHeight: '70%',
+                        position: 'absolute',
+                        left: '50%',
+                        top: '50%',
+                        transform: 'translate(-50%,-50%)',
+                        zIndex: 0,
+                        color:
+                          fullFile.metadata &&
+                          'waveformData' in fullFile.metadata
+                            ? blue[100].hex
+                            : blue[800].hex,
+                      }}
+                    />
+                    {fullFile.metadata && 'waveformData' in fullFile.metadata && (
+                      <WaveformDisplay
+                        waveformData={fullFile.metadata.waveformData}
+                        style={{
+                          zIndex: 1,
+                          position: 'relative',
+                          height: '100%',
+                        }}
+                        colorHue="blue"
+                      />
+                    )}
+                  </>
                 ) : (
                   <VideoIcon style={{ width: '50%', maxHeight: '70%' }} />
                 )}
@@ -215,41 +248,18 @@ const MediaPreview: React.FC<MediaPreview> = (props) => {
             </button>
           )}
           {props.context === 'input' && (
-            <Box
-              padding={3}
+            <Card
+              padding={4}
               style={{
                 position: 'absolute',
-                left: '50%',
-                bottom: '2rem',
-                transform: 'translate(-50%)',
-                maxWidth: '100%',
+                left: 0,
+                bottom: 0,
+                width: '100%',
+                boxSizing: 'border-box',
               }}
             >
-              <Stack space={2}>
-                <Heading size={1}>
-                  {fullFile.title || fullFile.firebase?.name}
-                </Heading>
-                {fullFile.description && (
-                  <p
-                    style={
-                      {
-                        fontFamily: 'inherit',
-                        margin: 0,
-                        fontSize: '0.8125rem',
-                        lineHeight: '1.0625rem',
-                        color: 'var(--card-muted-fg-color)',
-                        display: '-webkit-box',
-                        WebkitBoxOrient: 'vertical',
-                        WebkitLineClamp: 2,
-                        overflow: 'hidden',
-                      } as React.CSSProperties
-                    }
-                  >
-                    {fullFile.description}
-                  </p>
-                )}
-              </Stack>
-            </Box>
+              <FileMetadata file={fullFile} />
+            </Card>
           )}
         </>
       )}

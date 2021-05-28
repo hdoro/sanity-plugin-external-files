@@ -38,6 +38,41 @@ export default {
       type: 'text',
     },
     {
+      name: 'metadata',
+      title: 'Metadata',
+      type: 'object',
+      fields: [
+        {
+          name: 'duration',
+          title: 'Duration (in seconds)',
+          type: 'number',
+        },
+        {
+          name: 'dimensions',
+          title: 'Dimensions',
+          description: 'Exclusive to videos',
+          type: 'object',
+          fields: [
+            {
+              name: 'width',
+              type: 'number',
+            },
+            {
+              name: 'height',
+              type: 'number',
+            },
+          ],
+        },
+        {
+          name: 'waveformData',
+          title: 'Waveform peak data',
+          description: 'Exclusive to audio files',
+          type: 'array',
+          of: [{ type: 'number' }],
+        },
+      ],
+    },
+    {
       name: 'firebase',
       title: 'Firebase information',
       options: { collapsible: true, collapsed: false },

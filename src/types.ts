@@ -17,13 +17,7 @@ export interface SanityUpload extends SanityDocument {
   firebase: FirebaseUpload
   title?: string
   description?: string
-  metadata?: {
-    duration?: number
-    dimensions?: {
-      width: number
-      height: number
-    }
-  }
+  metadata?: FileMetadata
 }
 
 export interface AssetReference {
@@ -35,11 +29,12 @@ export interface AssetReference {
 
 export type MediaFile = SanityUpload | AssetReference
 
-interface AudioMetadata {
+export interface AudioMetadata {
   /**
    * Duration in seconds
    */
   duration: number
+  waveformData?: number[]
 }
 
 interface VideoMetadata {

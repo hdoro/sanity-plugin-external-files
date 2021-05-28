@@ -104,7 +104,21 @@ const UploadBox: React.FC<UploadBox> = (props) => {
           <>
             <Spinner />
             <Text weight="bold" muted>
-              {metadataStates.find(state.matches) && 'Parsing file'}
+              {state.matches('extractingVideoMetadata') &&
+                'Extracting video thumbnails'}
+
+              {state.matches('extractingAudioMetadata') && (
+                <>
+                  Extracting audio's waveform
+                  <div
+                    style={{
+                      fontWeight: 400,
+                    }}
+                  >
+                    (may take up to 2 minutes)
+                  </div>
+                </>
+              )}
 
               {state.value === 'uploadingToFirebase' && 'Uploading...'}
 

@@ -1,18 +1,10 @@
 import React from 'react'
-import { Card, Button, Text, Stack, Inline } from '@sanity/ui'
-import {
-  CheckmarkIcon,
-  EditIcon,
-  DownloadIcon,
-  CalendarIcon,
-  ClockIcon,
-} from '@sanity/icons'
+import { Card, Button, Stack } from '@sanity/ui'
+import { CheckmarkIcon, EditIcon } from '@sanity/icons'
 
 import MediaPreview from '../MediaPreview'
 import { SanityUpload } from '../../types'
-import formatSeconds from '../../scripts/formatSeconds'
-import formatBytes from '../../scripts/formatBytes'
-import IconInfo from '../IconInfo'
+import FileMetadata from '../FileMetadata'
 
 interface FilePreviewProps {
   onSelect?: (file: SanityUpload) => void
@@ -43,50 +35,7 @@ const FilePreview: React.FC<FilePreviewProps> = ({
         }}
       >
         <MediaPreview file={file} context="browser" />
-        <Stack space={2}>
-          <Stack space={2}>
-            <Text size={1} weight="bold" muted>
-              {file.title || file.firebase?.name}
-            </Text>
-            {file.description && (
-              <p
-                style={
-                  {
-                    fontFamily: 'inherit',
-                    margin: 0,
-                    fontSize: '0.8125rem',
-                    lineHeight: '1.0625rem',
-                    color: 'var(--card-muted-fg-color)',
-                    display: '-webkit-box',
-                    WebkitBoxOrient: 'vertical',
-                    WebkitLineClamp: 2,
-                    overflow: 'hidden',
-                  } as React.CSSProperties
-                }
-              >
-                {file.description}
-              </p>
-            )}
-          </Stack>
-          <Inline space={3}>
-            {file.metadata?.duration && (
-              <IconInfo
-                text={formatSeconds(file.metadata.duration)}
-                icon={ClockIcon}
-              />
-            )}
-            {file.firebase?.size && (
-              <IconInfo
-                text={formatBytes(file.firebase.size)}
-                icon={DownloadIcon}
-              />
-            )}
-            <IconInfo
-              text={new Date(file._createdAt).toISOString().split('T')[0]}
-              icon={CalendarIcon}
-            />
-          </Inline>
-        </Stack>
+        <FileMetadata file={file} />
         <div
           style={{
             display: 'flex',

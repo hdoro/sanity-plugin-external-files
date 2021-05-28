@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-firebase-dam",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Store Sanity media files in Firebase",
   "main": "lib/index.js",
   "scripts": {
@@ -17,7 +17,9 @@
   "keywords": [
     "sanity.io",
     "sanity",
-    "data migration",
+    "firebase",
+    "media",
+    "asset management",
     "sanity-plugin"
   ],
   "author": "Henrique Doro <opensource@hdoro.dev>",
@@ -25,12 +27,13 @@
   "dependencies": {
     "@sanity/base": ">= 2.5.0",
     "@sanity/ui": ">= 0.33.9",
+    "@sanity/icons": ">= 1.0.0",
     "@xstate/react": "^1.3.3",
-    "firebase": "^8.6.1",
+    "firebase": "^8.6.3",
     "mime": "^2.5.2",
     "nanoid": "^3.1.23",
     "react-dropzone": "^11.3.2",
-    "xstate": "^4.19.1"
+    "xstate": "^4.19.2"
   },
   "devDependencies": {
     "@types/mime": "^2.0.3",

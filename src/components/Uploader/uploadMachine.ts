@@ -1,6 +1,8 @@
 import firebase from 'firebase/app'
 import { createMachine, assign } from 'xstate'
-import { FileMetadata, SanityUpload } from '../../types'
+
+import { AudioMetadata, FileMetadata, SanityUpload } from '../../types'
+import getWaveformData from '../../scripts/getWaveformData'
 
 interface FirebaseUpload extends firebase.storage.FullMetadata {
   downloadURL: string
@@ -112,21 +114,38 @@ const uploadMachine = createMachine<Context, UploadEvent>(
         invoke: {
           id: 'ExtractAudioMetadata',
           src: async (context) => {
-            return new Promise((resolve, reject) => {
+            return new Promise(async (resolve, reject) => {
               if (!context.file || !context.file.type.includes('audio')) {
                 reject()
                 return
               }
-              const audioEl = document.createElement('audio')
-              audioEl.setAttribute('src', URL.createObjectURL(context.file))
+              const originalAudioEl = document.createElement('audio')
+              originalAudioEl.setAttribute(
+                'src',
+                URL.createObjectURL(context.file),
+              )
 
-              audioEl.addEventListener('loadedmetadata', () => {
+              let metadata: Partial<AudioMetadata> = {}
+              originalAudioEl.addEventListener('loadedmetadata', () => {
+                metadata = {
+                  duration: originalAudioEl.duration,
+                }
+              })
+
+              try {
+                console.time('Getting waveform data')
+                const waveformData = await getWaveformData(context.file)
+                console.timeEnd('Getting waveform data')
+
                 resolve({
                   metadata: {
-                    duration: audioEl.duration,
+                    ...metadata,
+                    waveformData,
                   },
                 })
-              })
+              } catch (error) {
+                resolve({ metadata })
+              }
             })
           },
           onDone: {
