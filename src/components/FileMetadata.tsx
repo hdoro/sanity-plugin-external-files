@@ -26,7 +26,7 @@ const FileMetadata: React.FC<FileMetadataProps> = ({ file }) => {
             wordWrap: 'break-word',
           }}
         >
-          {file.title || file.firebase?.name}
+          {file.title || file.externalFile?.name}
         </Text>
         {file.description && (
           <p
@@ -55,9 +55,9 @@ const FileMetadata: React.FC<FileMetadataProps> = ({ file }) => {
             icon={ClockIcon}
           />
         )}
-        {file.firebase?.size && (
+        {file.externalFile?.size && (
           <IconInfo
-            text={formatBytes(file.firebase.size)}
+            text={formatBytes(file.externalFile.size)}
             icon={DownloadIcon}
           />
         )}

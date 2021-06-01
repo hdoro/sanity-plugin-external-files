@@ -1,19 +1,20 @@
 import firebase from 'firebase/app'
 import { createMachine, assign } from 'xstate'
 
-import { AudioMetadata, FileMetadata, SanityUpload } from '../../types'
+import {
+  AudioMetadata,
+  FileMetadata,
+  SanityUpload,
+  VendorUpload,
+} from '../../types'
 import getWaveformData from '../../scripts/getWaveformData'
-
-interface FirebaseUpload extends firebase.storage.FullMetadata {
-  downloadURL: string
-}
 
 interface Context {
   retries: number
-  firebaseUploadProgress: number
+  vendorUploadProgress: number
   file?: File
   fileMetadata?: FileMetadata
-  firebaseUpload?: FirebaseUpload
+  vendorUpload?: VendorUpload
   sanityUpload?: SanityUpload
   /**
    * Comes from canvas.toDataURL()
@@ -32,14 +33,14 @@ export type UploadEvent =
   | { type: 'RETRY' }
   | { type: 'RESET_UPLOAD' }
   | { type: 'CANCEL_INPUT' }
-  | { type: 'FIREBASE_ERROR'; error: firebase.storage.FirebaseStorageError }
-  | { type: 'FIREBASE_PROGRESS'; data: number }
-  | { type: 'FIREBASE_DONE'; data: FirebaseUpload }
+  | { type: 'VENDOR_ERROR'; error: firebase.storage.FirebaseStorageError }
+  | { type: 'VENDOR_PROGRESS'; data: number }
+  | { type: 'VENDOR_DONE'; data: VendorUpload }
   | { type: 'SANITY_DONE'; data: SanityUpload }
 
 const INITIAL_CONTEXT: Context = {
   retries: 0,
-  firebaseUploadProgress: 0,
+  vendorUploadProgress: 0,
 }
 
 const uploadMachine = createMachine<Context, UploadEvent>(
@@ -96,7 +97,7 @@ const uploadMachine = createMachine<Context, UploadEvent>(
             })
           },
           onDone: {
-            target: 'uploadingToFirebase',
+            target: 'uploadingToVendor',
             actions: [
               assign({
                 videoScreenshot: (_context, event) => event.data.screenshot,
@@ -105,8 +106,8 @@ const uploadMachine = createMachine<Context, UploadEvent>(
             ],
           },
           onError: {
-            // If we can't generate a screenshot, that's okay - proceed to uploadingToFirebase
-            target: 'uploadingToFirebase',
+            // If we can't generate a screenshot, that's okay - proceed to uploadingToVendor
+            target: 'uploadingToVendor',
           },
         },
       },
@@ -149,7 +150,7 @@ const uploadMachine = createMachine<Context, UploadEvent>(
             })
           },
           onDone: {
-            target: 'uploadingToFirebase',
+            target: 'uploadingToVendor',
             actions: [
               assign({
                 fileMetadata: (_context, event) => event.data.metadata,
@@ -157,35 +158,35 @@ const uploadMachine = createMachine<Context, UploadEvent>(
             ],
           },
           onError: {
-            // If we can't generate a waveform, that's okay - proceed to uploadingToFirebase
-            target: 'uploadingToFirebase',
+            // If we can't generate a waveform, that's okay - proceed to uploadingToVendor
+            target: 'uploadingToVendor',
           },
         },
       },
-      uploadingToFirebase: {
+      uploadingToVendor: {
         invoke: {
           id: 'FirebaseUpload',
           src: 'uploadToFirebase',
         },
         on: {
-          FIREBASE_PROGRESS: {
+          VENDOR_PROGRESS: {
             actions: [
               assign({
-                firebaseUploadProgress: (_context, event) => event.data,
+                vendorUploadProgress: (_context, event) => event.data,
               }),
             ],
           },
-          FIREBASE_DONE: [
+          VENDOR_DONE: [
             {
               target: 'uploadingToSanity',
               actions: [
                 assign({
-                  firebaseUpload: (_context, event) => event.data,
+                  vendorUpload: (_context, event) => event.data,
                 }),
               ],
             },
           ],
-          FIREBASE_ERROR: {
+          VENDOR_ERROR: {
             target: 'failure',
             actions: assign({
               error: (context, event) => ({
@@ -245,10 +246,10 @@ const uploadMachine = createMachine<Context, UploadEvent>(
               actions: assign({
                 retries: (context, event) => context.retries + 1,
               }),
-              cond: 'firebaseReady',
+              cond: 'hasUploadedToVendor',
             },
             {
-              target: 'uploadingToFirebase',
+              target: 'uploadingToVendor',
               actions: assign({
                 retries: (context, event) => context.retries + 1,
               }),
@@ -296,7 +297,7 @@ const uploadMachine = createMachine<Context, UploadEvent>(
   {
     guards: {
       canRetry: (context) => context.retries <= 3,
-      firebaseReady: (context) => !!context.firebaseUpload,
+      hasUploadedToVendor: (context) => !!context.vendorUpload,
     },
   },
 )

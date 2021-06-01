@@ -15,13 +15,13 @@ export interface MediaPreview {
 }
 
 const Player: React.FC<SanityUpload> = (props) => {
-  if (!props.firebase) {
+  if (!props.externalFile) {
     return null
   }
-  if (props.firebase.contentType?.includes('audio')) {
+  if (props.externalFile.contentType?.includes('audio')) {
     return (
       <audio
-        src={props.firebase.downloadURL}
+        src={props.externalFile.downloadURL}
         controls={true}
         autoPlay={true}
         style={{
@@ -39,7 +39,7 @@ const Player: React.FC<SanityUpload> = (props) => {
         height: '100%',
         objectFit: 'contain',
       }}
-      src={props.firebase.downloadURL}
+      src={props.externalFile.downloadURL}
       controls={true}
       autoPlay={true}
     />
@@ -97,16 +97,17 @@ const MediaPreview: React.FC<MediaPreview> = (props) => {
   }, [])
 
   React.useEffect(() => {
-    if ((props.file as any)?.firebase?.downloadURL) {
+    if ((props.file as SanityUpload)?.externalFile?.downloadURL) {
       setFullFile(props.file as SanityUpload)
     } else if (props.file?.asset?._ref) {
       expandReference(props.file.asset._ref)
     }
   }, [props.file])
 
-  if (!props.file) {
+  if (!props.file || (fullFile && !fullFile.externalFile)) {
     return null
   }
+  
   if (!fullFile) {
     return (
       <WrappingCard context={props.context}>
@@ -130,7 +131,7 @@ const MediaPreview: React.FC<MediaPreview> = (props) => {
       .image(fullFile.screenshot)
       .width(props.context === 'browser' ? 300 : 600)
       .url()
-  const mediaType = fullFile.firebase.contentType?.includes('audio')
+  const mediaType = fullFile.externalFile.contentType?.includes('audio')
     ? 'audio'
     : 'video'
 

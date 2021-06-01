@@ -1,7 +1,7 @@
 import { SanityDocument } from '@sanity/client'
 import firebase from 'firebase/app'
 
-export interface FirebaseUpload extends firebase.storage.FullMetadata {
+export interface VendorUpload extends firebase.storage.FullMetadata {
   downloadURL: string
 }
 
@@ -14,7 +14,7 @@ export interface SanityUpload extends SanityDocument {
       _ref: string
     }
   }
-  firebase: FirebaseUpload
+  externalFile: VendorUpload
   title?: string
   description?: string
   metadata?: FileMetadata

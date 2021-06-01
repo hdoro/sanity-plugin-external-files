@@ -127,7 +127,7 @@ const UploadBox: React.FC<UploadBox> = (props) => {
             </Text>
             {state.value === 'uploadingToFirebase' && (
               <>
-                <Text>{state.context.firebaseUploadProgress}%</Text>
+                <Text>{state.context.vendorUploadProgress}%</Text>
                 <Button
                   icon={CloseIcon}
                   fontSize={2}

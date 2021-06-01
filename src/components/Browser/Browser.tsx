@@ -39,7 +39,7 @@ function getFilterForExtension(extension: string) {
   if (!extension) {
     return true
   }
-  return `firebase.contentType match "*${extension.replace(/[\.]/g, '')}*"`
+  return `externalFile.contentType match "*${extension.replace(/[\.]/g, '')}*"`
 }
 
 const Browser: React.FC<BrowserProps> = (props) => {
@@ -60,7 +60,7 @@ const Browser: React.FC<BrowserProps> = (props) => {
         return sanityClient.fetch(/* groq */ `
         *[
           _type == "firebase.storedFile" &&
-          defined(firebase.downloadURL)
+          defined(externalFile.downloadURL)
           ${extensionFilter}
         ] | order(_createdAt desc)
         `)

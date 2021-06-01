@@ -72,11 +72,11 @@ const useUpload = ({
               (snapshot.bytesTransferred / snapshot.totalBytes) * 90,
             )
 
-            callback({ type: 'FIREBASE_PROGRESS', data: progress })
+            callback({ type: 'VENDOR_PROGRESS', data: progress })
           },
           (error) => {
             callback({
-              type: 'FIREBASE_ERROR',
+              type: 'VENDOR_ERROR',
               error,
             })
           },
@@ -85,7 +85,7 @@ const useUpload = ({
             const metadata = await uploadTask.snapshot.ref.getMetadata()
 
             callback({
-              type: 'FIREBASE_DONE',
+              type: 'VENDOR_DONE',
               data: {
                 downloadURL,
                 ...metadata,
@@ -101,7 +101,7 @@ const useUpload = ({
         }
       },
       uploadToSanity: (context) => {
-        if (!context?.firebaseUpload?.downloadURL || !context?.file) {
+        if (!context?.vendorUpload?.downloadURL || !context?.file) {
           return new Promise((_resolve, reject) =>
             reject('Invalid Firebase upload'),
           )
@@ -138,7 +138,7 @@ const useUpload = ({
                   }
                 : undefined,
               firebase: {
-                ...context.firebaseUpload,
+                ...context.vendorUpload,
               },
               metadata: context.fileMetadata,
             })
