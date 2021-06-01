@@ -22,7 +22,7 @@ import { DEFAULT_ACCEPT } from '../../config'
 
 import parseAccept from '../../scripts/parseAccept'
 import sanityClient from '../../scripts/sanityClient'
-import { SanityUpload } from '../../types'
+import { SanityUpload, VendorConfiguration } from '../../types'
 import ConfigureCredentials from '../Credentials/ConfigureCredentials'
 import useVendorClient from '../Credentials/useVendorClient'
 import Uploader, { UploaderProps } from '../Uploader/Uploader'
@@ -33,6 +33,7 @@ import FilePreview from './FilePreview'
 interface BrowserProps {
   onSelect?: (file: SanityUpload) => void
   accept?: UploaderProps['accept']
+  vendorConfig: VendorConfiguration
 }
 
 function getFilterForExtension(extension: string) {

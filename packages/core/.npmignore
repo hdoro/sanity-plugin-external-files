@@ -1,4 +1,5 @@
 .git
+.yarn
 src/*
 clearLib.js
 .prettierignore

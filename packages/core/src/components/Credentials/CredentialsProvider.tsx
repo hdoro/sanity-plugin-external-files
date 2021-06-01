@@ -3,6 +3,7 @@ import { SanityDocument } from '@sanity/client'
 import { useToast } from '@sanity/ui'
 
 import sanityClient from '../../scripts/sanityClient'
+import { VendorConfiguration } from '../../types'
 
 export interface VendorCredentials extends Partial<SanityDocument> {
   apiKey: string
@@ -24,7 +25,11 @@ export const CredentialsContext = React.createContext<ContextValue>({
 
 const CREDENTIALS_QUERY = '*[_id == "firebase.credentials"][0]'
 
-const CredentialsProvider: React.FC = (props) => {
+interface CredentialsProviderProps {
+  vendorConfig: VendorConfiguration
+}
+
+const CredentialsProvider: React.FC<CredentialsProviderProps> = (props) => {
   const toast = useToast()
   const [credentials, setCredentials] =
     React.useState<VendorCredentials | undefined>()

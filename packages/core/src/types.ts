@@ -1,12 +1,29 @@
 import { SanityDocument } from '@sanity/client'
-import firebase from 'firebase/app'
 
-export interface VendorUpload extends firebase.storage.FullMetadata {
-  downloadURL: string
+/**
+ * Necessary to initialize the input & tool on different vendors
+ */
+export interface VendorConfiguration {
+  name: string
+  defaultAccept: string | string[]
 }
 
-export interface SanityUpload extends SanityDocument {
+export interface VendorUpload {
+  fileName?: string
+  assetURL?: string
+  contentType?: string
+  size?: number
+}
+
+export interface SanityUpload
+  extends SanityDocument,
+    Partial<AudioMetadata>,
+    Partial<VideoMetadata>,
+    VendorUpload {
   _type: 'firebase.storedFile'
+  /**
+   * Exclusive to videos
+   */
   screenshot?: {
     _type: 'image'
     asset: {
@@ -14,10 +31,8 @@ export interface SanityUpload extends SanityDocument {
       _ref: string
     }
   }
-  externalFile: VendorUpload
   title?: string
   description?: string
-  metadata?: FileMetadata
 }
 
 export interface AssetReference {

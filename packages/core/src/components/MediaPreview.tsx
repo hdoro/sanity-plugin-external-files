@@ -107,7 +107,7 @@ const MediaPreview: React.FC<MediaPreview> = (props) => {
   if (!props.file || (fullFile && !fullFile.externalFile)) {
     return null
   }
-  
+
   if (!fullFile) {
     return (
       <WrappingCard context={props.context}>

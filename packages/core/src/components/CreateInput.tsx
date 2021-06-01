@@ -6,11 +6,11 @@ import { ChangeIndicatorCompareValueProvider } from '@sanity/base/lib/change-ind
 import { withDocument, withValuePath } from 'part:@sanity/form-builder'
 import PatchEvent, { set, unset } from 'part:@sanity/form-builder/patch-event'
 
-import UploaderWithConfig from '../Uploader/UploaderWithConfig'
-import Browser from '../Browser/Browser'
-import { AssetReference, SanityUpload } from '../../types'
-import CredentialsProvider from '../Credentials/CredentialsProvider'
-import { DEFAULT_ACCEPT } from '../../config'
+import UploaderWithConfig from './Uploader/UploaderWithConfig'
+import Browser from './Browser/Browser'
+import { AssetReference, SanityUpload, VendorConfiguration } from '../types'
+import CredentialsProvider from './Credentials/CredentialsProvider'
+import { DEFAULT_ACCEPT } from '../config'
 
 export interface InputProps {}
 
@@ -141,4 +141,6 @@ class FirebaseMediaInput extends React.Component<
   }
 }
 
-export default withValuePath(withDocument(FirebaseMediaInput))
+const CreateInput = (props: VendorConfiguration) => withValuePath(withDocument(FirebaseMediaInput))
+
+export default CreateInput
