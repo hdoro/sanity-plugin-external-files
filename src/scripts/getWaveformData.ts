@@ -24,9 +24,9 @@ const filterData = (audioBuffer: AudioBuffer) => {
 }
 
 // Normalizes all data points on a 0-1 scale for proper visualization
-const normalizeData = (filteredData: number[]) => {
+const normalizeData = (filteredData: number[]): Number[] => {
   const multiplier = Math.pow(Math.max(...filteredData), -1)
-  return filteredData.map((n) => (n * multiplier).toFixed(4))
+  return filteredData.map((n) => Number((n * multiplier).toFixed(4)))
 }
 
 export default async function getWaveformData(file: File) {

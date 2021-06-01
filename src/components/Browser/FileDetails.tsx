@@ -107,7 +107,7 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
             try {
               await firebaseClient
                 .storage()
-                .ref(context.file?.firebase?.fullPath)
+                .ref(context.file?.externalFile?.fullPath)
                 .delete()
               resolve('Success!')
             } catch (error) {
@@ -130,7 +130,7 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
           .set({
             title: context.file?.title,
             description: context.file?.description,
-            'firebase.name': context.file?.firebase?.name,
+            'externalFile.name': context.file?.externalFile?.name,
           })
           .commit(),
     },
@@ -144,7 +144,7 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
   const isSaving = state.matches('interactions.saving')
   return (
     <Dialog
-      header={file.title || file.firebase?.name}
+      header={file.title || file.externalFile?.name}
       zOffset={600000}
       id="file-details-dialog"
       onClose={() => send('CLOSE')}
@@ -327,9 +327,9 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
                   size={2}
                 />
               )}
-              {file.firebase?.size && (
+              {file.externalFile?.size && (
                 <IconInfo
-                  text={`Size: ${formatBytes(file.firebase.size, 2)}`}
+                  text={`Size: ${formatBytes(file.externalFile.size, 2)}`}
                   icon={DownloadIcon}
                   size={2}
                 />
@@ -375,7 +375,7 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
                   description="Not visible to users. Useful for finding files later."
                   value={file?.title || ''}
                   placeholder={`Ex: "Customer testimonial ${
-                    file?.firebase?.contentType?.split('/')[0] || 'video'
+                    file?.externalFile?.contentType?.split('/')[0] || 'video'
                   }"`}
                   onInput={(e) =>
                     send({
@@ -399,7 +399,7 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
                 />
                 <AssetInput
                   label="File name"
-                  value={file?.firebase?.name || ''}
+                  value={file?.externalFile?.name || ''}
                   onInput={(e) =>
                     send({
                       type: 'MODIFY_FILE',

@@ -154,7 +154,7 @@ const browserMachine = createMachine<Context, BrowserEvent>(
 
           const filtered = (context.allFiles || []).filter(
             (file) =>
-              file.firebase?.name.toLowerCase().includes(event.term) ||
+              file.externalFile?.name.toLowerCase().includes(event.term) ||
               file.description?.toLowerCase().includes(event.term) ||
               file.title?.toLowerCase().includes(event.term),
           )

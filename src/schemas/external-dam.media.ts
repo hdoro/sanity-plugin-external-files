@@ -1,8 +1,8 @@
 import Input from '../components/Input/Input'
 
 export default {
-  name: 'firebase.media',
-  title: 'Firebase media',
+  name: 'external-dam.media',
+  title: 'External DAM media',
   type: 'object',
   inputComponent: Input,
   fields: [
@@ -10,7 +10,7 @@ export default {
       name: 'asset',
       title: 'Asset',
       type: 'reference',
-      to: [{ type: 'firebase.storedFile' }],
+      to: [{ type: 'external-dam.storedFile' }],
     },
   ],
 }

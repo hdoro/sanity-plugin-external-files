@@ -216,7 +216,7 @@ const fileDetailsMachine = createMachine<Context, FileDetailsEvent>(
             newFile.description = event.value
           }
           if (event.field === 'name') {
-            newFile.firebase.name = event.value
+            newFile.externalFile.name = event.value
           }
           return newFile
         },
