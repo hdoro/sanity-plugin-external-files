@@ -1,5 +1,6 @@
+import { ToolIcon } from 'sanity-plugin-external-dam-core'
+
 import Tool from './components/Tool'
-import ToolIcon from './components/ToolIcon'
 
 export default {
   name: 'firebase-dam',

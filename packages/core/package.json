@@ -1,0 +1,52 @@
+{
+  "name": "sanity-plugin-external-dam-core",
+  "version": "0.4.0",
+  "description": "Core library for sanity-plugin-firebase-dam & sanity-plugin-aws-dam.",
+  "main": "lib/index.js",
+  "scripts": {
+    "clear-lib": "node clearLib.js",
+    "build": "npm run format && npm run clear-lib && tsc --declaration",
+    "dev": "tsc -w",
+    "prepublish": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/hdoro/sanity-plugin-firebase-dam.git"
+  },
+  "keywords": [
+    "sanity.io",
+    "sanity",
+    "media",
+    "cloud storage",
+    "asset management",
+    "sanity-plugin"
+  ],
+  "author": "Henrique Doro <opensource@hdoro.dev>",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@sanity/base": ">= 2.5.0",
+    "@sanity/icons": ">= 1.0.0",
+    "@sanity/ui": ">= 0.33.9",
+    "@xstate/react": "^1.3.3",
+    "mime": "^2.5.2",
+    "nanoid": "^3.1.23",
+    "react-dropzone": "^11.3.2",
+    "xstate": "^4.19.2"
+  },
+  "devDependencies": {
+    "@types/mime": "^2.0.3",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "@types/styled-components": "^5.1.9",
+    "@xstate/inspect": "^0.4.1",
+    "prettier": "^2.2.1",
+    "typescript": "^4.2.2"
+  },
+  "peerDependencies": {
+    "styled-components": ">= 5.0.0"
+  },
+  "bugs": {
+    "url": "https://github.com/hdoro/sanity-plugin-firebase-dam/issues"
+  },
+  "homepage": "https://github.com/hdoro/sanity-plugin-firebase-dam#readme"
+}

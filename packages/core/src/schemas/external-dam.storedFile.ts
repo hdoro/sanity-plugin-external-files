@@ -9,11 +9,7 @@ const FIREBASE_FIELDS = [
   'type',
 ]
 
-const AWS_S3_FIELDS = [
-  'content_md5',
-  "version_id",
-  "key",
-]
+const AWS_S3_FIELDS = ['content_md5', 'version_id', 'key']
 
 export default {
   name: 'external-dam.storedFile',

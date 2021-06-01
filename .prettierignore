@@ -1,3 +1,7 @@
 node_modules
 package-lock.json
-lib
+**/lib
+.yarn
+.git
+.pnp.js
+.yarnrc.yml

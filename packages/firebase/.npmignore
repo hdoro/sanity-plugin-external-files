@@ -1,0 +1,7 @@
+.git
+.yarn
+src/*
+clearLib.js
+.prettierignore
+.prettierrc
+tsconfig.json
