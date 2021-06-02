@@ -1,9 +1,10 @@
-import { ToolIcon } from 'sanity-plugin-external-dam-core'
+import { ToolIcon } from 'sanity-plugin-external-dam'
 
 import Tool from './components/Tool'
+import config from './config'
 
 export default {
-  name: 'firebase-dam',
+  name: config.name,
   title: 'Videos & audio',
   component: Tool,
   icon: ToolIcon,

@@ -10,7 +10,6 @@ import UploaderWithConfig from './Uploader/UploaderWithConfig'
 import Browser from './Browser/Browser'
 import { AssetReference, SanityUpload, VendorConfiguration } from '../types'
 import CredentialsProvider from './Credentials/CredentialsProvider'
-import { DEFAULT_ACCEPT } from '../config'
 
 export interface InputProps {}
 
@@ -31,6 +30,7 @@ class FirebaseMediaInput extends React.Component<
     level?: any
     markers?: any
     presence?: any
+    vendorConfig: VendorConfiguration
   },
   {
     uploadedFile?: SanityUpload
@@ -82,12 +82,14 @@ class FirebaseMediaInput extends React.Component<
   }
 
   render() {
-    const { value, type } = this.props
-    const { accept = DEFAULT_ACCEPT, storeOriginalFilename = true } =
-      type?.options || {}
+    const { value, type, vendorConfig } = this.props
+    const {
+      accept = vendorConfig?.defaultAccept,
+      storeOriginalFilename = true,
+    } = type?.options || {}
 
     return (
-      <CredentialsProvider>
+      <CredentialsProvider vendorConfig={vendorConfig}>
         <ThemeProvider theme={studioTheme}>
           <ChangeIndicatorCompareValueProvider
             value={value?.asset?._ref}
@@ -131,7 +133,11 @@ class FirebaseMediaInput extends React.Component<
                   boxSizing: 'border-box',
                 }}
               >
-                <Browser onSelect={this.updateValue} accept={accept} />
+                <Browser
+                  vendorConfig={vendorConfig}
+                  onSelect={this.updateValue}
+                  accept={accept}
+                />
               </Dialog>,
               document.getElementsByTagName('body')[0],
             )}
@@ -141,6 +147,38 @@ class FirebaseMediaInput extends React.Component<
   }
 }
 
-const CreateInput = (props: VendorConfiguration) => withValuePath(withDocument(FirebaseMediaInput))
+// Adapted from Sanity's official withDocument implementation
+const withVendorConfig = (
+  ComposedComponent: any,
+  vendorConfig: VendorConfiguration,
+) => {
+  return class WithDocument extends React.PureComponent {
+    _input: any
+
+    constructor(props: any) {
+      super(props)
+    }
+
+    setInput = (input: any) => {
+      this._input = input
+    }
+
+    render() {
+      return (
+        <ComposedComponent
+          ref={this.setInput}
+          {...this.props}
+          vendorConfig={vendorConfig}
+        />
+      )
+    }
+  }
+}
+
+const CreateInput = (vendorConfig: VendorConfiguration) =>
+  withVendorConfig(
+    withValuePath(withDocument(FirebaseMediaInput)),
+    vendorConfig,
+  )
 
 export default CreateInput

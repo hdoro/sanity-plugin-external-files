@@ -18,7 +18,6 @@ import {
 } from '@sanity/ui'
 import { useMachine } from '@xstate/react'
 import React from 'react'
-import { DEFAULT_ACCEPT } from '../../config'
 
 import parseAccept from '../../scripts/parseAccept'
 import sanityClient from '../../scripts/sanityClient'
@@ -44,7 +43,7 @@ function getFilterForExtension(extension: string) {
 }
 
 const Browser: React.FC<BrowserProps> = (props) => {
-  const { onSelect, accept = DEFAULT_ACCEPT } = props
+  const { onSelect, accept = props.vendorConfig?.defaultAccept } = props
   const [state, send] = useMachine(browserMachine, {
     services: {
       fetchFiles: () => {
