@@ -26,7 +26,7 @@ const FileMetadata: React.FC<FileMetadataProps> = ({ file }) => {
             wordWrap: 'break-word',
           }}
         >
-          {file.title || file.externalFile?.name}
+          {file.title || file.fileName}
         </Text>
         {file.description && (
           <p
@@ -49,15 +49,15 @@ const FileMetadata: React.FC<FileMetadataProps> = ({ file }) => {
         )}
       </Stack>
       <Inline space={3}>
-        {file.metadata?.duration && (
+        {file.duration && (
           <IconInfo
-            text={formatSeconds(file.metadata.duration)}
+            text={formatSeconds(file.duration)}
             icon={ClockIcon}
           />
         )}
-        {file.externalFile?.size && (
+        {file.fileSize && (
           <IconInfo
-            text={formatBytes(file.externalFile.size)}
+            text={formatBytes(file.fileSize)}
             icon={DownloadIcon}
           />
         )}

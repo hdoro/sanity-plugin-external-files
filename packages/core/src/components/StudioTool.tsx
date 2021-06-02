@@ -3,7 +3,7 @@ import { VendorConfiguration } from '../types'
 import Browser from './Browser/Browser'
 import CredentialsProvider from './Credentials/CredentialsProvider'
 
-const Tool: React.FC<VendorConfiguration> = (props) => {
+const StudioTool: React.FC<VendorConfiguration> = (props) => {
   return (
     <CredentialsProvider vendorConfig={props}>
       <Browser vendorConfig={props} />
@@ -11,6 +11,4 @@ const Tool: React.FC<VendorConfiguration> = (props) => {
   )
 }
 
-const CreateTool = (props: VendorConfiguration) => Tool(props)
-
-export default CreateTool
+export default StudioTool

@@ -11,11 +11,13 @@ import {
 } from '@sanity/ui'
 import DefaultFormField from 'part:@sanity/components/formfields/default'
 import React from 'react'
+import { VendorConfiguration } from '../../types'
 
 import { CredentialsContext } from './CredentialsProvider'
 
 const ConfigureCredentials: React.FC<{
   onCredentialsSaved?: (success: boolean) => void
+  vendorConfig: VendorConfiguration
 }> = (props) => {
   const { saveCredentials, credentials } = React.useContext(CredentialsContext)
   const [isLoading, setIsLoading] = React.useState(false)
@@ -59,11 +61,11 @@ const ConfigureCredentials: React.FC<{
         ) : (
           <>
             <Label size={2} muted>
-              Firebase media library
+              External media library
             </Label>
             <Heading size={3}>First time set-up</Heading>
             <Text size={2}>
-              In order to communicate with Firebase to upload videos & audio,
+              In order to communicate with external vendor to upload videos & audio,
               you’ll have to set-up credentials below:
             </Text>
           </>

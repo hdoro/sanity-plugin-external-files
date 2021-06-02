@@ -1,19 +1,19 @@
-const FIREBASE_FIELDS = [
-  'bucket',
-  'contentDisposition',
-  'contentEncoding',
-  'fullPath',
-  'md5Hash',
-  'generation',
-  'metageneration',
-  'type',
-]
+import { SchemaType } from '@sanity/types'
+import { VendorConfiguration } from '../types'
 
-const AWS_S3_FIELDS = ['content_md5', 'version_id', 'key']
+type CustomField = string | SchemaType
 
-export default {
-  name: 'external-dam.storedFile',
-  title: 'Media file hosted in external vendor',
+interface SchemaConfigOptions {
+  title?: string
+  customFields?: CustomField[]
+}
+
+const getStoredFileSchema = (
+  vendorConfig: VendorConfiguration,
+  schemaConfig: SchemaConfigOptions = {},
+) => ({
+  name: `${vendorConfig.id}-dam.storedFile`,
+  title: schemaConfig.title || 'Media file hosted in external vendor',
   type: 'document',
   fieldsets: [
     {
@@ -46,13 +46,8 @@ export default {
       type: 'string',
     },
     {
-      name: 'vendorId',
-      title: 'Vendor ID',
-      type: 'string',
-    },
-    {
-      name: 'assetURL',
-      title: 'Asset URL / download URL',
+      name: 'fileURL',
+      title: 'File URL / download URL',
       type: 'string',
     },
     {
@@ -67,7 +62,7 @@ export default {
       type: 'number',
     },
     {
-      name: 'size',
+      name: 'fileSize',
       title: 'Size in bytes',
       type: 'number',
     },
@@ -101,40 +96,25 @@ export default {
       type: 'array',
       of: [{ type: 'number' }],
     },
-    {
-      name: 'firebase',
-      title: 'Firebase-exclusive fields',
-      options: { collapsible: true, collapsed: false },
-      type: 'object',
-      fields: [
-        ...FIREBASE_FIELDS.map((field) => {
-          if (typeof field === 'string') {
-            return {
-              name: field,
-              type: 'string',
-            }
-          }
-          return field
-        }),
-      ],
-    },
-    {
-      name: 'aws_s3',
-      title: 'S3-exclusive fields',
-      options: { collapsible: true, collapsed: false },
-      type: 'object',
-      fields: [
-        ...AWS_S3_FIELDS.map((field) => {
-          if (typeof field === 'string') {
-            return {
-              name: field,
-              type: 'string',
-            }
-          }
-          return field
-        }),
-      ],
-    },
+    ...(schemaConfig?.customFields
+      ? [
+          {
+            name: vendorConfig.id,
+            title: `${vendorConfig.id}-exclusive fields`,
+            options: { collapsible: true, collapsed: false },
+            type: 'object',
+            fields: schemaConfig.customFields.map((field) => {
+              if (typeof field === 'string') {
+                return {
+                  name: field,
+                  type: 'string',
+                }
+              }
+              return field
+            }),
+          },
+        ]
+      : []),
   ],
   preview: {
     select: {
@@ -152,4 +132,6 @@ export default {
       }
     },
   },
-}
+})
+
+export default getStoredFileSchema

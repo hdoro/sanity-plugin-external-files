@@ -1,14 +1,8 @@
 import React from 'react'
-import { SanityDocument } from '@sanity/client'
 import { useToast } from '@sanity/ui'
 
 import sanityClient from '../../scripts/sanityClient'
-import { VendorConfiguration } from '../../types'
-
-export interface VendorCredentials extends Partial<SanityDocument> {
-  apiKey: string
-  storageBucket: string
-}
+import { VendorConfiguration, VendorCredentials } from '../../types'
 
 export type CredentialsStatus = 'loading' | 'missingCredentials' | 'success'
 
@@ -23,23 +17,29 @@ export const CredentialsContext = React.createContext<ContextValue>({
   status: 'loading',
 })
 
-const CREDENTIALS_QUERY = '*[_id == "firebase.credentials"][0]'
-
 interface CredentialsProviderProps {
   vendorConfig: VendorConfiguration
 }
 
 const CredentialsProvider: React.FC<CredentialsProviderProps> = (props) => {
+  const { vendorConfig } = props
+  const cacheKey = `_${vendorConfig?.id || 'external'}DamSavedCredentials`
+  const documentId = `${vendorConfig.id}.credentials`
+
   const toast = useToast()
   const [credentials, setCredentials] =
     React.useState<VendorCredentials | undefined>()
   const [status, setStatus] = React.useState<CredentialsStatus>('loading')
 
   async function saveCredentials(newCredentials: VendorCredentials) {
-    const { storageBucket, apiKey } = newCredentials || {}
-    ;(window as any)._firebaseDamSavedCredentials = undefined
+    ;(window as any)[cacheKey] = undefined
 
-    if (!storageBucket || !apiKey) {
+    // If one credential is missing in newCredentials, error out
+    if (
+      vendorConfig.credentialsFields.some(
+        (field) => !(field.name in newCredentials),
+      )
+    ) {
       toast.push({
         title: 'Missing credentials',
         status: 'error',
@@ -49,10 +49,9 @@ const CredentialsProvider: React.FC<CredentialsProviderProps> = (props) => {
 
     try {
       await sanityClient.createOrReplace({
-        _id: 'firebase.credentials',
-        _type: 'firebase.credentials',
-        apiKey,
-        storageBucket,
+        _id: documentId,
+        _type: documentId,
+        ...newCredentials,
       })
       toast.push({
         title: 'Credentials successfully saved!',
@@ -71,34 +70,37 @@ const CredentialsProvider: React.FC<CredentialsProviderProps> = (props) => {
 
   React.useEffect(() => {
     if (credentials?.apiKey && credentials?.storageBucket) {
-      ;(window as any)._firebaseDamSavedCredentials = credentials
+      ;(window as any)[cacheKey] = credentials
       setStatus('success')
     }
   }, [credentials])
 
   React.useEffect(() => {
     // Credentials stored in the window object to spare extra API calls
-    const savedCredentials: VendorCredentials | undefined = (window as any)
-      ._firebaseDamSavedCredentials
+    const savedCredentials: VendorCredentials | undefined = (window as any)[
+      cacheKey
+    ]
     if (
-      typeof savedCredentials?.apiKey === 'string' &&
-      typeof savedCredentials?.storageBucket === 'string'
+      savedCredentials &&
+      vendorConfig.credentialsFields.every(
+        (field) => field.name in savedCredentials,
+      )
     ) {
       setCredentials(savedCredentials)
       return
     }
 
     sanityClient
-      .fetch<VendorCredentials>(CREDENTIALS_QUERY)
+      .fetch<VendorCredentials>(`*[_id == "${documentId}"][0]`)
       .then((doc) => {
-        if (!doc?.apiKey || !doc?.storageBucket) {
+        if (!doc) {
           setStatus('missingCredentials')
           return
         }
         setCredentials(doc)
       })
       .catch(() => setStatus('missingCredentials'))
-  }, [])
+  }, [vendorConfig])
 
   return (
     <CredentialsContext.Provider

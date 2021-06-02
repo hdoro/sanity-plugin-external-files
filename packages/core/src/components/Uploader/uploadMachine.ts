@@ -1,4 +1,3 @@
-import firebase from 'firebase/app'
 import { createMachine, assign } from 'xstate'
 
 import {
@@ -8,12 +7,13 @@ import {
   VendorUpload,
 } from '../../types'
 import getWaveformData from '../../scripts/getWaveformData'
+import parseAccept from '../../scripts/parseAccept'
 
 interface Context {
   retries: number
   vendorUploadProgress: number
   file?: File
-  fileMetadata?: FileMetadata
+  formatMetadata?: FileMetadata
   vendorUpload?: VendorUpload
   sanityUpload?: SanityUpload
   /**
@@ -33,7 +33,7 @@ export type UploadEvent =
   | { type: 'RETRY' }
   | { type: 'RESET_UPLOAD' }
   | { type: 'CANCEL_INPUT' }
-  | { type: 'VENDOR_ERROR'; error: firebase.storage.FirebaseStorageError }
+  | { type: 'VENDOR_ERROR'; error?: Error }
   | { type: 'VENDOR_PROGRESS'; data: number }
   | { type: 'VENDOR_DONE'; data: VendorUpload }
   | { type: 'SANITY_DONE'; data: SanityUpload }
@@ -41,6 +41,13 @@ export type UploadEvent =
 const INITIAL_CONTEXT: Context = {
   retries: 0,
   vendorUploadProgress: 0,
+}
+
+function getBasicFileMetadata(file: File) {
+  return {
+    fileSize: file.size,
+    contentType: parseAccept(file.type),
+  }
 }
 
 const uploadMachine = createMachine<Context, UploadEvent>(
@@ -54,7 +61,11 @@ const uploadMachine = createMachine<Context, UploadEvent>(
         invoke: {
           id: 'ExtractVideoMetadata',
           src: async (context) => {
-            return new Promise((resolve) => {
+            return new Promise((resolve, reject) => {
+              if (!context.file) {
+                reject("Missing file")
+                return
+              }
               const videoEl = document.createElement('video')
               videoEl.setAttribute('src', URL.createObjectURL(context.file))
 
@@ -87,6 +98,7 @@ const uploadMachine = createMachine<Context, UploadEvent>(
                         width: videoEl.videoWidth,
                         height: videoEl.videoHeight,
                       },
+                      ...getBasicFileMetadata(context.file as File)
                     },
                   })
                 }, 'image/png')
@@ -101,7 +113,7 @@ const uploadMachine = createMachine<Context, UploadEvent>(
             actions: [
               assign({
                 videoScreenshot: (_context, event) => event.data.screenshot,
-                fileMetadata: (_context, event) => event.data.metadata,
+                formatMetadata: (_context, event) => event.data.metadata,
               }),
             ],
           },
@@ -142,6 +154,7 @@ const uploadMachine = createMachine<Context, UploadEvent>(
                   metadata: {
                     ...metadata,
                     waveformData,
+                    ...getBasicFileMetadata(context.file)
                   },
                 })
               } catch (error) {
@@ -153,7 +166,7 @@ const uploadMachine = createMachine<Context, UploadEvent>(
             target: 'uploadingToVendor',
             actions: [
               assign({
-                fileMetadata: (_context, event) => event.data.metadata,
+                formatMetadata: (_context, event) => event.data.metadata,
               }),
             ],
           },
@@ -165,8 +178,8 @@ const uploadMachine = createMachine<Context, UploadEvent>(
       },
       uploadingToVendor: {
         invoke: {
-          id: 'FirebaseUpload',
-          src: 'uploadToFirebase',
+          id: 'VendorUpload',
+          src: 'uploadToVendor',
         },
         on: {
           VENDOR_PROGRESS: {
@@ -195,7 +208,7 @@ const uploadMachine = createMachine<Context, UploadEvent>(
                 subtitle:
                   context.retries > 1
                     ? "Make sure the right credentials are set in the plugins' settings."
-                    : event.error.message,
+                    : event.error?.message || 'Error',
               }),
             }),
           },

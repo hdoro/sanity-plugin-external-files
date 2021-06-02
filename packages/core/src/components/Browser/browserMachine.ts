@@ -35,10 +35,10 @@ const browserMachine = createMachine<Context, BrowserEvent>(
           src: 'fetchFiles',
           onDone: {
             target: 'browsing',
-            actions: assign({
+            actions: [console.log,assign({
               allFiles: (_context, event) => event.data,
               filteredFiles: (_context, event) => event.data,
-            }),
+            })],
           },
         },
       },
@@ -154,7 +154,7 @@ const browserMachine = createMachine<Context, BrowserEvent>(
 
           const filtered = (context.allFiles || []).filter(
             (file) =>
-              file.externalFile?.name.toLowerCase().includes(event.term) ||
+              file.fileName?.toLowerCase().includes(event.term) ||
               file.description?.toLowerCase().includes(event.term) ||
               file.title?.toLowerCase().includes(event.term),
           )

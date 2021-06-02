@@ -15,13 +15,13 @@ export interface MediaPreview {
 }
 
 const Player: React.FC<SanityUpload> = (props) => {
-  if (!props.externalFile) {
+  if (!props.fileURL) {
     return null
   }
-  if (props.externalFile.contentType?.includes('audio')) {
+  if (props.contentType?.includes('audio')) {
     return (
       <audio
-        src={props.externalFile.downloadURL}
+        src={props.fileURL}
         controls={true}
         autoPlay={true}
         style={{
@@ -39,7 +39,7 @@ const Player: React.FC<SanityUpload> = (props) => {
         height: '100%',
         objectFit: 'contain',
       }}
-      src={props.externalFile.downloadURL}
+      src={props.fileURL}
       controls={true}
       autoPlay={true}
     />
@@ -97,14 +97,14 @@ const MediaPreview: React.FC<MediaPreview> = (props) => {
   }, [])
 
   React.useEffect(() => {
-    if ((props.file as SanityUpload)?.externalFile?.downloadURL) {
+    if ((props.file as SanityUpload)?.fileURL) {
       setFullFile(props.file as SanityUpload)
-    } else if (props.file?.asset?._ref) {
+    } else if (props.file && "asset" in props.file  && props.file?.asset?._ref) {
       expandReference(props.file.asset._ref)
     }
   }, [props.file])
 
-  if (!props.file || (fullFile && !fullFile.externalFile)) {
+  if (!props.file || (fullFile && !fullFile.fileURL)) {
     return null
   }
 
@@ -131,7 +131,7 @@ const MediaPreview: React.FC<MediaPreview> = (props) => {
       .image(fullFile.screenshot)
       .width(props.context === 'browser' ? 300 : 600)
       .url()
-  const mediaType = fullFile.externalFile.contentType?.includes('audio')
+  const mediaType = fullFile.contentType?.includes('audio')
     ? 'audio'
     : 'video'
 
@@ -141,10 +141,10 @@ const MediaPreview: React.FC<MediaPreview> = (props) => {
     <WrappingCard
       context={props.context}
       paddingBottom={
-        fullFile.metadata && 'dimensions' in fullFile.metadata
+        fullFile.dimensions
           ? `${
-              (fullFile.metadata.dimensions.height /
-                fullFile.metadata.dimensions.width) *
+              (fullFile.dimensions.height /
+                fullFile.dimensions.width) *
               100
             }%`
           : undefined
@@ -199,15 +199,15 @@ const MediaPreview: React.FC<MediaPreview> = (props) => {
                         transform: 'translate(-50%,-50%)',
                         zIndex: 0,
                         color:
-                          fullFile.metadata &&
-                          'waveformData' in fullFile.metadata
+                          fullFile &&
+                          'waveformData' in fullFile
                             ? blue[100].hex
                             : blue[800].hex,
                       }}
                     />
-                    {fullFile.metadata && 'waveformData' in fullFile.metadata && (
+                    {fullFile.waveformData && (
                       <WaveformDisplay
-                        waveformData={fullFile.metadata.waveformData}
+                        waveformData={fullFile.waveformData}
                         style={{
                           zIndex: 1,
                           position: 'relative',
