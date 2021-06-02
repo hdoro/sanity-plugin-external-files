@@ -24,26 +24,26 @@ import {
   TextInput,
   useToast,
 } from '@sanity/ui'
-import firebase from 'firebase/app'
 import { useMachine } from '@xstate/react'
 import DefaultFormField from 'part:@sanity/components/formfields/default'
 import React from 'react'
 import formatBytes from '../../scripts/formatBytes'
 import formatSeconds from '../../scripts/formatSeconds'
 import sanityClient from '../../scripts/sanityClient'
-import { SanityUpload } from '../../types'
+import { SanityUpload, VendorConfiguration } from '../../types'
 import IconInfo from '../IconInfo'
 import MediaPreview from '../MediaPreview'
 import SpinnerBox from '../SpinnerBox'
 import fileDetailsMachine from './fileDetailsMachine'
 import FileReferences from './FileReferences'
+import { CredentialsContext } from '../Credentials/CredentialsProvider'
 
 interface FileDetailsProps {
   onSelect?: (file: SanityUpload) => void
   persistFileSave: (file: SanityUpload) => void
   persistFileDeletion: (file: SanityUpload) => void
   closeDialog: () => void
-  vendorClient: firebase.app.App
+  vendorConfig: VendorConfiguration
   file: SanityUpload
 }
 
@@ -68,8 +68,9 @@ const AssetInput: React.FC<{
 )
 
 const FileDetails: React.FC<FileDetailsProps> = (props) => {
+  const { closeDialog, vendorConfig } = props
   const toast = useToast()
-  const { closeDialog, vendorClient: firebaseClient } = props
+  const { credentials } = React.useContext(CredentialsContext)
   const [state, send] = useMachine(fileDetailsMachine, {
     actions: {
       closeDialog: () => closeDialog(),
@@ -101,25 +102,24 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
       deleteFile: (context) =>
         new Promise(async (resolve, reject) => {
           try {
-            const sanityDelete = await sanityClient.delete<SanityUpload>(
+            if (!context?.file || !credentials) {
+              reject('Missing file or credentials')
+              return
+            }
+            const deletedAtVendor = await vendorConfig?.deleteFile({
+              storedFile: context.file,
+              credentials,
+            })
+
+            if (deletedAtVendor !== true) {
+              reject(deletedAtVendor)
+              return
+            }
+
+            await sanityClient.delete<SanityUpload>(
               context.file?._id as string,
             )
-            try {
-              await firebaseClient
-                .storage()
-                .ref(context.file?.externalFile?.fullPath)
-                .delete()
-              resolve('Success!')
-            } catch (error) {
-              if (error?.code === 'storage/object-not-found') {
-                // If file not found in Firebase, we're good!
-                resolve('Success!')
-              } else {
-                // Before returning an error to the user, let's re-create the sanity document to prevent an unlinked reference in firebase
-                await sanityClient.createOrReplace(context.file || sanityDelete)
-                reject(error)
-              }
-            }
+            resolve('Success!')
           } catch (error) {
             reject(error)
           }
@@ -130,7 +130,7 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
           .set({
             title: context.file?.title,
             description: context.file?.description,
-            'externalFile.name': context.file?.externalFile?.name,
+            fileName: context.file?.fileName,
           })
           .commit(),
     },
@@ -144,7 +144,7 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
   const isSaving = state.matches('interactions.saving')
   return (
     <Dialog
-      header={file.title || file.externalFile?.name}
+      header={file.title || file.fileName}
       zOffset={600000}
       id="file-details-dialog"
       onClose={() => send('CLOSE')}
@@ -320,16 +320,16 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
           <Stack space={4} flex={1} sizing="border">
             <MediaPreview context="detailsDialog" file={file} />
             <Stack space={3}>
-              {file.metadata?.duration && (
+              {file?.duration && (
                 <IconInfo
-                  text={`Duration: ${formatSeconds(file.metadata.duration)}`}
+                  text={`Duration: ${formatSeconds(file.duration)}`}
                   icon={ClockIcon}
                   size={2}
                 />
               )}
-              {file.externalFile?.size && (
+              {file?.fileSize && (
                 <IconInfo
-                  text={`Size: ${formatBytes(file.externalFile.size, 2)}`}
+                  text={`Size: ${formatBytes(file.fileSize, 2)}`}
                   icon={DownloadIcon}
                   size={2}
                 />
@@ -375,7 +375,7 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
                   description="Not visible to users. Useful for finding files later."
                   value={file?.title || ''}
                   placeholder={`Ex: "Customer testimonial ${
-                    file?.externalFile?.contentType?.split('/')[0] || 'video'
+                    file?.contentType?.split('/')[0] || 'video'
                   }"`}
                   onInput={(e) =>
                     send({
@@ -399,12 +399,12 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
                 />
                 <AssetInput
                   label="File name"
-                  value={file?.externalFile?.name || ''}
+                  value={file?.fileName || ''}
                   onInput={(e) =>
                     send({
                       type: 'MODIFY_FILE',
                       value: e.currentTarget.value,
-                      field: 'name',
+                      field: 'fileName',
                     })
                   }
                 />

@@ -1,26 +1,84 @@
 import { SanityDocument } from '@sanity/client'
+import { BaseSchemaType } from '@sanity/types'
+
+type StrictSanityDocument = Pick<
+  SanityDocument,
+  '_id' | '_rev' | '_type' | '_createdAt' | '_updatedAt'
+>
+
+export interface VendorCredentials extends Partial<SanityDocument> {
+  [credentialKey: string]: any
+}
+
+/**
+ * Use this return to cancel your upload, clean observables, etc.
+ */
+type CleanUpUpload = () => void
+
+interface AcceptedCredentialField extends Omit<BaseSchemaType, 'type'> {
+  type: 'string' | 'boolean' | 'number'
+}
 
 /**
  * Necessary to initialize the input & tool on different vendors
  */
 export interface VendorConfiguration {
-  name: string
+  id: string
   defaultAccept: string | string[]
+  /**
+   * This plugin currently treats all fields as required
+   */
+  credentialsFields: AcceptedCredentialField[]
+  /**
+   * Should return true if file successfully deleted or string with error code / name if failed to delete.
+   */
+  deleteFile: (props: {
+    storedFile: SanityUpload
+    credentials: VendorCredentials
+  }) => Promise<true | string>
+  /**
+   * Function to upload file to
+   */
+  uploadFile: (props: {
+    file: File
+    /**
+     * File name you should use for storage.
+     * Use this instead of file.name as it respects users' storeOriginalFilename options.
+     */
+    fileName: string
+    /**
+     * Credentials as configured by your plugin.
+     */
+    credentials: VendorCredentials
+    /**
+     * Inform users about the progress of the upload
+     */
+    updateProgress: (progress: number) => void
+    /**
+     * Call this function if upload fails to update the UI
+     */
+    onError: (error?: Error) => void
+    /**
+     * Should return a VendorUpload object with data we can populate the SanityUpload document with
+     */
+    onSuccess: (uploadedFile: VendorUpload) => void
+  }) => CleanUpUpload
 }
 
 export interface VendorUpload {
-  fileName?: string
-  assetURL?: string
-  contentType?: string
-  size?: number
+  fileURL?: string
+  [vendorId: string]: any
 }
 
 export interface SanityUpload
-  extends SanityDocument,
+  extends StrictSanityDocument,
     Partial<AudioMetadata>,
     Partial<VideoMetadata>,
     VendorUpload {
-  _type: 'firebase.storedFile'
+  _type: string
+  fileName?: string
+  contentType?: string
+  fileSize?: number
   /**
    * Exclusive to videos
    */

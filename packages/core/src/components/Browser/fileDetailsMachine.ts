@@ -15,7 +15,7 @@ type FileDetailsEvent =
   | { type: 'OPEN_DETAILS' }
   | {
       type: 'MODIFY_FILE'
-      field: 'title' | 'description' | 'name'
+      field: 'title' | 'description' | 'fileName'
       value: string
     }
   // ACTIONS
@@ -215,8 +215,8 @@ const fileDetailsMachine = createMachine<Context, FileDetailsEvent>(
           if (event.field === 'description') {
             newFile.description = event.value
           }
-          if (event.field === 'name') {
-            newFile.externalFile.name = event.value
+          if (event.field === 'fileName') {
+            newFile.fileName = event.value
           }
           return newFile
         },

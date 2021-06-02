@@ -1,21 +1,21 @@
 import { Card, Spinner, Box } from '@sanity/ui'
 import React from 'react'
 import sanityClient from '../../scripts/sanityClient'
-import useVendorClient from '../Credentials/useVendorClient'
 import ConfigureCredentials from '../Credentials/ConfigureCredentials'
+import { CredentialsContext } from '../Credentials/CredentialsProvider'
 import Uploader, { UploaderProps } from './Uploader'
 
 export interface UploaderWithConfigProps
-  extends Omit<UploaderProps, 'vendorClient' | 'sanityClient'> {}
+  extends Omit<UploaderProps, 'sanityClient'> {}
 
 const UploaderWithConfig: React.FC<UploaderWithConfigProps> = (props) => {
-  const { vendorClient, status } = useVendorClient()
+  const { status } = React.useContext(CredentialsContext)
 
   if (status === 'missingCredentials') {
-    return <ConfigureCredentials />
+    return <ConfigureCredentials vendorConfig={props.vendorConfig} />
   }
 
-  if (status === 'loading' || !vendorClient) {
+  if (status === 'loading') {
     return (
       <Card
         border
@@ -41,7 +41,6 @@ const UploaderWithConfig: React.FC<UploaderWithConfigProps> = (props) => {
   return (
     <Uploader
       sanityClient={sanityClient}
-      vendorClient={vendorClient}
       {...props}
     />
   )

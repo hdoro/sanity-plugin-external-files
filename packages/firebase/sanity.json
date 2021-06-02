@@ -10,11 +10,11 @@
     },
     {
       "implements": "part:@sanity/base/schema-type",
-      "path": "schemas/firebase.storedFile.js"
+      "path": "schemas/firebase-dam.storedFile.js"
     },
     {
       "implements": "part:@sanity/base/schema-type",
-      "path": "schemas/firebase.media.js"
+      "path": "schemas/firebase-dam.media.js"
     }
   ]
 }

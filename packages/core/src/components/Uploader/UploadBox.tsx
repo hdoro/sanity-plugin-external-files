@@ -22,7 +22,7 @@ const UploadBox: React.FC<UploadBox> = (props) => {
   } = dropzone
 
   const metadataStates = ['extractingVideoMetadata', 'extractingAudioMetadata']
-  const uploadingStates = ['uploadingToFirebase', 'uploadingToSanity']
+  const uploadingStates = ['uploadingToVendor', 'uploadingToSanity']
   const loadingStates = [...metadataStates, ...uploadingStates]
 
   return (
@@ -120,12 +120,12 @@ const UploadBox: React.FC<UploadBox> = (props) => {
                 </>
               )}
 
-              {state.value === 'uploadingToFirebase' && 'Uploading...'}
+              {state.value === 'uploadingToVendor' && 'Uploading...'}
 
               {state.value === 'uploadingToSanity' &&
                 'Saving to the library...'}
             </Text>
-            {state.value === 'uploadingToFirebase' && (
+            {state.value === 'uploadingToVendor' && (
               <>
                 <Text>{state.context.vendorUploadProgress}%</Text>
                 <Button

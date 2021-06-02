@@ -23,7 +23,7 @@ import parseAccept from '../../scripts/parseAccept'
 import sanityClient from '../../scripts/sanityClient'
 import { SanityUpload, VendorConfiguration } from '../../types'
 import ConfigureCredentials from '../Credentials/ConfigureCredentials'
-import useVendorClient from '../Credentials/useVendorClient'
+import { CredentialsContext } from '../Credentials/CredentialsProvider'
 import Uploader, { UploaderProps } from '../Uploader/Uploader'
 import browserMachine from './browserMachine'
 import FileDetails from './FileDetails'
@@ -39,7 +39,7 @@ function getFilterForExtension(extension: string) {
   if (!extension) {
     return true
   }
-  return `externalFile.contentType match "*${extension.replace(/[\.]/g, '')}*"`
+  return `contentType match "*${extension.replace(/[\.]/g, '')}*"`
 }
 
 const Browser: React.FC<BrowserProps> = (props) => {
@@ -59,15 +59,15 @@ const Browser: React.FC<BrowserProps> = (props) => {
         }
         return sanityClient.fetch(/* groq */ `
         *[
-          _type == "firebase.storedFile" &&
-          defined(externalFile.downloadURL)
+          _type == "${props.vendorConfig?.id}-dam.storedFile" &&
+          defined(fileURL)
           ${extensionFilter}
         ] | order(_createdAt desc)
         `)
       },
     },
   })
-  const { vendorClient, status } = useVendorClient()
+  const { status } = React.useContext(CredentialsContext)
 
   return (
     <ThemeProvider theme={studioTheme}>
@@ -86,7 +86,7 @@ const Browser: React.FC<BrowserProps> = (props) => {
             <Spinner />
           </Flex>
         ) : status === 'missingCredentials' ? (
-          <ConfigureCredentials />
+          <ConfigureCredentials vendorConfig={props.vendorConfig} />
         ) : (
           <Container padding={2} width={3} sizing="border-box" flex={1}>
             <Flex justify="space-between" align="center">
@@ -102,7 +102,7 @@ const Browser: React.FC<BrowserProps> = (props) => {
                 placeholder="Search files"
               />
               <Inline space={2}>
-                {vendorClient && (
+                {status === "success" && (
                   <Button
                     icon={UploadIcon}
                     mode="ghost"
@@ -174,7 +174,7 @@ const Browser: React.FC<BrowserProps> = (props) => {
                   ))
                 : null}
             </Grid>
-            {state.matches('uploading') && vendorClient && (
+            {state.matches('uploading') && status === "success" && (
               <Dialog
                 header="Upload new file"
                 zOffset={600000}
@@ -185,7 +185,6 @@ const Browser: React.FC<BrowserProps> = (props) => {
               >
                 <Card padding={3}>
                   <Uploader
-                    vendorClient={vendorClient}
                     sanityClient={sanityClient}
                     accept={accept}
                     onSuccess={(document) =>
@@ -195,15 +194,14 @@ const Browser: React.FC<BrowserProps> = (props) => {
                       })
                     }
                     storeOriginalFilename={true}
+                    vendorConfig={props.vendorConfig}
                   />
                 </Card>
               </Dialog>
             )}
             {state.matches('editingFile') &&
-              state.context.fileToEdit &&
-              vendorClient && (
+              state.context.fileToEdit && (
                 <FileDetails
-                  vendorClient={vendorClient}
                   closeDialog={() => send('CLEAR_FILE')}
                   file={state.context.fileToEdit}
                   onSelect={onSelect}
@@ -219,6 +217,7 @@ const Browser: React.FC<BrowserProps> = (props) => {
                       file,
                     })
                   }
+                  vendorConfig={props.vendorConfig}
                 />
               )}
             {state.matches('editingSettings') && (
@@ -234,6 +233,7 @@ const Browser: React.FC<BrowserProps> = (props) => {
                   onCredentialsSaved={(success) =>
                     success && send('CLOSE_SETTINGS')
                   }
+                  vendorConfig={props.vendorConfig}
                 />
               </Dialog>
             )}

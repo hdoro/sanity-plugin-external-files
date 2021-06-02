@@ -2,15 +2,14 @@ import React from 'react'
 import { Button, Container, Stack } from '@sanity/ui'
 import { SanityClient } from '@sanity/client'
 import { SearchIcon, UploadIcon, TrashIcon } from '@sanity/icons'
-import firebase from 'firebase/app'
 
 import useUpload from './useUpload'
-import { MediaFile, SanityUpload } from '../../types'
+import { MediaFile, SanityUpload, VendorConfiguration } from '../../types'
 import UploadBox from './UploadBox'
 import MediaPreview from '../MediaPreview'
 
 export interface UploaderProps {
-  vendorClient: firebase.app.App
+  vendorConfig: VendorConfiguration
   sanityClient: SanityClient
   onSuccess: (document: SanityUpload) => void
 

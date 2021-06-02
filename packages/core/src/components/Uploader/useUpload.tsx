@@ -4,29 +4,14 @@ import { useMachine } from '@xstate/react'
 import { DropzoneState, useDropzone } from 'react-dropzone'
 import { useToast } from '@sanity/ui'
 import { SanityImageAssetDocument } from '@sanity/client'
-import { nanoid } from 'nanoid'
 
 import uploadMachine from './uploadMachine'
 import { UploaderProps } from './Uploader'
 import parseAccept from '../../scripts/parseAccept'
 import { SanityUpload } from '../../types'
-
-/**
- * Creates unique file names for uploads if storeOriginalFilename is set to false
- */
-function getFileRef({
-  storeOriginalFilename,
-  file,
-}: Pick<UploaderProps, 'storeOriginalFilename'> & { file: File }) {
-  if (storeOriginalFilename) {
-    // Even when using the original file name, we need to provide a unique identifier for it.
-    // Else Firebase's storage will re-utilize the same file for 2 different uploads with the same file name, replacing the previous upload.
-    return `${file.name}-${new Date().toISOString().replace(/\:/g, '-')}`
-  }
-  return `${new Date().toISOString().replace(/\:/g, '-')}-${nanoid(6)}.${
-    file.name.split('.').slice(-1)[0]
-  }`
-}
+import { CredentialsContext } from '../Credentials/CredentialsProvider'
+import getFileRef from '../../scripts/getFileRef'
+import getBasicFileMetadata from '../../scripts/getBasicMetadata'
 
 export interface useUploadReturn {
   dropzone: DropzoneState
@@ -37,12 +22,13 @@ export interface useUploadReturn {
 
 const useUpload = ({
   accept,
-  vendorClient,
+  vendorConfig,
   sanityClient,
   storeOriginalFilename = true,
   onSuccess,
 }: UploaderProps): useUploadReturn => {
   const toast = useToast()
+  const { credentials } = React.useContext(CredentialsContext)
   const [state, send] = useMachine(uploadMachine, {
     actions: {
       invalidFileToast: () =>
@@ -52,59 +38,41 @@ const useUpload = ({
         }),
     },
     services: {
-      uploadToFirebase: (context) => (callback) => {
-        if (!context.file?.name || !vendorClient) {
+      uploadToVendor: (context) => (callback) => {
+        if (!context.file?.name || !vendorConfig?.uploadFile || !credentials) {
           callback({ type: 'CANCEL_INPUT' })
           return
         }
-        const ref = vendorClient
-          .storage()
-          .ref(getFileRef({ file: context.file, storeOriginalFilename }))
-        const uploadTask = ref.put(context.file, {
-          customMetadata: {
-            uploadedFrom: 'sanity-plugin-firebase-dam',
-          },
-        })
 
-        uploadTask.on(
-          'state_changed',
-          (snapshot) => {
-            const progress = Math.ceil(
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 90,
-            )
-
-            callback({ type: 'VENDOR_PROGRESS', data: progress })
-          },
-          (error) => {
+        const cleanUp = vendorConfig.uploadFile({
+          credentials,
+          file: context.file,
+          fileName: getFileRef({
+            file: context.file as File,
+            storeOriginalFilename,
+          }),
+          onError: (error) =>
             callback({
               type: 'VENDOR_ERROR',
               error,
-            })
-          },
-          async () => {
-            const downloadURL = await uploadTask.snapshot.ref.getDownloadURL()
-            const metadata = await uploadTask.snapshot.ref.getMetadata()
-
+            }),
+          updateProgress: (progress) =>
+            callback({ type: 'VENDOR_PROGRESS', data: progress }),
+          onSuccess: (uploadedFile) =>
             callback({
               type: 'VENDOR_DONE',
-              data: {
-                downloadURL,
-                ...metadata,
-              },
-            })
-          },
-        )
+              data: uploadedFile,
+            }),
+        })
 
         return () => {
-          try {
-            uploadTask.cancel()
-          } catch (error) {}
+          cleanUp()
         }
       },
       uploadToSanity: (context) => {
-        if (!context?.vendorUpload?.assetURL || !context?.file) {
+        if (!context?.vendorUpload?.fileURL || !context?.file) {
           return new Promise((_resolve, reject) =>
-            reject('Invalid Firebase upload'),
+            reject('Invalid Vendor upload'),
           )
         }
         return new Promise(async (resolve, reject) => {
@@ -115,7 +83,10 @@ const useUpload = ({
                 'image',
                 context.videoScreenshot,
                 {
-                  source: { id: 'firebase-dam', name: 'Firebase DAM' },
+                  source: {
+                    id: `${vendorConfig.id}-dam`,
+                    name: `${vendorConfig.id} DAM`,
+                  },
                   filename: getFileRef({
                     file: context.file as File,
                     storeOriginalFilename,
@@ -128,7 +99,7 @@ const useUpload = ({
           }
           try {
             const document = await sanityClient.create({
-              _type: 'firebase.storedFile',
+              _type: `${vendorConfig.id}-dam.storedFile`,
               screenshot: screenshot
                 ? {
                     _type: 'image',
@@ -138,8 +109,12 @@ const useUpload = ({
                     },
                   }
                 : undefined,
+              ...getBasicFileMetadata({
+                file: context.file as File,
+                storeOriginalFilename,
+              }),
               ...context.vendorUpload,
-              ...(context.fileMetadata || {}),
+              ...(context.formatMetadata || {}),
             } as SanityUpload)
 
             resolve(document)

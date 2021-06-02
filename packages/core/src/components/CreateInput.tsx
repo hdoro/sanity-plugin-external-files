@@ -21,7 +21,7 @@ const createPatchFrom = (value?: any) =>
  * - shows the final URL for the relative address (adds the BASE.PATH/ at the start)
  * - removes special characters and startin/trailing slashes
  */
-class FirebaseMediaInput extends React.Component<
+class ExternalDamInput extends React.Component<
   {
     compareValue?: AssetReference
     value?: AssetReference
@@ -111,6 +111,7 @@ class FirebaseMediaInput extends React.Component<
                 chosenFile={this.state.uploadedFile || value}
                 removeFile={this.removeFile}
                 openBrowser={this.toggleBrowser}
+                vendorConfig={vendorConfig}
               />
             </DefaultFormField>
           </ChangeIndicatorCompareValueProvider>
@@ -177,7 +178,7 @@ const withVendorConfig = (
 
 const CreateInput = (vendorConfig: VendorConfiguration) =>
   withVendorConfig(
-    withValuePath(withDocument(FirebaseMediaInput)),
+    withValuePath(withDocument(ExternalDamInput)),
     vendorConfig,
   )
 

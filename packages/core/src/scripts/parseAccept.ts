@@ -2,7 +2,7 @@ import mime from 'mime'
 
 import { UploaderProps } from '../components/Uploader/Uploader'
 
-function parseExtension(extension: string) {
+export function parseExtension(extension: string) {
   return mime.getType(extension) || extension
 }
 
