@@ -1,11 +1,13 @@
 {
-  "name": "sanity-plugin-external-dam-core",
+  "name": "sanity-plugin-external-dam",
   "version": "0.4.0",
   "description": "Core library for sanity-plugin-firebase-dam & sanity-plugin-aws-dam.",
   "main": "lib/index.js",
   "scripts": {
+    "format": "prettier --write .",
     "clear-lib": "node clearLib.js",
-    "build": "npm run format && npm run clear-lib && tsc --declaration",
+    "build": "npm run format && npm run clear-lib && npm run build:tsc",
+    "build:tsc": "tsc --declaration",
     "dev": "tsc -w",
     "prepublish": "npm run build"
   },

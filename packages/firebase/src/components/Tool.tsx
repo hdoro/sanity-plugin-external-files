@@ -1,4 +1,4 @@
-import { CreateTool } from 'sanity-plugin-external-dam-core'
+import { CreateTool } from 'sanity-plugin-external-dam'
 import config from '../config'
 
 const Tool = CreateTool(config)

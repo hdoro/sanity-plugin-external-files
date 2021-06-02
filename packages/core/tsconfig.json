@@ -23,7 +23,6 @@
     "./node_modules/@sanity/base/types/**/*.ts",
     "./**/*.ts",
     "./**/*.tsx",
-    "./**/*.d.ts",
-    "./**/*.module.css"
+    "./**/*.d.ts"
   ]
 }

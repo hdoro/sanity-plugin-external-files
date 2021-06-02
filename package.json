@@ -1,7 +1,6 @@
 {
-  "name": "sanity-plugin-external-dam",
+  "name": "sanity-plugin-alt-dams",
   "private": true,
-  "version": "0.3.0",
   "scripts": {
     "format": "prettier --write ."
   },

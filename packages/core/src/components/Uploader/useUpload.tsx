@@ -9,6 +9,7 @@ import { nanoid } from 'nanoid'
 import uploadMachine from './uploadMachine'
 import { UploaderProps } from './Uploader'
 import parseAccept from '../../scripts/parseAccept'
+import { SanityUpload } from '../../types'
 
 /**
  * Creates unique file names for uploads if storeOriginalFilename is set to false
@@ -101,7 +102,7 @@ const useUpload = ({
         }
       },
       uploadToSanity: (context) => {
-        if (!context?.vendorUpload?.downloadURL || !context?.file) {
+        if (!context?.vendorUpload?.assetURL || !context?.file) {
           return new Promise((_resolve, reject) =>
             reject('Invalid Firebase upload'),
           )
@@ -137,11 +138,9 @@ const useUpload = ({
                     },
                   }
                 : undefined,
-              firebase: {
-                ...context.vendorUpload,
-              },
-              metadata: context.fileMetadata,
-            })
+              ...context.vendorUpload,
+              ...(context.fileMetadata || {}),
+            } as SanityUpload)
 
             resolve(document)
           } catch (error) {
