@@ -63,7 +63,7 @@ const uploadMachine = createMachine<Context, UploadEvent>(
           src: async (context) => {
             return new Promise((resolve, reject) => {
               if (!context.file) {
-                reject("Missing file")
+                reject('Missing file')
                 return
               }
               const videoEl = document.createElement('video')
@@ -98,7 +98,7 @@ const uploadMachine = createMachine<Context, UploadEvent>(
                         width: videoEl.videoWidth,
                         height: videoEl.videoHeight,
                       },
-                      ...getBasicFileMetadata(context.file as File)
+                      ...getBasicFileMetadata(context.file as File),
                     },
                   })
                 }, 'image/png')
@@ -154,7 +154,7 @@ const uploadMachine = createMachine<Context, UploadEvent>(
                   metadata: {
                     ...metadata,
                     waveformData,
-                    ...getBasicFileMetadata(context.file)
+                    ...getBasicFileMetadata(context.file),
                   },
                 })
               } catch (error) {

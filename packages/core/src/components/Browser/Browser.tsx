@@ -86,7 +86,9 @@ const Browser: React.FC<BrowserProps> = (props) => {
             <Spinner />
           </Flex>
         ) : status === 'missingCredentials' ? (
-          <ConfigureCredentials vendorConfig={props.vendorConfig} />
+          <Container width={1}>
+            <ConfigureCredentials vendorConfig={props.vendorConfig} />
+          </Container>
         ) : (
           <Container padding={2} width={3} sizing="border-box" flex={1}>
             <Flex justify="space-between" align="center">
@@ -102,7 +104,7 @@ const Browser: React.FC<BrowserProps> = (props) => {
                 placeholder="Search files"
               />
               <Inline space={2}>
-                {status === "success" && (
+                {status === 'success' && (
                   <Button
                     icon={UploadIcon}
                     mode="ghost"
@@ -174,7 +176,7 @@ const Browser: React.FC<BrowserProps> = (props) => {
                   ))
                 : null}
             </Grid>
-            {state.matches('uploading') && status === "success" && (
+            {state.matches('uploading') && status === 'success' && (
               <Dialog
                 header="Upload new file"
                 zOffset={600000}
@@ -199,27 +201,26 @@ const Browser: React.FC<BrowserProps> = (props) => {
                 </Card>
               </Dialog>
             )}
-            {state.matches('editingFile') &&
-              state.context.fileToEdit && (
-                <FileDetails
-                  closeDialog={() => send('CLEAR_FILE')}
-                  file={state.context.fileToEdit}
-                  onSelect={onSelect}
-                  persistFileSave={(file) =>
-                    send({
-                      type: 'PERSIST_FILE_SAVE',
-                      file,
-                    })
-                  }
-                  persistFileDeletion={(file) =>
-                    send({
-                      type: 'PERSIST_FILE_DELETION',
-                      file,
-                    })
-                  }
-                  vendorConfig={props.vendorConfig}
-                />
-              )}
+            {state.matches('editingFile') && state.context.fileToEdit && (
+              <FileDetails
+                closeDialog={() => send('CLEAR_FILE')}
+                file={state.context.fileToEdit}
+                onSelect={onSelect}
+                persistFileSave={(file) =>
+                  send({
+                    type: 'PERSIST_FILE_SAVE',
+                    file,
+                  })
+                }
+                persistFileDeletion={(file) =>
+                  send({
+                    type: 'PERSIST_FILE_DELETION',
+                    file,
+                  })
+                }
+                vendorConfig={props.vendorConfig}
+              />
+            )}
             {state.matches('editingSettings') && (
               <Dialog
                 header="Edit settings"

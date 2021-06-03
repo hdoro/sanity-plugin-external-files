@@ -15,8 +15,8 @@ export interface VendorCredentials extends Partial<SanityDocument> {
  */
 type CleanUpUpload = () => void
 
-interface AcceptedCredentialField extends Omit<BaseSchemaType, 'type'> {
-  type: 'string' | 'boolean' | 'number'
+export interface AcceptedCredentialField extends Omit<BaseSchemaType, 'type'> {
+  type: 'string' | 'number'
 }
 
 /**

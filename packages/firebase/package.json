@@ -26,6 +26,7 @@
   "author": "Henrique Doro <opensource@hdoro.dev>",
   "license": "Apache-2.0",
   "dependencies": {
+    "@sanity/icons": ">= 1.0.0",
     "firebase": "^8.6.3",
     "sanity-plugin-external-dam": "*"
   },

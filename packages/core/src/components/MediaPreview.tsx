@@ -99,7 +99,7 @@ const MediaPreview: React.FC<MediaPreview> = (props) => {
   React.useEffect(() => {
     if ((props.file as SanityUpload)?.fileURL) {
       setFullFile(props.file as SanityUpload)
-    } else if (props.file && "asset" in props.file  && props.file?.asset?._ref) {
+    } else if (props.file && 'asset' in props.file && props.file?.asset?._ref) {
       expandReference(props.file.asset._ref)
     }
   }, [props.file])
@@ -131,9 +131,7 @@ const MediaPreview: React.FC<MediaPreview> = (props) => {
       .image(fullFile.screenshot)
       .width(props.context === 'browser' ? 300 : 600)
       .url()
-  const mediaType = fullFile.contentType?.includes('audio')
-    ? 'audio'
-    : 'video'
+  const mediaType = fullFile.contentType?.includes('audio') ? 'audio' : 'video'
 
   const allowPlayback = props.context !== 'browser'
 
@@ -142,11 +140,7 @@ const MediaPreview: React.FC<MediaPreview> = (props) => {
       context={props.context}
       paddingBottom={
         fullFile.dimensions
-          ? `${
-              (fullFile.dimensions.height /
-                fullFile.dimensions.width) *
-              100
-            }%`
+          ? `${(fullFile.dimensions.height / fullFile.dimensions.width) * 100}%`
           : undefined
       }
     >
@@ -199,8 +193,7 @@ const MediaPreview: React.FC<MediaPreview> = (props) => {
                         transform: 'translate(-50%,-50%)',
                         zIndex: 0,
                         color:
-                          fullFile &&
-                          'waveformData' in fullFile
+                          fullFile && 'waveformData' in fullFile
                             ? blue[100].hex
                             : blue[800].hex,
                       }}

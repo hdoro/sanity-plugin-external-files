@@ -38,12 +38,7 @@ const UploaderWithConfig: React.FC<UploaderWithConfigProps> = (props) => {
     )
   }
 
-  return (
-    <Uploader
-      sanityClient={sanityClient}
-      {...props}
-    />
-  )
+  return <Uploader sanityClient={sanityClient} {...props} />
 }
 
 export default UploaderWithConfig

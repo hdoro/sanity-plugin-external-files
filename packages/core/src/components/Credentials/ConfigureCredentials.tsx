@@ -1,4 +1,4 @@
-import { LinkIcon, LockIcon, UploadIcon } from '@sanity/icons'
+import { UploadIcon } from '@sanity/icons'
 import {
   Button,
   Card,
@@ -11,7 +11,11 @@ import {
 } from '@sanity/ui'
 import DefaultFormField from 'part:@sanity/components/formfields/default'
 import React from 'react'
-import { VendorConfiguration } from '../../types'
+import {
+  AcceptedCredentialField,
+  VendorConfiguration,
+  VendorCredentials,
+} from '../../types'
 
 import { CredentialsContext } from './CredentialsProvider'
 
@@ -23,16 +27,12 @@ const ConfigureCredentials: React.FC<{
   const [isLoading, setIsLoading] = React.useState(false)
 
   // Form values:
-  const [storageBucket, setStorageBucket] = React.useState('')
-  const [apiKey, setApiKey] = React.useState('')
+  const [formValues, setFormValues] = React.useState<VendorCredentials>({})
 
   async function submitCredentials(e: React.FormEvent) {
     e.preventDefault()
     setIsLoading(true)
-    const success = await saveCredentials({
-      apiKey,
-      storageBucket,
-    })
+    const success = await saveCredentials(formValues)
     setIsLoading(false)
     if (props.onCredentialsSaved) {
       props.onCredentialsSaved(success)
@@ -40,18 +40,25 @@ const ConfigureCredentials: React.FC<{
   }
 
   React.useEffect(() => {
-    if (credentials?.apiKey) {
-      setApiKey(credentials.apiKey)
-    }
-    if (credentials?.storageBucket) {
-      setStorageBucket(credentials.storageBucket)
+    if (credentials) {
+      setFormValues(credentials)
     }
   }, [])
+
+  function resolveFieldHandler(field: AcceptedCredentialField) {
+    return (e: React.FormEvent<HTMLInputElement>) => {
+      e.preventDefault()
+      setFormValues({
+        ...formValues,
+        [field.name]: e.currentTarget.value,
+      })
+    }
+  }
 
   return (
     <Card padding={4} border>
       <Stack space={3}>
-        {credentials?.apiKey ? (
+        {credentials ? (
           <>
             <Heading size={3}>Edit settings</Heading>
             <Text size={2}>
@@ -65,51 +72,49 @@ const ConfigureCredentials: React.FC<{
             </Label>
             <Heading size={3}>First time set-up</Heading>
             <Text size={2}>
-              In order to communicate with external vendor to upload videos & audio,
-              you’ll have to set-up credentials below:
+              In order to communicate with external vendor to upload videos &
+              audio, you’ll have to set-up credentials below:
             </Text>
           </>
         )}
-        <form style={{ marginTop: '1.5rem' }} onSubmit={submitCredentials}>
-          <Stack space={3}>
-            <DefaultFormField label={'Storage bucket URL'} level={0}>
-              <TextInput
-                icon={LinkIcon}
-                onInput={(e: React.FormEvent<HTMLInputElement>) =>
-                  setStorageBucket(e.currentTarget.value)
+        {props.vendorConfig.credentialsFields?.length ? (
+          <form style={{ marginTop: '1.5rem' }} onSubmit={submitCredentials}>
+            <Stack space={4}>
+              {props.vendorConfig.credentialsFields.map((field) => (
+                <DefaultFormField label={field.title || field.name} level={0}>
+                  <TextInput
+                    icon={field.icon}
+                    onInput={resolveFieldHandler(field)}
+                    value={formValues[field.name] || ''}
+                    type={field.type === 'number' ? 'number' : 'text'}
+                    disabled={isLoading}
+                  />
+                </DefaultFormField>
+              ))}
+              <Button
+                text={
+                  credentials?.apiKey
+                    ? 'Update credentials'
+                    : 'Set-up credentials'
                 }
-                value={storageBucket}
-                type="text"
+                icon={UploadIcon}
+                iconRight={isLoading && Spinner}
+                tone="positive"
+                fontSize={2}
+                padding={3}
+                type="submit"
                 disabled={isLoading}
               />
-            </DefaultFormField>
-            <DefaultFormField label={'API Key'} level={0}>
-              <TextInput
-                icon={LockIcon}
-                onInput={(e: React.FormEvent<HTMLInputElement>) =>
-                  setApiKey(e.currentTarget.value)
-                }
-                value={apiKey}
-                type="text"
-                disabled={isLoading}
-              />
-            </DefaultFormField>
-            <Button
-              text={
-                credentials?.apiKey
-                  ? 'Update credentials'
-                  : 'Set-up credentials'
-              }
-              icon={UploadIcon}
-              iconRight={isLoading && Spinner}
-              tone="positive"
-              fontSize={2}
-              padding={3}
-              type="submit"
-              disabled={isLoading}
-            />
-          </Stack>
-        </form>
+            </Stack>
+          </form>
+        ) : (
+          <>
+            <Heading size={3}>Plugin configured incorrectly</Heading>
+            <Text size={3}>
+              Missing the credentialsField configuration property
+            </Text>
+          </>
+        )}
       </Stack>
     </Card>
   )
