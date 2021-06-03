@@ -1,5 +1,6 @@
 import pluginConfig from 'config:firebase-dam'
 import { VendorConfiguration } from 'sanity-plugin-external-dam/lib/types'
+import { LockIcon, LinkIcon } from '@sanity/icons'
 import getFirebaseClient, { FirebaseCredentials } from './getFirebaseClient'
 
 export const DEFAULT_ACCEPT = pluginConfig?.defaultAccept || [
@@ -14,11 +15,13 @@ const config: VendorConfiguration = {
     {
       name: 'apiKey',
       title: 'API Key',
+      icon: LockIcon,
       type: 'string',
     },
     {
       name: 'storageBucket',
       title: 'Storage Bucket',
+      icon: LinkIcon,
       type: 'string',
     },
   ],
@@ -60,7 +63,7 @@ const config: VendorConfiguration = {
       'state_changed',
       (snapshot) => {
         const progress = Math.ceil(
-          snapshot.bytesTransferred / snapshot.totalBytes,
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100,
         )
 
         updateProgress(progress)

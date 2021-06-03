@@ -116,9 +116,7 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
               return
             }
 
-            await sanityClient.delete<SanityUpload>(
-              context.file?._id as string,
-            )
+            await sanityClient.delete<SanityUpload>(context.file?._id as string)
             resolve('Success!')
           } catch (error) {
             reject(error)

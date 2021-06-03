@@ -50,16 +50,10 @@ const FileMetadata: React.FC<FileMetadataProps> = ({ file }) => {
       </Stack>
       <Inline space={3}>
         {file.duration && (
-          <IconInfo
-            text={formatSeconds(file.duration)}
-            icon={ClockIcon}
-          />
+          <IconInfo text={formatSeconds(file.duration)} icon={ClockIcon} />
         )}
         {file.fileSize && (
-          <IconInfo
-            text={formatBytes(file.fileSize)}
-            icon={DownloadIcon}
-          />
+          <IconInfo text={formatBytes(file.fileSize)} icon={DownloadIcon} />
         )}
         <IconInfo
           text={new Date(file._createdAt).toISOString().split('T')[0]}

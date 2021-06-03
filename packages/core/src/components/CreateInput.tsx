@@ -177,9 +177,6 @@ const withVendorConfig = (
 }
 
 const CreateInput = (vendorConfig: VendorConfiguration) =>
-  withVendorConfig(
-    withValuePath(withDocument(ExternalDamInput)),
-    vendorConfig,
-  )
+  withVendorConfig(withValuePath(withDocument(ExternalDamInput)), vendorConfig)
 
 export default CreateInput

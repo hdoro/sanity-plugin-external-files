@@ -24,7 +24,7 @@ interface CredentialsProviderProps {
 const CredentialsProvider: React.FC<CredentialsProviderProps> = (props) => {
   const { vendorConfig } = props
   const cacheKey = `_${vendorConfig?.id || 'external'}DamSavedCredentials`
-  const documentId = `${vendorConfig.id}.credentials`
+  const documentId = `${vendorConfig.id}-dam.credentials`
 
   const toast = useToast()
   const [credentials, setCredentials] =
