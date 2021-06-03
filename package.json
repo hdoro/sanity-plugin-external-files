@@ -9,7 +9,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/hdoro/sanity-plugin-firebase-dam.git"
+    "url": "git+ssh://git@github.com/hdoro/sanity-plugin-external-dam.git"
   },
   "author": "Henrique Doro <opensource@hdoro.dev>",
   "license": "Apache-2.0",
@@ -18,7 +18,7 @@
     "typescript": "^4.2.2"
   },
   "bugs": {
-    "url": "https://github.com/hdoro/sanity-plugin-firebase-dam/issues"
+    "url": "https://github.com/hdoro/sanity-plugin-external-dam/issues"
   },
-  "homepage": "https://github.com/hdoro/sanity-plugin-firebase-dam#readme"
+  "homepage": "https://github.com/hdoro/sanity-plugin-external-dam#readme"
 }
