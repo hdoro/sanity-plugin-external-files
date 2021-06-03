@@ -66,7 +66,9 @@ const useUpload = ({
         })
 
         return () => {
-          cleanUp()
+          if (typeof cleanUp === "function") {
+            cleanUp()
+          }
         }
       },
       uploadToSanity: (context) => {
