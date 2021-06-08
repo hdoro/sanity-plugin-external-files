@@ -25,6 +25,8 @@ export interface AcceptedCredentialField extends Omit<BaseSchemaType, 'type'> {
 export interface VendorConfiguration {
   id: string
   defaultAccept: string | string[]
+  toolTitle?: string
+  supportsProgress?: boolean
   /**
    * This plugin currently treats all fields as required
    */

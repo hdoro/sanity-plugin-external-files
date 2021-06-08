@@ -11,6 +11,8 @@ export const DEFAULT_ACCEPT = pluginConfig?.defaultAccept || [
 const config: VendorConfiguration = {
   id: 'firebase',
   defaultAccept: DEFAULT_ACCEPT,
+  toolTitle: pluginConfig.toolTitle || "Videos & Audio",
+  supportsProgress: true,
   credentialsFields: [
     {
       name: 'apiKey',
