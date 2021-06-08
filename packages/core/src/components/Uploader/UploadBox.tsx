@@ -5,9 +5,11 @@ import { UploadIcon, CloseIcon, RestoreIcon } from '@sanity/icons'
 
 import { useUploadReturn } from './useUpload'
 import { Heading } from '@sanity/ui'
+import { VendorConfiguration } from '../../types'
 
 interface UploadBox extends useUploadReturn {
   onUploadClick: () => void
+  vendorConfig: VendorConfiguration
 }
 
 const UploadBox: React.FC<UploadBox> = (props) => {
@@ -127,7 +129,9 @@ const UploadBox: React.FC<UploadBox> = (props) => {
             </Text>
             {state.value === 'uploadingToVendor' && (
               <>
-                <Text>{state.context.vendorUploadProgress}%</Text>
+                {props.vendorConfig.supportsProgress && (
+                    <Text>{state.context.vendorUploadProgress}%</Text>
+                  )}
                 <Button
                   icon={CloseIcon}
                   fontSize={2}

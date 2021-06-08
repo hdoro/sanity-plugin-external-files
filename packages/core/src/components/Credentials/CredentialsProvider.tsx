@@ -58,6 +58,7 @@ const CredentialsProvider: React.FC<CredentialsProviderProps> = (props) => {
         status: 'success',
       })
       setCredentials(newCredentials)
+      setStatus("success")
       return true
     } catch (error) {
       toast.push({
@@ -87,6 +88,7 @@ const CredentialsProvider: React.FC<CredentialsProviderProps> = (props) => {
       )
     ) {
       setCredentials(savedCredentials)
+      setStatus("success")
       return
     }
 
@@ -98,6 +100,7 @@ const CredentialsProvider: React.FC<CredentialsProviderProps> = (props) => {
           return
         }
         setCredentials(doc)
+        setStatus("success")
       })
       .catch(() => setStatus('missingCredentials'))
   }, [vendorConfig])

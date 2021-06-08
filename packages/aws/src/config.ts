@@ -1,6 +1,12 @@
 import pluginConfig from 'config:s3-dam'
 import { VendorConfiguration } from 'sanity-plugin-external-dam/lib/types'
-import { LockIcon, PinIcon } from '@sanity/icons'
+import {
+  LockIcon,
+  PinIcon,
+  TrashIcon,
+  EyeClosedIcon,
+  EarthGlobeIcon,
+} from '@sanity/icons'
 
 export const DEFAULT_ACCEPT = pluginConfig?.defaultAccept || [
   'video/*',
@@ -10,7 +16,20 @@ export const DEFAULT_ACCEPT = pluginConfig?.defaultAccept || [
 const config: VendorConfiguration = {
   id: 's3',
   defaultAccept: DEFAULT_ACCEPT,
+  toolTitle: pluginConfig.toolTitle || 'Videos & audio',
   credentialsFields: [
+    {
+      name: 'bucketKey',
+      title: 'S3 bucket key',
+      icon: LockIcon,
+      type: 'string',
+    },
+    {
+      name: 'bucketRegion',
+      title: 'S3 bucket region',
+      icon: EarthGlobeIcon,
+      type: 'string',
+    },
     {
       name: 'getSignedUrlEndpoint',
       title: "Endpoint for getting S3's signed URL",
@@ -18,15 +37,44 @@ const config: VendorConfiguration = {
       type: 'string',
     },
     {
-      name: 'bucketKey',
-      title: 'Bucket key',
-      icon: LockIcon,
+      name: 'deleteObjectEndpoint',
+      title: 'Endpoint for deleting an object in S3',
+      icon: TrashIcon,
+      type: 'string',
+    },
+    {
+      name: 'secretForValidating',
+      title: 'Secret for validating the signed URL request (optional)',
+      icon: EyeClosedIcon,
       type: 'string',
     },
   ],
   deleteFile: async ({ storedFile, credentials }) => {
-    // @TODO
-    return 'error'
+    if (!credentials || typeof credentials.deleteObjectEndpoint !== 'string') {
+      return 'missing-credentials'
+    }
+
+    const endpoint = credentials.deleteObjectEndpoint as string
+    try {
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        body: JSON.stringify({
+          fileKey: storedFile.s3?.key,
+          secret: credentials.secretForValidating,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      console.log({ res })
+      if (res.ok) {
+        return true
+      } else {
+        return 'error'
+      }
+    } catch (error) {
+      return error?.message || 'error'
+    }
   },
   uploadFile: ({ credentials, onError, onSuccess, file, fileName }) => {
     if (
@@ -49,14 +97,22 @@ const config: VendorConfiguration = {
     } catch (error) {}
 
     const endpoint = credentials.getSignedUrlEndpoint as string
-    fetch(
-      `${endpoint}${endpoint.includes('?') ? '&' : '?'}contentType=${
-        file.type
-      }&fileName=${fileName}`,
-      { signal },
-    ).then((response) =>
-      response.json().then(({ url, fields }) => {
-        // Reference: https://github.com/codyseibert/youtube/blob/master/s3-upload-example/index.html
+    fetch(endpoint, {
+      method: 'POST',
+      body: JSON.stringify({
+        fileName,
+        contentType: file.type,
+        secret: credentials.secretForValidating,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      mode: 'cors',
+      signal,
+    })
+      .then((response) => response.json())
+      .then(({ url, fields }) => {
+        const fileKey = fields?.key || fileName
         const data = {
           bucket: credentials.bucketKey,
           ...fields,
@@ -72,13 +128,38 @@ const config: VendorConfiguration = {
         fetch(url, {
           method: 'POST',
           body: formData,
+          mode: 'cors',
+          signal,
         })
           .then((res) => {
-            onSuccess(res)
+            if (res.ok) {
+              onSuccess({
+                fileURL: `https://s3.${credentials.bucketRegion}.amazonaws.com/${credentials.bucketKey}/${fileKey}`,
+                s3: {
+                  key: fileKey,
+                  bucket: credentials.bucketKey,
+                  region: credentials.bucketRegion,
+                },
+              })
+            } else {
+              console.log({
+                objectPostFaultyResponse: res,
+              })
+              onError({
+                message: 'Ask your developer to check AWS permissions.',
+                name: 'failed-presigned',
+              })
+            }
           })
-          .catch((error) => onError(error))
-      }),
-    )
+          .catch((error) => {
+            console.log({ objectPostError: error })
+            onError(error)
+          })
+      })
+      .catch((error) => {
+        console.log({ presignedUrlFailure: error })
+        onError(error)
+      })
     return () => {
       try {
         if (controller?.abort) {
