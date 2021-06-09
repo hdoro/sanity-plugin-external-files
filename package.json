@@ -1,5 +1,5 @@
 {
-  "name": "sanity-plugin-alt-dams",
+  "name": "sanity-plugin-external-dam-root",
   "private": true,
   "scripts": {
     "format": "prettier --write ."

@@ -1,6 +1,7 @@
 .git
 .yarn
 src/*
+!src/types.ts
 clearLib.js
 .prettierignore
 .prettierrc

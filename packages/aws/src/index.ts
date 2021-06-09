@@ -1,5 +1,5 @@
 import { ToolIcon } from 'sanity-plugin-external-dam'
-import config from '../lib/config'
+import config from './config'
 import Tool from './components/Tool'
 
 export default {
