@@ -2,9 +2,9 @@ const AWS = require('aws-sdk')
 
 // === CONFIG ===
 // 🚨 Don't forget to configure CORS in AWS' API Gateway configuration
-const SECRET = "SECRET_CODE";
 const BUCKET = "YOUR_BUCKET";
 const REGION = "YOUR_REGION";
+const SECRET = undefined; // (Optional) set a secret. Needs to be added to the Sanity plugin as well!
 
 const s3 = new AWS.S3({
   region: REGION,
@@ -44,8 +44,7 @@ exports.handler = async (event, _context, callback) => {
   // Event is an object with the JSON data sent to the function
   const { fileKey, secret } = body || {};
 
-  // REMOVE IF NOT USING SECRETS
-  if (secret !== SECRET) {
+  if (typeof SECRET !== "undefined" && secret !== SECRET) {
     return callback(null, {
       statusCode: 401,
       body: JSON.stringify({
