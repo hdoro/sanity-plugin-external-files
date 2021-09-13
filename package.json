@@ -14,8 +14,8 @@
   "author": "Henrique Doro <opensource@hdoro.dev>",
   "license": "Apache-2.0",
   "devDependencies": {
-    "prettier": "^2.2.1",
-    "typescript": "^4.2.2"
+    "prettier": "^2.4.0",
+    "typescript": "^4.4.3"
   },
   "bugs": {
     "url": "https://github.com/hdoro/sanity-plugin-external-dam/issues"

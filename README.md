@@ -2,13 +2,7 @@
 
 Series of plugins for working with media files hosted elsewhere inside of Sanity - _currently only audio and video are supported_. Use one of the existing implementations or write your own!
 
-**Screenshots:**
-
-![Screenshot of the file uploader](https://raw.githubusercontent.com/hdoro/sanity-plugin-external-dam/main/screenshot-uploader.png)
-![Screenshot of the file preview](https://raw.githubusercontent.com/hdoro/sanity-plugin-external-dam/main/screenshot-file-preview.png)
-![Screenshot of the file browser](https://raw.githubusercontent.com/hdoro/sanity-plugin-external-dam/main/screenshot-browser.png)
-![Screenshot of the file details](https://raw.githubusercontent.com/hdoro/sanity-plugin-external-dam/main/screenshot-file-details.png)
-![Screenshot of the credentials set-up](https://raw.githubusercontent.com/hdoro/sanity-plugin-external-dam/main/screenshot-credentials.png)
+![Screenshot of the plugin](https://raw.githubusercontent.com/hdoro/sanity-plugin-external-dam/main/screenshots.png)
 
 ## Existing implementations
 

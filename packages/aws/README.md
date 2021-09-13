@@ -2,13 +2,7 @@
 
 Allows uploading, referencing and deleting video and audio files to S3 directly from your Sanity studio. Is a flavor of [sanity-plugin-external-dam](https://github.com/hdoro/sanity-plugin-external-dam).
 
-**Screenshots:**
-
-![Screenshot of the file uploader](https://raw.githubusercontent.com/hdoro/sanity-plugin-external-dam/main/screenshot-uploader.png)
-![Screenshot of the file preview](https://raw.githubusercontent.com/hdoro/sanity-plugin-external-dam/main/screenshot-file-preview.png)
-![Screenshot of the file browser](https://raw.githubusercontent.com/hdoro/sanity-plugin-external-dam/main/screenshot-browser.png)
-![Screenshot of the file details](https://raw.githubusercontent.com/hdoro/sanity-plugin-external-dam/main/screenshot-file-details.png)
-![Screenshot of the credentials set-up](https://raw.githubusercontent.com/hdoro/sanity-plugin-external-dam/main/screenshot-credentials.png)
+![Screenshot of the plugin](https://raw.githubusercontent.com/hdoro/sanity-plugin-external-dam/main/screenshots.png)
 
 ## Installing
 
@@ -32,8 +26,6 @@ The rest of the work must be done inside AWS' console:
     - I strongly recommend using the same gateway for both functions for simplicity of configuration
 
 With these in hand, fill-in the plugin's configuration form where you'll fill in the bucket key (ex: `my-sanity-bucket`), the bucket region (ex: `ap-south-1`), the URL for both Lambda functions and an optional secret for validating input in functions.
-
-🚨 If not using a secret, make sure your Lambda functions do not check for it.
 
 I plan on recording a video tutorial going through the process in detail. Until then, reach out if you have questions 😉
 
