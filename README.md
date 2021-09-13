@@ -10,8 +10,7 @@ List of vendors currently supported:
 
 - AWS S3 -> [sanity-plugin-s3-dam](https://github.com/hdoro/sanity-plugin-external-dam/tree/main/packages/aws)
 - Google Firebase -> [sanity-plugin-firebase-dam](https://github.com/hdoro/sanity-plugin-external-dam/tree/main/packages/firebase)
-
-I'm currently considering building one for Supabase.
+- DigitalOcean Spaces -> [sanity-plugin-digital-ocean-files](https://github.com/hdoro/sanity-plugin-external-dam/tree/main/packages/digital-ocean)
 
 ## Creating your own implementation
 
