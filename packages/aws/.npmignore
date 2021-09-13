@@ -5,3 +5,4 @@ clearLib.js
 .prettierignore
 .prettierrc
 tsconfig.json
+node_modules

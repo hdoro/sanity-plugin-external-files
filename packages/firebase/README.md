@@ -14,6 +14,32 @@ Add your bucket URL and API key to the plugin via the dedicated settings dialog.
 
 I plan on recording a video tutorial going through the process in detail. Until then, reach out if you have questions 😉
 
+## Using
+
+Use the `firebase-dam.media` type in your fields. Examples:
+
+```
+{
+    name: "video",
+    title: "Video (Firebase)",
+    type: "firebase-dam.media",
+    options: {
+        accept: "video/*",
+        storeOriginalFilename: true,
+    },
+},
+{
+    name: "anyFile",
+    title: "File (Firebase)",
+    type: "firebase-dam.media",
+    options: {
+        // Accept ANY file
+        accept: "*",
+        storeOriginalFilename: true,
+    },
+},
+```
+
 ## Contributing, roadmap & acknowledgments
 
 Refer to [sanity-plugin-external-dam](https://github.com/hdoro/sanity-plugin-external-dam) for those :)

@@ -1,7 +1,7 @@
 import { getStoredFileSchema } from 'sanity-plugin-external-dam'
 import config from '../config'
 
-const S3_FIELDS = ['content_md5', 'version_id', 'key']
+const S3_FIELDS = ['key', 'bucket', 'region']
 
 export default getStoredFileSchema(config, {
   title: 'Media file hosted in AWS S3',

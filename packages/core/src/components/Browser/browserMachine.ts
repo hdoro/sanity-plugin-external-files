@@ -36,7 +36,7 @@ const browserMachine = createMachine<Context, BrowserEvent>(
           onDone: {
             target: 'browsing',
             actions: [
-              console.log,
+              // console.log,
               assign({
                 allFiles: (_context, event) => event.data,
                 filteredFiles: (_context, event) => event.data,

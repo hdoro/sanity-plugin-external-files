@@ -29,6 +29,33 @@ With these in hand, fill-in the plugin's configuration form where you'll fill in
 
 I plan on recording a video tutorial going through the process in detail. Until then, reach out if you have questions 😉
 
+
+## Using
+
+Use the `s3-dam.media` type in your fields. Examples:
+
+```
+{
+    name: "video",
+    title: "Video (S3)",
+    type: "s3-dam.media",
+    options: {
+        accept: "video/*",
+        storeOriginalFilename: true,
+    },
+},
+{
+    name: "anyFile",
+    title: "File (S3)",
+    type: "s3-dam.media",
+    options: {
+        // Accept ANY file
+        accept: "*",
+        storeOriginalFilename: true,
+    },
+},
+```
+
 ## Contributing, roadmap & acknowledgments
 
 Refer to [sanity-plugin-external-dam](https://github.com/hdoro/sanity-plugin-external-dam) for those :)

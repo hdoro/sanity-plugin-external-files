@@ -24,6 +24,7 @@ export interface AcceptedCredentialField extends Omit<BaseSchemaType, 'type'> {
  */
 export interface VendorConfiguration {
   id: string
+  customDataFieldName?: string
   defaultAccept: string | string[]
   toolTitle?: string
   supportsProgress?: boolean

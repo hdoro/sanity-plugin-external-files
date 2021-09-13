@@ -12,7 +12,7 @@ const getStoredFileSchema = (
   vendorConfig: VendorConfiguration,
   schemaConfig: SchemaConfigOptions = {},
 ) => ({
-  name: `${vendorConfig.id}-dam.storedFile`,
+  name: `${vendorConfig.id}.storedFile`,
   title: schemaConfig.title || 'Media file hosted in external vendor',
   type: 'document',
   fieldsets: [
@@ -99,7 +99,7 @@ const getStoredFileSchema = (
     ...(schemaConfig?.customFields
       ? [
           {
-            name: vendorConfig.id,
+            name: vendorConfig.customDataFieldName || vendorConfig.id.replace(/-/g, '_'),
             title: `${vendorConfig.id}-exclusive fields`,
             options: { collapsible: true, collapsed: false },
             type: 'object',

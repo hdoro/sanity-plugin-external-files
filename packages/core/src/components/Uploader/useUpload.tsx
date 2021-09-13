@@ -86,8 +86,8 @@ const useUpload = ({
                 context.videoScreenshot,
                 {
                   source: {
-                    id: `${vendorConfig.id}-dam`,
-                    name: `${vendorConfig.id} DAM`,
+                    id: `${vendorConfig.id}`,
+                    name: `${vendorConfig.id} (external DAM)`,
                   },
                   filename: getFileRef({
                     file: context.file as File,
@@ -101,7 +101,7 @@ const useUpload = ({
           }
           try {
             const document = await sanityClient.create({
-              _type: `${vendorConfig.id}-dam.storedFile`,
+              _type: `${vendorConfig.id}.storedFile`,
               screenshot: screenshot
                 ? {
                     _type: 'image',

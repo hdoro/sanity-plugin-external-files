@@ -5,7 +5,7 @@ const dir = 'lib'
 
 // delete directory recursively
 try {
-  fs.rmdirSync(dir, { recursive: true })
+  fs.rmSync(dir, { recursive: true })
 
   console.log(`${dir} is deleted, ready for build.`)
 } catch (err) {

@@ -1,17 +1,17 @@
-import pluginConfig from 'config:firebase-dam'
 import { VendorConfiguration } from 'sanity-plugin-external-dam/lib/types'
 import { LockIcon, LinkIcon } from '@sanity/icons'
 import getFirebaseClient, { FirebaseCredentials } from './getFirebaseClient'
 
-export const DEFAULT_ACCEPT = pluginConfig?.defaultAccept || [
+export const DEFAULT_ACCEPT = [
   'video/*',
   'audio/*',
 ]
 
 const config: VendorConfiguration = {
-  id: 'firebase',
+  id: 'firebase-dam',
+  customDataFieldName: 'firebase',
   defaultAccept: DEFAULT_ACCEPT,
-  toolTitle: pluginConfig.toolTitle || "Videos & Audio",
+  toolTitle: "Videos & Audio (Firebase)",
   supportsProgress: true,
   credentialsFields: [
     {
@@ -36,7 +36,7 @@ const config: VendorConfiguration = {
       await firebaseClient.storage().ref(storedFile.firebase?.fullPath).delete()
 
       return true
-    } catch (error) {
+    } catch (error: any) {
       if (error?.code === 'storage/object-not-found') {
         // If file not found in Firebase, we're good!
         return true
