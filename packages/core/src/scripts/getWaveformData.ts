@@ -1,6 +1,3 @@
-const audioContext = new (window.AudioContext ||
-  (window as any).webkitAudioContext)()
-
 const filterData = (audioBuffer: AudioBuffer) => {
   // We only need to work with one channel of data
   const rawData = audioBuffer.getChannelData(0)
@@ -33,6 +30,10 @@ export default async function getWaveformData(file: File) {
   if (!file) {
     return
   }
+  
+  const audioContext = new (window.AudioContext ||
+    (window as any).webkitAudioContext)()
+
   const arrayBuffer = await file.arrayBuffer()
   const audioBuffer = await audioContext.decodeAudioData(arrayBuffer)
   const normalizedData = normalizeData(filterData(audioBuffer))

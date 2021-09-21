@@ -75,6 +75,8 @@ const uploadMachine = createMachine<Context, UploadEvent>(
               videoEl.addEventListener('loadedmetadata', () => {
                 canvasEl.width = videoEl.videoWidth
                 canvasEl.height = videoEl.videoHeight
+                // Go to frame at 1 second
+                videoEl.currentTime = 1
               })
 
               videoEl.addEventListener('timeupdate', () => {
@@ -103,9 +105,6 @@ const uploadMachine = createMachine<Context, UploadEvent>(
                   })
                 }, 'image/png')
               })
-
-              // Go to frame at 1 second
-              videoEl.fastSeek(1)
             })
           },
           onDone: {
