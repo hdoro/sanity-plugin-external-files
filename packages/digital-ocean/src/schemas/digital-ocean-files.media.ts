@@ -1,3 +1,4 @@
+import { Rule } from "@sanity/types"
 import Input from '../components/Input'
 
 export default {
@@ -11,6 +12,7 @@ export default {
       title: 'Asset',
       type: 'reference',
       to: [{ type: 'digital-ocean-files.storedFile' }],
+      validation: (Rule: Rule) => Rule.required(),
     },
   ],
 }

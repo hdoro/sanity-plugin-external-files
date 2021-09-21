@@ -18,7 +18,8 @@ const config: VendorConfiguration = {
   credentialsFields: [
     {
       name: 'bucketKey',
-      title: 'Digital Ocean Space (bucket) key',
+      title: 'Digital Ocean Space name',
+      description: 'This corresponds to the id of the bucket',
       icon: LockIcon,
       type: 'string',
       validation: (Rule) => Rule.required(),
@@ -76,7 +77,6 @@ const config: VendorConfiguration = {
           'Content-Type': 'application/json',
         },
       })
-      console.log({ res })
       if (res.ok) {
         return true
       } else {
@@ -124,9 +124,8 @@ const config: VendorConfiguration = {
       .then(({ url, fields }) => {
         const fileKey = fields?.key || fileName
         const data = {
-          bucket: credentials.bucketKey,
           ...fields,
-          'Content-Type': file.type,
+          "Content-Type": file.type,
           file,
         }
 
@@ -138,16 +137,16 @@ const config: VendorConfiguration = {
         fetch(url, {
           method: 'POST',
           body: formData,
-          mode: 'cors',
+          mode: "cors",
           signal,
         })
           .then((res) => {
             if (res.ok) {
               const subdomain = `${credentials.bucketKey}.${credentials.bucketRegion}`
               onSuccess({
-                // CDN
+                // CDN - accepts a custom subdomain
                 fileURL: credentials.subdomain
-                  ? `${subdomain}/${fileKey}`
+                  ? `${credentials.subdomain}/${fileKey}`
                   : `https://${subdomain}.cdn.digitaloceanspaces.com/${fileKey}`,
                 digitalOcean: {
                   key: fileKey,
@@ -158,9 +157,6 @@ const config: VendorConfiguration = {
                 },
               })
             } else {
-              console.log({
-                objectPostFaultyResponse: res,
-              })
               onError({
                 message: 'Ask your developer to check AWS permissions.',
                 name: 'failed-presigned',
@@ -168,12 +164,10 @@ const config: VendorConfiguration = {
             }
           })
           .catch((error) => {
-            console.log({ objectPostError: error })
             onError(error)
           })
       })
       .catch((error) => {
-        console.log({ presignedUrlFailure: error })
         onError(error)
       })
     return () => {
