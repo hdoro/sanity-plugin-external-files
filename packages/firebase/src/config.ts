@@ -19,12 +19,14 @@ const config: VendorConfiguration = {
       title: 'API Key',
       icon: LockIcon,
       type: 'string',
+      validation: Rule => Rule.required(),
     },
     {
       name: 'storageBucket',
       title: 'Storage Bucket',
       icon: LinkIcon,
       type: 'string',
+      validation: Rule => Rule.required(),
     },
   ],
   deleteFile: async ({ storedFile, credentials }) => {

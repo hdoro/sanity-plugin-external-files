@@ -10,6 +10,9 @@ import {
   TextInput,
 } from '@sanity/ui'
 import DefaultFormField from 'part:@sanity/components/formfields/default'
+import { validateDocument } from '@sanity/validation'
+import Schema from '@sanity/schema'
+import { ValidationMarker } from '@sanity/types'
 import React from 'react'
 import {
   AcceptedCredentialField,
@@ -25,6 +28,7 @@ const ConfigureCredentials: React.FC<{
 }> = (props) => {
   const { saveCredentials, credentials } = React.useContext(CredentialsContext)
   const [isLoading, setIsLoading] = React.useState(false)
+  const [markers, setMarkers] = React.useState<ValidationMarker[]>([])
 
   // Form values:
   const [formValues, setFormValues] = React.useState<VendorCredentials>({})
@@ -50,10 +54,39 @@ const ConfigureCredentials: React.FC<{
       e.preventDefault()
       setFormValues({
         ...formValues,
-        [field.name]: e.currentTarget.value,
+        [field.name]: e.currentTarget.value !== "" ? e.currentTarget.value : undefined,
       })
     }
   }
+
+  const schema = React.useMemo(
+    () =>
+      new Schema({
+        name: 'vendorSchema',
+        types: [
+          {
+            name: 'vendorCredentials',
+            type: 'document',
+            fields: props.vendorConfig.credentialsFields,
+          },
+        ],
+      }),
+    [props.vendorConfig.credentialsFields],
+  )
+
+  async function validateForm(values: typeof formValues) {
+    const newMarkers = await validateDocument(
+      { ...values, _type: 'vendorCredentials' } as any,
+      schema,
+    )
+    setMarkers(newMarkers)
+  }
+
+  React.useEffect(() => {
+    if (Object.keys(formValues).length > 0) {
+      validateForm(formValues)
+    }
+  }, [formValues])
 
   return (
     <Card padding={4} border>
@@ -81,7 +114,14 @@ const ConfigureCredentials: React.FC<{
           <form style={{ marginTop: '1.5rem' }} onSubmit={submitCredentials}>
             <Stack space={4}>
               {props.vendorConfig.credentialsFields.map((field) => (
-                <DefaultFormField label={field.title || field.name} level={0}>
+                <DefaultFormField
+                  label={field.title || field.name}
+                  description={field.description}
+                  markers={markers.filter(
+                    (marker) => marker.path[0] === field.name,
+                  )}
+                  level={0}
+                >
                   <TextInput
                     icon={field.icon}
                     onInput={resolveFieldHandler(field)}
@@ -103,7 +143,11 @@ const ConfigureCredentials: React.FC<{
                 fontSize={2}
                 padding={3}
                 type="submit"
-                disabled={isLoading}
+                disabled={
+                  isLoading ||
+                  markers.filter((marker) => marker.level === 'error').length >
+                    0
+                }
               />
             </Stack>
           </form>

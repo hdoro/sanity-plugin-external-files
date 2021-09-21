@@ -7,7 +7,7 @@
     "clear-lib": "node clearLib.js",
     "build": "npm run clear-lib && npm run build:tsc",
     "build:tsc": "tsc --declaration",
-    "dev": "tsc -w --declaration",
+    "dev": "tsc -w",
     "prepublish": "npm run build"
   },
   "repository": {

@@ -5,13 +5,10 @@ import {
   TrashIcon,
   EyeClosedIcon,
   EarthGlobeIcon,
+  ApiIcon,
 } from '@sanity/icons'
 
-export const DEFAULT_ACCEPT = [
-  'video/*',
-  'audio/*',
-]
-
+export const DEFAULT_ACCEPT = ['video/*', 'audio/*']
 
 const config: VendorConfiguration = {
   id: 'digital-ocean-files',
@@ -24,24 +21,35 @@ const config: VendorConfiguration = {
       title: 'Digital Ocean Space (bucket) key',
       icon: LockIcon,
       type: 'string',
+      validation: (Rule) => Rule.required(),
     },
     {
       name: 'bucketRegion',
       title: 'Space (bucket) region',
       icon: EarthGlobeIcon,
       type: 'string',
+      validation: (Rule) => Rule.required(),
     },
     {
       name: 'getSignedUrlEndpoint',
       title: "Endpoint for getting Space's signed URL",
       icon: PinIcon,
-      type: 'string',
+      type: 'url',
+      validation: (Rule) => Rule.required(),
     },
     {
       name: 'deleteObjectEndpoint',
       title: 'Endpoint for deleting an object in Space',
       icon: TrashIcon,
-      type: 'string',
+      type: 'url',
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'subdomain',
+      title: 'Custom subdomain (optional)',
+      description: "If none provided, will fallback to DigitalOcean's default",
+      icon: ApiIcon,
+      type: 'url',
     },
     {
       name: 'secretForValidating',
@@ -50,7 +58,7 @@ const config: VendorConfiguration = {
       type: 'string',
     },
   ],
-  
+
   deleteFile: async ({ storedFile, credentials }) => {
     if (!credentials || typeof credentials.deleteObjectEndpoint !== 'string') {
       return 'missing-credentials'
@@ -138,7 +146,9 @@ const config: VendorConfiguration = {
               const subdomain = `${credentials.bucketKey}.${credentials.bucketRegion}`
               onSuccess({
                 // CDN
-                fileURL: `https://${subdomain}.cdn.digitaloceanspaces.com/${fileKey}`,
+                fileURL: credentials.subdomain
+                  ? `${subdomain}/${fileKey}`
+                  : `https://${subdomain}.cdn.digitaloceanspaces.com/${fileKey}`,
                 digitalOcean: {
                   key: fileKey,
                   bucket: credentials.bucketKey,
