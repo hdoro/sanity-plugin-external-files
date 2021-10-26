@@ -10,6 +10,14 @@
     },
     {
       "implements": "part:@sanity/base/schema-type",
+      "path": "schemas/digital-ocean-files.custom-data.js"
+    },
+    {
+      "implements": "part:@sanity/base/schema-type",
+      "path": "schemas/digital-ocean-files.dimensions.js"
+    },
+    {
+      "implements": "part:@sanity/base/schema-type",
       "path": "schemas/digital-ocean-files.storedFile.js"
     },
     {

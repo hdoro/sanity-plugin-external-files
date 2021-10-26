@@ -10,6 +10,14 @@
     },
     {
       "implements": "part:@sanity/base/schema-type",
+      "path": "schemas/s3-dam.custom-data.js"
+    },
+    {
+      "implements": "part:@sanity/base/schema-type",
+      "path": "schemas/s3-dam.dimensions.js"
+    },
+    {
+      "implements": "part:@sanity/base/schema-type",
       "path": "schemas/s3-dam.storedFile.js"
     },
     {

@@ -1,5 +1,7 @@
 import { SchemaType } from '@sanity/types'
 import { VendorConfiguration } from '../types'
+import { getCustomDataFieldKey, getCustomDataTypeKey } from './getCustomDataSchema'
+import getDimensionsSchema from './getDimensionsSchema'
 
 type CustomField = string | SchemaType
 
@@ -75,18 +77,8 @@ const getStoredFileSchema = (
     {
       name: 'dimensions',
       title: 'Dimensions',
-      type: 'object',
+      type: getDimensionsSchema(vendorConfig).name,
       fieldset: 'video',
-      fields: [
-        {
-          name: 'width',
-          type: 'number',
-        },
-        {
-          name: 'height',
-          type: 'number',
-        },
-      ],
     },
     {
       name: 'waveformData',
@@ -99,19 +91,10 @@ const getStoredFileSchema = (
     ...(schemaConfig?.customFields
       ? [
           {
-            name: vendorConfig.customDataFieldName || vendorConfig.id.replace(/-/g, '_'),
+            name: getCustomDataFieldKey(vendorConfig),
             title: `${vendorConfig.id}-exclusive fields`,
             options: { collapsible: true, collapsed: false },
-            type: 'object',
-            fields: schemaConfig.customFields.map((field) => {
-              if (typeof field === 'string') {
-                return {
-                  name: field,
-                  type: 'string',
-                }
-              }
-              return field
-            }),
+            type: getCustomDataTypeKey(vendorConfig),
           },
         ]
       : []),
