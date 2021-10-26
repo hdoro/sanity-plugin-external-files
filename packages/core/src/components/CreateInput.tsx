@@ -17,9 +17,7 @@ const createPatchFrom = (value?: any) =>
   PatchEvent.from(value ? set(value) : unset())
 
 /**
- * Custom slug component for better UX & safer slugs:
- * - shows the final URL for the relative address (adds the BASE.PATH/ at the start)
- * - removes special characters and startin/trailing slashes
+ * Lets editors choose assets from external DAM inside the document editor.
  */
 class ExternalDamInput extends React.Component<
   {
@@ -162,6 +160,10 @@ const withVendorConfig = (
 
     setInput = (input: any) => {
       this._input = input
+    }
+
+    focus = () => {
+      // @TODO: handle input focus
     }
 
     render() {
