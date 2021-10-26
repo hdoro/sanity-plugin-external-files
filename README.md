@@ -30,6 +30,8 @@ That said, I'm willing to develop it further given the interest and resources. H
   - ✨ Solves: this would make it possible to have multiple entries to your storage buckets and using Sanity as the single source of truth. A significantly better experience than opening AWS S3's console and managing files there, for example.
   - This actually doesn't involve much code on the plugin side. It'd be more about providing a blessed path for implementing webhooks in a simpler way by developers.
   - If you already have this demand, just take a look at your used plugin's schema and try to build a handler for new files in your vendor that creates documents in Sanity following that schema.
+- New vendors
+  - I'd love to suport [Cloudflare's R2 Storage](https://blog.cloudflare.com/introducing-r2-object-storage/) & Supabase
 
 ## Contributing
 

@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-external-dam",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Core library for sanity-plugin-firebase-dam & sanity-plugin-aws-dam.",
   "main": "lib/index.js",
   "scripts": {
