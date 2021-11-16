@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-s3-dam",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Store Sanity media files in AWS S3",
   "main": "lib/index.js",
   "scripts": {
@@ -27,7 +27,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@sanity/icons": ">= 1.0.0",
-    "sanity-plugin-external-dam": "^0.6.1"
+    "sanity-plugin-external-dam": "^0.6.2"
   },
   "bugs": {
     "url": "https://github.com/hdoro/sanity-plugin-external-dam/issues"
