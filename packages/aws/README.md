@@ -12,7 +12,7 @@ Start by installing the plugin:
 
 The rest of the work must be done inside AWS' console. The video below is a full walkthrough, be sure to watch from start to finish to avoid missing small details that are hard to debug.
 
-<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/Aokoz4j4Dzo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[![Video screenshot](https://img.youtube.com/vi/Aokoz4j4Dzo/0.jpg)](https://www.youtube.com/watch?v=Aokoz4j4Dzo)
 
 ### Creating the S3 bucket
 
