@@ -1,4 +1,4 @@
-import pluginConfig from 'config:digital-ocean-files';
+import pluginConfig from 'config:digital-ocean-files?';
 import { VendorConfiguration } from 'sanity-plugin-external-dam/lib/types'
 import {
   LockIcon,

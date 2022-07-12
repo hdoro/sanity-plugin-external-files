@@ -1,4 +1,4 @@
-import pluginConfig from 'config:s3-dam';
+import pluginConfig from 'config:s3-dam?';
 import { VendorConfiguration } from 'sanity-plugin-external-dam/lib/types'
 import {
   LockIcon,

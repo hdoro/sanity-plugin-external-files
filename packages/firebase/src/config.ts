@@ -1,4 +1,4 @@
-import pluginConfig from 'config:firebase-dam';
+import pluginConfig from 'config:firebase-dam?';
 import { VendorConfiguration } from 'sanity-plugin-external-dam/lib/types'
 import { LockIcon, LinkIcon } from '@sanity/icons'
 import getFirebaseClient, { FirebaseCredentials } from './getFirebaseClient'

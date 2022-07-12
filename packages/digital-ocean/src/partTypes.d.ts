@@ -1,1 +1,1 @@
-declare module 'config:digital-ocean-files'
+declare module 'config:digital-ocean-files?'
