@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-s3-dam",
-  "version": "0.6.2",
+  "version": "0.7.0",
   "description": "Store Sanity media files in AWS S3",
   "main": "lib/index.js",
   "scripts": {
