@@ -1,20 +1,15 @@
-import pluginConfig from 'config:firebase-dam?';
+import pluginConfig from 'config:firebase-dam';
 import { VendorConfiguration } from 'sanity-plugin-external-dam/lib/types'
 import { LockIcon, LinkIcon } from '@sanity/icons'
 import getFirebaseClient, { FirebaseCredentials } from './getFirebaseClient'
 
-export const DEFAULT_ACCEPT = [
-  'video/*',
-  'audio/*',
-]
-
-const { defaultAccept, toolTitle } = pluginConfig ?? {};
+const { defaultAccept, toolTitle } = pluginConfig;
 
 const config: VendorConfiguration = {
   id: 'firebase-dam',
   customDataFieldName: 'firebase',
-  defaultAccept: defaultAccept ?? DEFAULT_ACCEPT,
-  toolTitle: toolTitle ?? "Videos & Audio (Firebase)",
+  defaultAccept,
+  toolTitle,
   supportsProgress: true,
   credentialsFields: [
     {

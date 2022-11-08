@@ -1,0 +1,7 @@
+{
+    "toolTitle": "Videos & audio (DigitalOcean)",
+    "defaultAccept": [
+        "video/*",
+        "audio/*"
+    ]
+}

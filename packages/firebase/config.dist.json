@@ -1,0 +1,7 @@
+{
+    "toolTitle": "Videos & Audio (Firebase)",
+    "defaultAccept": [
+        "video/*",
+        "audio/*"
+    ]
+}

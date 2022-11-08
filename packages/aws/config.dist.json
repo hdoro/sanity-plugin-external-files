@@ -1,0 +1,7 @@
+{
+    "toolTitle": "Videos & audio (S3)",
+    "defaultAccept": [
+        "video/*",
+        "audio/*"
+    ]
+}

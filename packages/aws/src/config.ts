@@ -1,4 +1,4 @@
-import pluginConfig from 'config:s3-dam?';
+import pluginConfig from 'config:s3-dam';
 import { VendorConfiguration } from 'sanity-plugin-external-dam/lib/types'
 import {
   LockIcon,
@@ -8,18 +8,13 @@ import {
   EarthGlobeIcon,
 } from '@sanity/icons'
 
-export const DEFAULT_ACCEPT = [
-  'video/*',
-  'audio/*',
-]
-
-const { defaultAccept, toolTitle } = pluginConfig ?? {};
+const { defaultAccept, toolTitle } = pluginConfig;
 
 const config: VendorConfiguration = {
   id: 's3-dam',
   customDataFieldName: 's3',
-  defaultAccept: defaultAccept ?? DEFAULT_ACCEPT,
-  toolTitle: toolTitle ?? 'Videos & audio (S3)',
+  defaultAccept,
+  toolTitle,
   credentialsFields: [
     {
       name: 'bucketKey',
