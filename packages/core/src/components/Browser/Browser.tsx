@@ -1,13 +1,13 @@
-import { SearchIcon, UploadIcon, CogIcon } from '@sanity/icons'
+import { CogIcon, SearchIcon, UploadIcon } from '@sanity/icons'
 import {
+  Box,
   Button,
   Card,
-  Box,
   Container,
   Dialog,
-  Inline,
   Flex,
   Grid,
+  Inline,
   Spinner,
   Stack,
   studioTheme,
@@ -20,7 +20,7 @@ import { useMachine } from '@xstate/react'
 import React from 'react'
 
 import parseAccept from '../../scripts/parseAccept'
-import sanityClient from '../../scripts/sanityClient'
+import { useSanityClient } from '../../scripts/sanityClient'
 import { SanityUpload, VendorConfiguration } from '../../types'
 import ConfigureCredentials from '../Credentials/ConfigureCredentials'
 import { CredentialsContext } from '../Credentials/CredentialsProvider'
@@ -44,6 +44,7 @@ function getFilterForExtension(extension: string) {
 
 const Browser: React.FC<BrowserProps> = (props) => {
   const { onSelect, accept = props.vendorConfig?.defaultAccept } = props
+  const sanityClient = useSanityClient()
   const [state, send] = useMachine(browserMachine, {
     services: {
       fetchFiles: () => {
@@ -90,7 +91,7 @@ const Browser: React.FC<BrowserProps> = (props) => {
             <ConfigureCredentials vendorConfig={props.vendorConfig} />
           </Container>
         ) : (
-          <Container padding={2} width={3} sizing="border-box" flex={1}>
+          <Container padding={2} width={3} sizing="border" flex={1}>
             <Flex justify="space-between" align="center">
               <TextInput
                 value={state.context.searchTerm || ''}
@@ -187,7 +188,6 @@ const Browser: React.FC<BrowserProps> = (props) => {
               >
                 <Card padding={3}>
                   <Uploader
-                    sanityClient={sanityClient}
                     accept={accept}
                     onSuccess={(document) =>
                       send({

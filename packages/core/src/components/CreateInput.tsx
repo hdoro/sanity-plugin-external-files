@@ -1,7 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Dialog, studioTheme, ThemeProvider } from '@sanity/ui'
-import DefaultFormField from 'part:@sanity/components/formfields/default'
 import { ChangeIndicatorCompareValueProvider } from '@sanity/base/lib/change-indicators/ChangeIndicator'
 import { withDocument, withValuePath } from 'part:@sanity/form-builder'
 import PatchEvent, { set, unset } from 'part:@sanity/form-builder/patch-event'
@@ -10,6 +9,7 @@ import UploaderWithConfig from './Uploader/UploaderWithConfig'
 import Browser from './Browser/Browser'
 import { AssetReference, SanityUpload, VendorConfiguration } from '../types'
 import CredentialsProvider from './Credentials/CredentialsProvider'
+import { FormField } from 'sanity'
 
 export interface InputProps {}
 
@@ -93,14 +93,15 @@ class ExternalDamInput extends React.Component<
             value={value?.asset?._ref}
             compareValue={this.props.compareValue?.asset?._ref}
           >
-            <DefaultFormField
+            <FormField
               label={type.title || type.name}
               description={type.description}
               level={this.props.level}
               // Necessary for validation warnings to show up contextually
-              markers={this.props.markers}
+              // @TODO: markers & presence
+              // markers={this.props.markers}
               // Necessary for presence indication
-              presence={this.props.presence}
+              // presence={this.props.presence}
             >
               <UploaderWithConfig
                 accept={accept}
@@ -111,7 +112,7 @@ class ExternalDamInput extends React.Component<
                 openBrowser={this.toggleBrowser}
                 vendorConfig={vendorConfig}
               />
-            </DefaultFormField>
+            </FormField>
           </ChangeIndicatorCompareValueProvider>
           {this.state.browserOpen &&
             ReactDOM.createPortal(

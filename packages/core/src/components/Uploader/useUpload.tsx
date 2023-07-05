@@ -12,6 +12,7 @@ import { SanityUpload } from '../../types'
 import { CredentialsContext } from '../Credentials/CredentialsProvider'
 import getFileRef from '../../scripts/getFileRef'
 import getBasicFileMetadata from '../../scripts/getBasicMetadata'
+import { useSanityClient } from '../../scripts/sanityClient'
 
 export interface useUploadReturn {
   dropzone: DropzoneState
@@ -23,12 +24,12 @@ export interface useUploadReturn {
 const useUpload = ({
   accept,
   vendorConfig,
-  sanityClient,
   storeOriginalFilename = true,
   onSuccess,
 }: UploaderProps): useUploadReturn => {
   const toast = useToast()
   const { credentials } = React.useContext(CredentialsContext)
+  const sanityClient = useSanityClient()
   const [state, send] = useMachine(uploadMachine, {
     actions: {
       invalidFileToast: () =>

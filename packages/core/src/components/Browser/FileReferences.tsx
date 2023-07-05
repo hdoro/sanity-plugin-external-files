@@ -1,11 +1,10 @@
 import type { SanityDocument } from '@sanity/client'
 import { Box, Card, Text } from '@sanity/ui'
-import Preview from 'part:@sanity/base/preview'
-import { IntentLink } from 'part:@sanity/base/router'
-import schema from 'part:@sanity/base/schema'
 import React from 'react'
 import styled from 'styled-components'
 import SpinnerBox from '../SpinnerBox'
+import { Preview, useSchema } from 'sanity'
+import { IntentLink } from 'sanity/router'
 
 const Container = styled(Box)`
   * {
@@ -27,6 +26,7 @@ const FileReferences: React.FC<{
   references?: SanityDocument[]
   isLoaded: boolean
 }> = (props) => {
+  const schema = useSchema()
   if (!props.isLoaded) {
     return <SpinnerBox />
   }
@@ -74,7 +74,7 @@ const FileReferences: React.FC<{
                   params={{ id: doc._id }}
                   key={doc._id}
                 >
-                  <Preview layout="default" value={doc} type={schemaType} />
+                  <Preview layout="default" value={doc} schemaType={schemaType} />
                 </IntentLink>
               ) : (
                 <Box padding={2}>

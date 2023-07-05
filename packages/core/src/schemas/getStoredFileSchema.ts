@@ -1,4 +1,4 @@
-import { SchemaType } from '@sanity/types'
+import { SchemaType } from 'sanity'
 import { VendorConfiguration } from '../types'
 import { getCustomDataFieldKey, getCustomDataTypeKey } from './getCustomDataSchema'
 import getDimensionsSchema from './getDimensionsSchema'

@@ -1,5 +1,5 @@
-import { SanityUpload } from '../types'
-import getFileRef, { GetFileRefProps } from './getFileRef'
+import type { SanityUpload } from '../types'
+import getFileRef, { type GetFileRefProps } from './getFileRef'
 import { parseExtension } from './parseAccept'
 
 export default function getBasicFileMetadata(

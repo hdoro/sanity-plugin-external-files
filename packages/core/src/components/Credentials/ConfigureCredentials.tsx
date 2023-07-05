@@ -9,7 +9,6 @@ import {
   Text,
   TextInput,
 } from '@sanity/ui'
-import DefaultFormField from 'part:@sanity/components/formfields/default'
 import { validateDocument } from '@sanity/validation'
 import Schema from '@sanity/schema'
 import { ValidationMarker } from '@sanity/types'
@@ -21,6 +20,7 @@ import {
 } from '../../types'
 
 import { CredentialsContext } from './CredentialsProvider'
+import { FormField } from 'sanity'
 
 const ConfigureCredentials: React.FC<{
   onCredentialsSaved?: (success: boolean) => void
@@ -74,6 +74,7 @@ const ConfigureCredentials: React.FC<{
     [props.vendorConfig.credentialsFields],
   )
 
+  // @TODO: validate form
   async function validateForm(values: typeof formValues) {
     const newMarkers = await validateDocument(
       { ...values, _type: 'vendorCredentials' } as any,
@@ -114,12 +115,13 @@ const ConfigureCredentials: React.FC<{
           <form style={{ marginTop: '1.5rem' }} onSubmit={submitCredentials}>
             <Stack space={4}>
               {props.vendorConfig.credentialsFields.map((field) => (
-                <DefaultFormField
+                <FormField
                   label={field.title || field.name}
                   description={field.description}
-                  markers={markers.filter(
-                    (marker) => marker.path[0] === field.name,
-                  )}
+                  // @TODO: markers
+                  // markers={markers.filter(
+                  //   (marker) => marker.path[0] === field.name,
+                  // )}
                   level={0}
                 >
                   <TextInput
@@ -129,7 +131,7 @@ const ConfigureCredentials: React.FC<{
                     type={field.type === 'number' ? 'number' : 'text'}
                     disabled={isLoading}
                   />
-                </DefaultFormField>
+                </FormField>
               ))}
               <Button
                 text={

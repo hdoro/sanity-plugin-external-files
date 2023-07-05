@@ -1,6 +1,5 @@
 import React from 'react'
 import { Button, Container, Stack } from '@sanity/ui'
-import { SanityClient } from '@sanity/client'
 import { SearchIcon, UploadIcon, TrashIcon } from '@sanity/icons'
 
 import useUpload from './useUpload'
@@ -10,7 +9,6 @@ import MediaPreview from '../MediaPreview'
 
 export interface UploaderProps {
   vendorConfig: VendorConfiguration
-  sanityClient: SanityClient
   onSuccess: (document: SanityUpload) => void
 
   // CONFIGURATION

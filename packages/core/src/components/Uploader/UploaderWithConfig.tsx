@@ -1,6 +1,5 @@
 import { Card, Spinner, Box } from '@sanity/ui'
 import React from 'react'
-import sanityClient from '../../scripts/sanityClient'
 import ConfigureCredentials from '../Credentials/ConfigureCredentials'
 import { CredentialsContext } from '../Credentials/CredentialsProvider'
 import Uploader, { UploaderProps } from './Uploader'
@@ -38,7 +37,7 @@ const UploaderWithConfig: React.FC<UploaderWithConfigProps> = (props) => {
     )
   }
 
-  return <Uploader sanityClient={sanityClient} {...props} />
+  return <Uploader {...props} />
 }
 
 export default UploaderWithConfig

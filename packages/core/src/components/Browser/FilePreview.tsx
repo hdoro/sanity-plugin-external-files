@@ -26,7 +26,7 @@ const FilePreview: React.FC<FilePreviewProps> = ({
     return null
   }
   return (
-    <Card border padding={2} sizing="border-box" radius={2}>
+    <Card border padding={2} sizing="border" radius={2}>
       <Stack
         space={3}
         height="fill"

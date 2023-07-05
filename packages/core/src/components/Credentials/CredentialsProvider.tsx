@@ -1,7 +1,6 @@
-import React from 'react'
 import { useToast } from '@sanity/ui'
-
-import sanityClient from '../../scripts/sanityClient'
+import React, { PropsWithChildren } from 'react'
+import { useSanityClient } from '../../scripts/sanityClient'
 import { VendorConfiguration, VendorCredentials } from '../../types'
 
 export type CredentialsStatus = 'loading' | 'missingCredentials' | 'success'
@@ -17,15 +16,15 @@ export const CredentialsContext = React.createContext<ContextValue>({
   status: 'loading',
 })
 
-interface CredentialsProviderProps {
-  vendorConfig: VendorConfiguration
-}
 
-const CredentialsProvider: React.FC<CredentialsProviderProps> = (props) => {
+const CredentialsProvider = (props: PropsWithChildren<{
+  vendorConfig: VendorConfiguration
+}>) => {
   const { vendorConfig } = props
   const cacheKey = `_${vendorConfig?.id || 'external'}DamSavedCredentials`
   const documentId = `${vendorConfig.id}.credentials`
 
+  const sanityClient = useSanityClient()
   const toast = useToast()
   const [credentials, setCredentials] =
     React.useState<VendorCredentials | undefined>()

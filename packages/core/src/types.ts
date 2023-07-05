@@ -1,5 +1,4 @@
-import { SanityDocument } from '@sanity/client'
-import { BaseSchemaType } from '@sanity/types'
+import { SanityDocument, BaseSchemaType } from 'sanity'
 
 type StrictSanityDocument = Pick<
   SanityDocument,

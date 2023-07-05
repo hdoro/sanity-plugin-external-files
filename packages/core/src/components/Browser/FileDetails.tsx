@@ -25,18 +25,18 @@ import {
   useToast,
 } from '@sanity/ui'
 import { useMachine } from '@xstate/react'
-import DefaultFormField from 'part:@sanity/components/formfields/default'
+import { FormField } from 'sanity'
 import React from 'react'
 import formatBytes from '../../scripts/formatBytes'
 import formatSeconds from '../../scripts/formatSeconds'
-import sanityClient from '../../scripts/sanityClient'
+import { useSanityClient } from '../../scripts/sanityClient'
 import { SanityUpload, VendorConfiguration } from '../../types'
+import { CredentialsContext } from '../Credentials/CredentialsProvider'
 import IconInfo from '../IconInfo'
 import MediaPreview from '../MediaPreview'
 import SpinnerBox from '../SpinnerBox'
-import fileDetailsMachine from './fileDetailsMachine'
 import FileReferences from './FileReferences'
-import { CredentialsContext } from '../Credentials/CredentialsProvider'
+import fileDetailsMachine from './fileDetailsMachine'
 
 interface FileDetailsProps {
   onSelect?: (file: SanityUpload) => void
@@ -54,7 +54,7 @@ const AssetInput: React.FC<{
   value: string
   onInput: (e: React.FormEvent<HTMLInputElement>) => void
 }> = (props) => (
-  <DefaultFormField
+  <FormField
     label={props.label}
     description={props.description}
     level={0}
@@ -64,13 +64,14 @@ const AssetInput: React.FC<{
       placeholder={props.placeholder}
       onInput={props.onInput}
     />
-  </DefaultFormField>
+  </FormField>
 )
 
 const FileDetails: React.FC<FileDetailsProps> = (props) => {
   const { closeDialog, vendorConfig } = props
   const toast = useToast()
   const { credentials } = React.useContext(CredentialsContext)
+  const sanityClient = useSanityClient()
   const [state, send] = useMachine(fileDetailsMachine, {
     actions: {
       closeDialog: () => closeDialog(),
@@ -350,7 +351,6 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
                 label="Details"
                 onClick={() => send({ type: 'OPEN_DETAILS' })}
                 selected={state.matches('tab.details_tab')}
-                space={2}
               />
               <Tab
                 aria-controls="references-panel"
@@ -359,7 +359,6 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
                 label="Used by"
                 onClick={() => send({ type: 'OPEN_REFERENCES' })}
                 selected={state.matches('tab.references_tab')}
-                space={2}
               />
             </TabList>
             <TabPanel

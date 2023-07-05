@@ -7030,7 +7030,10 @@ __metadata:
   resolution: "sanity-plugin-digital-ocean-files@workspace:packages/digital-ocean"
   dependencies:
     "@sanity/icons": ^1
+    sanity: ^3.14.1
     sanity-plugin-external-dam: "workspace:*"
+  peerDependencies:
+    sanity: ^3.14.0
   languageName: unknown
   linkType: soft
 
@@ -7075,7 +7078,10 @@ __metadata:
   dependencies:
     "@sanity/icons": ^1
     firebase: ^8.6.3
+    sanity: ^3.14.1
     sanity-plugin-external-dam: "workspace:*"
+  peerDependencies:
+    sanity: ^3.14.0
   languageName: unknown
   linkType: soft
 
@@ -7084,7 +7090,10 @@ __metadata:
   resolution: "sanity-plugin-s3-dam@workspace:packages/aws"
   dependencies:
     "@sanity/icons": ^1
+    sanity: ^3.14.1
     sanity-plugin-external-dam: "workspace:*"
+  peerDependencies:
+    sanity: ^3.14.0
   languageName: unknown
   linkType: soft
 

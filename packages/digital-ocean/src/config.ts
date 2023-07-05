@@ -1,5 +1,4 @@
-import pluginConfig from 'config:digital-ocean-files?';
-import { VendorConfiguration } from 'sanity-plugin-external-dam/lib/types'
+import type { VendorConfiguration } from 'sanity-plugin-external-dam/lib/types'
 import {
   LockIcon,
   PinIcon,
@@ -11,7 +10,8 @@ import {
 
 export const DEFAULT_ACCEPT = ['video/*', 'audio/*']
 
-const { defaultAccept, toolTitle } = pluginConfig ?? {};
+// @TODO: plugin config
+const { defaultAccept, toolTitle } = {} as any;
 
 const config: VendorConfiguration = {
   id: 'digital-ocean-files',

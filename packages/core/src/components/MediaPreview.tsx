@@ -1,14 +1,14 @@
 import { blue } from '@sanity/color'
-import { PlayIcon } from '@sanity/icons'
+import { DocumentIcon, ImageIcon, PlayIcon } from '@sanity/icons'
+import imageUrlBuilder from '@sanity/image-url'
 import { Box, Card, Spinner } from '@sanity/ui'
 import React from 'react'
-import sanityClient, { imageBuilder } from '../scripts/sanityClient'
+import { useSanityClient } from '../scripts/sanityClient'
 import { MediaFile, SanityUpload } from '../types'
 import AudioIcon from './AudioIcon'
 import FileMetadata from './FileMetadata'
 import VideoIcon from './VideoIcon'
 import WaveformDisplay from './WaveformDisplay'
-import { ImageIcon, DocumentIcon } from '@sanity/icons'
 
 export interface MediaPreview {
   file: MediaFile
@@ -47,16 +47,16 @@ const Player: React.FC<SanityUpload> = (props) => {
   )
 }
 
-const WrappingCard: React.FC<
-  Pick<MediaPreview, 'context'> & {
-    paddingBottom?: string
-  }
-> = ({
+const WrappingCard = ({
   children,
   context,
   // 16:9 aspect ratio
   paddingBottom = '56.25%',
-}) => {
+}: React.PropsWithChildren<
+Pick<MediaPreview, 'context'> & {
+  paddingBottom?: string
+}
+>) => {
     return (
       <Card
         padding={context === 'input' ? 4 : 0}
@@ -89,8 +89,10 @@ const WrappingCard: React.FC<
 const MediaPreview: React.FC<MediaPreview> = (props) => {
   const [playing, setPlaying] = React.useState(false)
   const [fullFile, setFullFile] = React.useState<SanityUpload>()
+  const sanityClient = useSanityClient()
+  const imageBuilder = imageUrlBuilder(sanityClient)
 
-  const expandReference = React.useCallback(async (_ref) => {
+  const expandReference = React.useCallback(async (_ref: string) => {
     const doc = await sanityClient.fetch<SanityUpload>(`*[_id == $id][0]`, {
       id: _ref,
     })
@@ -230,8 +232,8 @@ const MediaPreview: React.FC<MediaPreview> = (props) => {
                   top: '50%',
                   transform: 'translate(-50%,-50%)',
                   color: blue[800].hex,
-                  height: mediaType === 'audio' && '60%',
-                  width: mediaType === 'audio' && '90%',
+                  height: mediaType === 'audio' ? '60%' : undefined,
+                  width: mediaType === 'audio' ? '90%' : undefined,
                 }}
               >
                 {icon}

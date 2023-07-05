@@ -1,11 +1,3 @@
-import client from 'part:@sanity/base/client'
-import { SanityClient } from '@sanity/client'
-import imageUrlBuilder from '@sanity/image-url'
+import { useClient } from 'sanity'
 
-const sanityClient = client.withConfig({
-  apiVersion: '2021-03-25',
-}) as SanityClient
-
-export default sanityClient
-
-export const imageBuilder = imageUrlBuilder(sanityClient)
+export const useSanityClient = () => useClient({ apiVersion: '2023-07-05' })

@@ -28,6 +28,12 @@
     "@sanity/icons": "^1",
     "sanity-plugin-external-dam": "workspace:*"
   },
+  "devDependencies": {
+    "sanity": "^3.14.1"
+  },
+  "peerDependencies": {
+    "sanity": "^3.14.0"
+  },
   "bugs": {
     "url": "https://github.com/hdoro/sanity-plugin-external-dam/issues"
   },
