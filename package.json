@@ -2,6 +2,8 @@
   "name": "sanity-plugin-external-dam-root",
   "private": true,
   "scripts": {
+    "dev": "turbo run dev --parallel",
+    "build": "turbo run build",
     "format": "prettier --write .",
     "update-package-versions": "changeset version"
   },
@@ -17,6 +19,7 @@
   "devDependencies": {
     "@changesets/cli": "latest",
     "prettier": "latest",
+    "turbo": "latest",
     "typescript": "latest"
   },
   "bugs": {
