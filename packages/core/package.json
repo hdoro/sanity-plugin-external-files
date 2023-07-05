@@ -1,7 +1,7 @@
 {
-  "name": "sanity-plugin-external-dam",
+  "name": "sanity-plugin-external-files",
   "version": "1.0.0-next.0",
-  "description": "Core library for sanity-plugin-firebase-dam & sanity-plugin-aws-dam.",
+  "description": "Core library for external object storage providers in Sanity.io studio.",
   "main": "lib/index.js",
   "scripts": {
     "clear-lib": "node clearLib.js",
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/hdoro/sanity-plugin-external-dam.git"
+    "url": "git+ssh://git@github.com/hdoro/sanity-plugin-external-files.git"
   },
   "keywords": [
     "sanity.io",
@@ -48,7 +48,7 @@
     "styled-components": "^5"
   },
   "bugs": {
-    "url": "https://github.com/hdoro/sanity-plugin-external-dam/issues"
+    "url": "https://github.com/hdoro/sanity-plugin-external-files/issues"
   },
-  "homepage": "https://github.com/hdoro/sanity-plugin-external-dam#readme"
+  "homepage": "https://github.com/hdoro/sanity-plugin-external-files#readme"
 }

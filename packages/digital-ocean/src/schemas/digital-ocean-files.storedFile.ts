@@ -1,4 +1,4 @@
-import { getStoredFileSchema } from 'sanity-plugin-external-dam'
+import { getStoredFileSchema } from 'sanity-plugin-external-files'
 import config from '../config'
 import schemaConfig from '../schema.config'
 

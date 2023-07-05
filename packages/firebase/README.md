@@ -1,8 +1,8 @@
 # Firebase Digital Asset Management (DAM) plugin for Sanity.io
 
-Allows uploading, referencing and deleting video and audio files to Firebase directly from your Sanity studio. Is a flavor of [sanity-plugin-external-dam](https://github.com/hdoro/sanity-plugin-external-dam).
+Allows uploading, referencing and deleting video and audio files to Firebase directly from your Sanity studio. Is a flavor of [sanity-plugin-external-files](https://github.com/hdoro/sanity-plugin-external-files).
 
-![Screenshot of the plugin](https://raw.githubusercontent.com/hdoro/sanity-plugin-external-dam/main/screenshots.png)
+![Screenshot of the plugin](https://raw.githubusercontent.com/hdoro/sanity-plugin-external-files/main/screenshots.png)
 
 ## Installing
 
@@ -16,13 +16,13 @@ I plan on recording a video tutorial going through the process in detail. Until 
 
 ## Using
 
-Use the `firebase-dam.media` type in your fields. Examples:
+Use the `firebase-files.media` type in your fields. Examples:
 
 ```
 {
     name: "video",
     title: "Video (Firebase)",
-    type: "firebase-dam.media",
+    type: "firebase-files.media",
     options: {
         accept: "video/*",
         storeOriginalFilename: true,
@@ -31,7 +31,7 @@ Use the `firebase-dam.media` type in your fields. Examples:
 {
     name: "anyFile",
     title: "File (Firebase)",
-    type: "firebase-dam.media",
+    type: "firebase-files.media",
     options: {
         // Accept ANY file
         accept: "*",
@@ -42,4 +42,4 @@ Use the `firebase-dam.media` type in your fields. Examples:
 
 ## Contributing, roadmap & acknowledgments
 
-Refer to [sanity-plugin-external-dam](https://github.com/hdoro/sanity-plugin-external-dam) for those :)
+Refer to [sanity-plugin-external-files](https://github.com/hdoro/sanity-plugin-external-files) for those :)

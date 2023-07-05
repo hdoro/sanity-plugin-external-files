@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/hdoro/sanity-plugin-external-dam.git"
+    "url": "git+ssh://git@github.com/hdoro/sanity-plugin-external-files.git"
   },
   "keywords": [
     "sanity.io",
@@ -26,7 +26,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@sanity/icons": "^1",
-    "sanity-plugin-external-dam": "workspace:*"
+    "sanity-plugin-external-files": "workspace:*"
   },
   "devDependencies": {
     "sanity": "^3.14.1"
@@ -35,7 +35,7 @@
     "sanity": "^3.14.0"
   },
   "bugs": {
-    "url": "https://github.com/hdoro/sanity-plugin-external-dam/issues"
+    "url": "https://github.com/hdoro/sanity-plugin-external-files/issues"
   },
-  "homepage": "https://github.com/hdoro/sanity-plugin-external-dam#readme"
+  "homepage": "https://github.com/hdoro/sanity-plugin-external-files#readme"
 }

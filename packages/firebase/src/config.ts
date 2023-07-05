@@ -1,14 +1,15 @@
-import pluginConfig from 'config:firebase-dam?'
-import { VendorConfiguration } from 'sanity-plugin-external-dam/lib/types'
+import { VendorConfiguration } from 'sanity-plugin-external-files/lib/types'
 import { LockIcon, LinkIcon } from '@sanity/icons'
 import getFirebaseClient, { FirebaseCredentials } from './getFirebaseClient'
 
 export const DEFAULT_ACCEPT = ['video/*', 'audio/*']
 
-const { defaultAccept, toolTitle } = pluginConfig ?? {}
+// @TODO: plugin config
+const { defaultAccept, toolTitle } = {} as any
 
+// @TODO: how to handle schema/id changes?
 const config: VendorConfiguration = {
-  id: 'firebase-dam',
+  id: 'firebase-files',
   customDataFieldName: 'firebase',
   defaultAccept: defaultAccept ?? DEFAULT_ACCEPT,
   toolTitle: toolTitle ?? 'Videos & Audio (Firebase)',
@@ -62,7 +63,7 @@ const config: VendorConfiguration = {
     const ref = firebaseClient.storage().ref(fileName)
     const uploadTask = ref.put(file, {
       customMetadata: {
-        uploadedFrom: 'sanity-plugin-firebase-dam',
+        uploadedFrom: 'sanity-plugin-firebase-files',
       },
     })
 

@@ -1,4 +1,4 @@
-import { getCustomDataSchema } from 'sanity-plugin-external-dam'
+import { getCustomDataSchema } from 'sanity-plugin-external-files'
 import config from '../config'
 import schemaConfig from '../schema.config'
 

@@ -1,6 +1,6 @@
-import { CreateInput } from 'sanity-plugin-external-dam'
+import { createInput } from 'sanity-plugin-external-files'
 import config from '../config'
 
-const Input = CreateInput(config)
+const Input = createInput(config)
 
 export default Input

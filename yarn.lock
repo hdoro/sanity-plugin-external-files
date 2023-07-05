@@ -7031,15 +7031,15 @@ __metadata:
   dependencies:
     "@sanity/icons": ^1
     sanity: ^3.14.1
-    sanity-plugin-external-dam: "workspace:*"
+    sanity-plugin-external-files: "workspace:*"
   peerDependencies:
     sanity: ^3.14.0
   languageName: unknown
   linkType: soft
 
-"sanity-plugin-external-dam-root@workspace:.":
+"sanity-plugin-external-files-root@workspace:.":
   version: 0.0.0-use.local
-  resolution: "sanity-plugin-external-dam-root@workspace:."
+  resolution: "sanity-plugin-external-files-root@workspace:."
   dependencies:
     "@changesets/cli": latest
     prettier: latest
@@ -7048,9 +7048,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"sanity-plugin-external-dam@workspace:*, sanity-plugin-external-dam@workspace:packages/core":
+"sanity-plugin-external-files@workspace:*, sanity-plugin-external-files@workspace:packages/core":
   version: 0.0.0-use.local
-  resolution: "sanity-plugin-external-dam@workspace:packages/core"
+  resolution: "sanity-plugin-external-files@workspace:packages/core"
   dependencies:
     "@sanity/icons": ^1
     "@sanity/ui": ^1
@@ -7073,26 +7073,26 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"sanity-plugin-firebase-dam@workspace:packages/firebase":
+"sanity-plugin-firebase-files@workspace:packages/firebase":
   version: 0.0.0-use.local
-  resolution: "sanity-plugin-firebase-dam@workspace:packages/firebase"
+  resolution: "sanity-plugin-firebase-files@workspace:packages/firebase"
   dependencies:
     "@sanity/icons": ^1
     firebase: ^8.6.3
     sanity: ^3.14.1
-    sanity-plugin-external-dam: "workspace:*"
+    sanity-plugin-external-files: "workspace:*"
   peerDependencies:
     sanity: ^3.14.0
   languageName: unknown
   linkType: soft
 
-"sanity-plugin-s3-dam@workspace:packages/aws":
+"sanity-plugin-s3-files@workspace:packages/aws":
   version: 0.0.0-use.local
-  resolution: "sanity-plugin-s3-dam@workspace:packages/aws"
+  resolution: "sanity-plugin-s3-files@workspace:packages/aws"
   dependencies:
     "@sanity/icons": ^1
     sanity: ^3.14.1
-    sanity-plugin-external-dam: "workspace:*"
+    sanity-plugin-external-files: "workspace:*"
   peerDependencies:
     sanity: ^3.14.0
   languageName: unknown

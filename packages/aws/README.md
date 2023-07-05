@@ -1,8 +1,8 @@
 # AWS S3 Digital Asset Management (DAM) plugin for Sanity.io
 
-Allows uploading, referencing and deleting video and audio files to S3 directly from your Sanity studio. Is a flavor of [sanity-plugin-external-dam](https://github.com/hdoro/sanity-plugin-external-dam).
+Allows uploading, referencing and deleting video and audio files to S3 directly from your Sanity studio. Is a flavor of [sanity-plugin-external-files](https://github.com/hdoro/sanity-plugin-external-files).
 
-![Screenshot of the plugin](https://raw.githubusercontent.com/hdoro/sanity-plugin-external-dam/main/screenshots.png)
+![Screenshot of the plugin](https://raw.githubusercontent.com/hdoro/sanity-plugin-external-files/main/screenshots.png)
 
 ## Installing
 
@@ -27,7 +27,7 @@ If you already have a bucket, make sure to follow the configuration below.
 1. Once created, click into the bucket's page and go into the "Permissions" tab to configure CORS
 1. Configure CORS for your bucket to accept the origins your studio will be hosted in (including localhost)
    - Refer to [S3's guide on CORS](https://docs.aws.amazon.com/AmazonS3/latest/userguide/enabling-cors-examples.html) if this is new to you (it was for me too!)
-   - You can use the template at [s3Cors.example.json](https://github.com/hdoro/sanity-plugin-external-dam/blob/main/packages/aws/s3Cors.example.json)
+   - You can use the template at [s3Cors.example.json](https://github.com/hdoro/sanity-plugin-external-files/blob/main/packages/aws/s3Cors.example.json)
 
 ### Creating the Lambda functions' role for accessing the bucket
 
@@ -81,7 +81,7 @@ Now we can change the code of each function
 
 #### Editing functions' code
 
-Use the templates at [getSignedUrl.example.js](https://github.com/hdoro/sanity-plugin-external-dam/blob/main/packages/aws/getSignedUrl.example.js) and [deleteObject.example.js](https://github.com/hdoro/sanity-plugin-external-dam/blob/main/packages/aws/deleteObject.example.js).
+Use the templates at [getSignedUrl.example.js](https://github.com/hdoro/sanity-plugin-external-files/blob/main/packages/aws/getSignedUrl.example.js) and [deleteObject.example.js](https://github.com/hdoro/sanity-plugin-external-files/blob/main/packages/aws/deleteObject.example.js).
 
 With the functions' URLs in hand - which you can find in each functions' page -, open the plugin's configuration form in the Sanity tool.
 
@@ -89,13 +89,13 @@ There, you'll fill in the bucket key (ex: `my-sanity-bucket`), the bucket region
 
 ## Using
 
-Use the `s3-dam.media` type in your fields. Examples:
+Use the `s3-files.media` type in your fields. Examples:
 
 ```
 {
     name: "video",
     title: "Video (S3)",
-    type: "s3-dam.media",
+    type: "s3-files.media",
     options: {
         accept: "video/*",
         storeOriginalFilename: true,
@@ -104,7 +104,7 @@ Use the `s3-dam.media` type in your fields. Examples:
 {
     name: "anyFile",
     title: "File (S3)",
-    type: "s3-dam.media",
+    type: "s3-files.media",
     options: {
         // Accept ANY file
         accept: "*",
@@ -115,4 +115,4 @@ Use the `s3-dam.media` type in your fields. Examples:
 
 ## Contributing, roadmap & acknowledgments
 
-Refer to [sanity-plugin-external-dam](https://github.com/hdoro/sanity-plugin-external-dam) for those :)
+Refer to [sanity-plugin-external-files](https://github.com/hdoro/sanity-plugin-external-files) for those :)

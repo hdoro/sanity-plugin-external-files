@@ -75,13 +75,15 @@ const ConfigureCredentials: React.FC<{
     [props.vendorConfig.credentialsFields],
   )
 
+  console.log({ schema, setMarkers, validateDocument })
+
   // @TODO: validate form
   async function validateForm(values: typeof formValues) {
-    const newMarkers = await validateDocument(
-      { ...values, _type: 'vendorCredentials' } as any,
-      schema,
-    )
-    setMarkers(newMarkers)
+    // const newMarkers = await validateDocument(
+    //   { ...values, _type: 'vendorCredentials' } as any,
+    //   schema,
+    // )
+    // setMarkers(newMarkers)
   }
 
   React.useEffect(() => {

@@ -1,5 +1,5 @@
 import React from 'react'
-import { StudioTool } from 'sanity-plugin-external-dam'
+import { StudioTool } from 'sanity-plugin-external-files'
 import config from '../config'
 
 const Tool = () => <StudioTool {...config} />

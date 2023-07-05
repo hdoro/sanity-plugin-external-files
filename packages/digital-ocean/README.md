@@ -1,8 +1,8 @@
 # Sanity.io plugin for storing large files in Digital Ocean Spaces
 
-Allows uploading, referencing and deleting video and audio files to DigitalOcean directly from your Sanity studio. Is a flavor of [sanity-plugin-external-dam](https://github.com/hdoro/sanity-plugin-external-dam).
+Allows uploading, referencing and deleting video and audio files to DigitalOcean directly from your Sanity studio. Is a flavor of [sanity-plugin-external-files](https://github.com/hdoro/sanity-plugin-external-files).
 
-![Screenshot of the plugin](https://raw.githubusercontent.com/hdoro/sanity-plugin-external-dam/main/screenshots.png)
+![Screenshot of the plugin](https://raw.githubusercontent.com/hdoro/sanity-plugin-external-files/main/screenshots.png)
 
 ## Installing
 
@@ -17,7 +17,7 @@ The rest of the work must be done inside DigitalOcean's console:
   - Refer to [DigitalOcean's guide on CORS on Spaces](https://docs.digitalocean.com/products/spaces/how-to/configure-cors/) if this is new to you (it was for me too!)
 - To use the Spaces API, you need to [create an access key and secret key](https://docs.digitalocean.com/products/spaces/how-to/manage-access/#access-keys) for your Space from the [API page in the control panel](https://cloud.digitalocean.com/settings/api/tokens).
 - Create server endpoints for creating the pre-signed URLs we'll use to post objects to DigitalOcean and deleting objects
-  - If using serverless, use the templates at [getSignedUrl.example.js](https://github.com/hdoro/sanity-plugin-external-dam/blob/main/packages/digital-oean/getSignedUrl.example.js) and [deleteObject.example.js](https://github.com/hdoro/sanity-plugin-external-dam/blob/main/packages/digital-oean/deleteObject.example.js)
+  - If using serverless, use the templates at [getSignedUrl.example.js](https://github.com/hdoro/sanity-plugin-external-files/blob/main/packages/digital-oean/getSignedUrl.example.js) and [deleteObject.example.js](https://github.com/hdoro/sanity-plugin-external-files/blob/main/packages/digital-oean/deleteObject.example.js)
 
 With these in hand, fill-in the plugin's configuration form where you'll fill in the bucket key (ex: `my-sanity-bucket`), the Space region (ex: `ams3`), the URL for both server endpoints and an secret for validating input in functions.
 
@@ -51,4 +51,4 @@ Use the `digital-ocean-files.media` type in your fields. Examples:
 
 ## Contributing, roadmap & acknowledgments
 
-Refer to [sanity-plugin-external-dam](https://github.com/hdoro/sanity-plugin-external-dam) for those :)
+Refer to [sanity-plugin-external-files](https://github.com/hdoro/sanity-plugin-external-files) for those :)

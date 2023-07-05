@@ -1,4 +1,4 @@
-import type { VendorConfiguration } from 'sanity-plugin-external-dam/lib/types'
+import type { VendorConfiguration } from 'sanity-plugin-external-files/lib/types'
 import {
   LockIcon,
   PinIcon,

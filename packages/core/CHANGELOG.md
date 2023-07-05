@@ -1,4 +1,4 @@
-# sanity-plugin-external-dam
+# sanity-plugin-external-files
 
 ## 1.0.0-next.0
 

@@ -1,4 +1,4 @@
-# sanity-plugin-firebase-dam
+# sanity-plugin-firebase-files
 
 ## 1.0.0-next.0
 
@@ -9,4 +9,4 @@
 ### Patch Changes
 
 - Updated dependencies
-  - sanity-plugin-external-dam@1.0.0-next.0
+  - sanity-plugin-external-files@1.0.0-next.0

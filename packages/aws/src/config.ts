@@ -1,5 +1,4 @@
-import pluginConfig from 'config:s3-dam?'
-import { VendorConfiguration } from 'sanity-plugin-external-dam/lib/types'
+import { VendorConfiguration } from 'sanity-plugin-external-files/lib/types'
 import {
   LockIcon,
   PinIcon,
@@ -10,10 +9,12 @@ import {
 
 export const DEFAULT_ACCEPT = ['video/*', 'audio/*']
 
-const { defaultAccept, toolTitle } = pluginConfig ?? {}
+// @TODO: plugin config
+const { defaultAccept, toolTitle } = {} as any
 
+// @TODO: how to handle schema/id changes?
 const config: VendorConfiguration = {
-  id: 's3-dam',
+  id: 's3-files',
   customDataFieldName: 's3',
   defaultAccept: defaultAccept ?? DEFAULT_ACCEPT,
   toolTitle: toolTitle ?? 'Videos & audio (S3)',

@@ -1,24 +1,22 @@
-⚠️ **Poorly documented v3 version in the [feat/sanity-v3 branch](https://github.com/hdoro/sanity-plugin-external-files/tree/feat/sanity-v3)**
+# sanity-plugin-external-files
 
-# sanity-plugin-external-dam
+Series of plugins for working with media files hosted elsewhere inside of Sanity. Use one of the existing implementations or write your own!
 
-Series of plugins for working with media files hosted elsewhere inside of Sanity - _currently only audio and video are supported_. Use one of the existing implementations or write your own!
-
-![Screenshot of the plugin](https://raw.githubusercontent.com/hdoro/sanity-plugin-external-dam/main/screenshots.png)
+![Screenshot of the plugin](https://raw.githubusercontent.com/hdoro/sanity-plugin-external-files/main/screenshots.png)
 
 ## Existing implementations
 
 List of vendors currently supported:
 
-- AWS S3 -> [sanity-plugin-s3-dam](https://github.com/hdoro/sanity-plugin-external-dam/tree/main/packages/aws)
-- Google Firebase -> [sanity-plugin-firebase-dam](https://github.com/hdoro/sanity-plugin-external-dam/tree/main/packages/firebase)
-- DigitalOcean Spaces -> [sanity-plugin-digital-ocean-files](https://github.com/hdoro/sanity-plugin-external-dam/tree/main/packages/digital-ocean)
+- AWS S3 -> [sanity-plugin-s3-files](https://github.com/hdoro/sanity-plugin-external-files/tree/main/packages/aws)
+- Google Firebase -> [sanity-plugin-firebase-files](https://github.com/hdoro/sanity-plugin-external-files/tree/main/packages/firebase)
+- DigitalOcean Spaces -> [sanity-plugin-digital-ocean-files](https://github.com/hdoro/sanity-plugin-external-files/tree/main/packages/digital-ocean)
 
 ## Creating your own implementation
 
-I'm yet to properly document how to create your own implementation, so please reach out if you're looking into doing it! You can get a hold of me at [opensource@hdoro.dev](mailto:opensource@hdoro.dev) or by [messaging me in the Sanity Slack community](https://sanity-io-land.slack.com/team/UB1QTEXGC).
+I'm yet to properly document how to create your own implementation, so please reach out if you're looking into doing it! You can get a hold of me at [opensource@hdoro.dev](mailto:opensource@hdoro.dev).
 
-While that documentation gets sorted out, be sure to take a look at the configuration for the [Firebase plugin](https://github.com/hdoro/sanity-plugin-external-dam/blob/main/packages/firebase/src/config.ts) and for the [S3 plugin](https://github.com/hdoro/sanity-plugin-external-dam/blob/main/packages/aws/src/config.ts).
+While that documentation gets sorted out, be sure to take a look at the configuration for the [Firebase plugin](https://github.com/hdoro/sanity-plugin-external-files/blob/main/packages/firebase/src/config.ts) and for the [S3 plugin](https://github.com/hdoro/sanity-plugin-external-files/blob/main/packages/aws/src/config.ts).
 
 ## Roadmap
 
