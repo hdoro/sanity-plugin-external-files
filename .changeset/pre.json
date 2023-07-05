@@ -1,0 +1,13 @@
+{
+  "mode": "pre",
+  "tag": "next",
+  "initialVersions": {
+    "sanity-plugin-s3-dam": "0.7.0",
+    "sanity-plugin-external-dam": "0.7.0",
+    "sanity-plugin-digital-ocean-files": "0.7.0",
+    "sanity-plugin-firebase-dam": "0.7.0"
+  },
+  "changesets": [
+    "big-kangaroos-kneel"
+  ]
+}

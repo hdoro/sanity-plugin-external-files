@@ -5,3 +5,4 @@ node_modules
 .pnp.js
 **/*.lerna_backup
 lerna-debug.log
+.DS_STORE

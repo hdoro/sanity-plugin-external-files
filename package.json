@@ -2,7 +2,8 @@
   "name": "sanity-plugin-external-dam-root",
   "private": true,
   "scripts": {
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "update-package-versions": "changeset version"
   },
   "workspaces": [
     "packages/*"
@@ -14,8 +15,9 @@
   "author": "Henrique Doro <opensource@hdoro.dev>",
   "license": "Apache-2.0",
   "devDependencies": {
-    "prettier": "^2.4.0",
-    "typescript": "^4.4.3"
+    "@changesets/cli": "latest",
+    "prettier": "latest",
+    "typescript": "latest"
   },
   "bugs": {
     "url": "https://github.com/hdoro/sanity-plugin-external-dam/issues"
