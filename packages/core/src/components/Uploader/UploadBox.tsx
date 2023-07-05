@@ -130,8 +130,8 @@ const UploadBox: React.FC<UploadBox> = (props) => {
             {state.value === 'uploadingToVendor' && (
               <>
                 {props.vendorConfig.supportsProgress && (
-                    <Text>{state.context.vendorUploadProgress}%</Text>
-                  )}
+                  <Text>{state.context.vendorUploadProgress}%</Text>
+                )}
                 <Button
                   icon={CloseIcon}
                   fontSize={2}

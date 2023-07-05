@@ -54,11 +54,7 @@ const AssetInput: React.FC<{
   value: string
   onInput: (e: React.FormEvent<HTMLInputElement>) => void
 }> = (props) => (
-  <FormField
-    label={props.label}
-    description={props.description}
-    level={0}
-  >
+  <FormField label={props.label} description={props.description} level={0}>
     <TextInput
       value={props.value}
       placeholder={props.placeholder}

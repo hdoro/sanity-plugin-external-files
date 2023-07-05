@@ -53,38 +53,38 @@ const WrappingCard = ({
   // 16:9 aspect ratio
   paddingBottom = '56.25%',
 }: React.PropsWithChildren<
-Pick<MediaPreview, 'context'> & {
-  paddingBottom?: string
-}
->) => {
-    return (
-      <Card
-        padding={context === 'input' ? 4 : 0}
-        border={context === 'input'}
-        display="flex"
-        style={{
-          textAlign: 'center',
-          width: '100%',
-          position: 'relative',
-          paddingBottom,
-        }}
-        sizing="border"
-      >
-        <div
-          style={{
-            position: 'absolute',
-            left: '50%',
-            top: '50%',
-            transform: 'translate(-50%,-50%)',
-            width: '100%',
-            height: '100%',
-          }}
-        >
-          {children}
-        </div>
-      </Card>
-    )
+  Pick<MediaPreview, 'context'> & {
+    paddingBottom?: string
   }
+>) => {
+  return (
+    <Card
+      padding={context === 'input' ? 4 : 0}
+      border={context === 'input'}
+      display="flex"
+      style={{
+        textAlign: 'center',
+        width: '100%',
+        position: 'relative',
+        paddingBottom,
+      }}
+      sizing="border"
+    >
+      <div
+        style={{
+          position: 'absolute',
+          left: '50%',
+          top: '50%',
+          transform: 'translate(-50%,-50%)',
+          width: '100%',
+          height: '100%',
+        }}
+      >
+        {children}
+      </div>
+    </Card>
+  )
+}
 
 const MediaPreview: React.FC<MediaPreview> = (props) => {
   const [playing, setPlaying] = React.useState(false)
@@ -128,66 +128,69 @@ const MediaPreview: React.FC<MediaPreview> = (props) => {
     )
   }
 
-  let mediaType: 'audio' | 'video' | 'image' | 'other';
-  let imgUrl: string | undefined;
-  let allowPlayback = props.context !== 'browser';
-  let icon;
+  let mediaType: 'audio' | 'video' | 'image' | 'other'
+  let imgUrl: string | undefined
+  let allowPlayback = props.context !== 'browser'
+  let icon
   switch (true) {
     case fullFile.contentType?.includes('audio/'):
-      mediaType = 'audio';
-      allowPlayback &&= true;
-      icon = <>
-        <AudioIcon
-          style={{
-            width: '50%',
-            maxHeight: '70%',
-            position: 'absolute',
-            left: '50%',
-            top: '50%',
-            transform: 'translate(-50%,-50%)',
-            zIndex: 0,
-            color:
-              fullFile && 'waveformData' in fullFile
-                ? blue[100].hex
-                : blue[800].hex,
-          }}
-        />
-        {fullFile.waveformData && (
-          <WaveformDisplay
-            waveformData={fullFile.waveformData}
+      mediaType = 'audio'
+      allowPlayback &&= true
+      icon = (
+        <>
+          <AudioIcon
             style={{
-              zIndex: 1,
-              position: 'relative',
-              height: '100%',
+              width: '50%',
+              maxHeight: '70%',
+              position: 'absolute',
+              left: '50%',
+              top: '50%',
+              transform: 'translate(-50%,-50%)',
+              zIndex: 0,
+              color:
+                fullFile && 'waveformData' in fullFile
+                  ? blue[100].hex
+                  : blue[800].hex,
             }}
-            colorHue="blue"
           />
-        )}
-      </>
-      break;
+          {fullFile.waveformData && (
+            <WaveformDisplay
+              waveformData={fullFile.waveformData}
+              style={{
+                zIndex: 1,
+                position: 'relative',
+                height: '100%',
+              }}
+              colorHue="blue"
+            />
+          )}
+        </>
+      )
+      break
 
     case fullFile.contentType?.includes('video/'):
-      mediaType = 'video';
-      imgUrl = fullFile.screenshot &&
+      mediaType = 'video'
+      imgUrl =
+        fullFile.screenshot &&
         imageBuilder
           .image(fullFile.screenshot)
           .width(props.context === 'browser' ? 300 : 600)
-          .url();
-      allowPlayback &&= true;
-      icon = <VideoIcon style={{ width: '50%', maxHeight: '70%' }} />;
-      break;
+          .url()
+      allowPlayback &&= true
+      icon = <VideoIcon style={{ width: '50%', maxHeight: '70%' }} />
+      break
 
     case fullFile.contentType?.includes('image/'):
-      mediaType = 'image';
-      allowPlayback &&= false;
-      icon = <ImageIcon />;
-      break;
+      mediaType = 'image'
+      allowPlayback &&= false
+      icon = <ImageIcon />
+      break
 
     default:
-      mediaType = 'other';
-      allowPlayback &&= false;
+      mediaType = 'other'
+      allowPlayback &&= false
       icon = <DocumentIcon />
-      break;
+      break
   }
 
   return (

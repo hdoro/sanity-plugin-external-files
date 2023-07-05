@@ -54,7 +54,8 @@ const ConfigureCredentials: React.FC<{
       e.preventDefault()
       setFormValues({
         ...formValues,
-        [field.name]: e.currentTarget.value !== "" ? e.currentTarget.value : undefined,
+        [field.name]:
+          e.currentTarget.value !== '' ? e.currentTarget.value : undefined,
       })
     }
   }

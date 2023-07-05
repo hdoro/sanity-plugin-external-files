@@ -1,20 +1,17 @@
-import pluginConfig from 'config:firebase-dam?';
+import pluginConfig from 'config:firebase-dam?'
 import { VendorConfiguration } from 'sanity-plugin-external-dam/lib/types'
 import { LockIcon, LinkIcon } from '@sanity/icons'
 import getFirebaseClient, { FirebaseCredentials } from './getFirebaseClient'
 
-export const DEFAULT_ACCEPT = [
-  'video/*',
-  'audio/*',
-]
+export const DEFAULT_ACCEPT = ['video/*', 'audio/*']
 
-const { defaultAccept, toolTitle } = pluginConfig ?? {};
+const { defaultAccept, toolTitle } = pluginConfig ?? {}
 
 const config: VendorConfiguration = {
   id: 'firebase-dam',
   customDataFieldName: 'firebase',
   defaultAccept: defaultAccept ?? DEFAULT_ACCEPT,
-  toolTitle: toolTitle ?? "Videos & Audio (Firebase)",
+  toolTitle: toolTitle ?? 'Videos & Audio (Firebase)',
   supportsProgress: true,
   credentialsFields: [
     {
@@ -22,14 +19,14 @@ const config: VendorConfiguration = {
       title: 'API Key',
       icon: LockIcon,
       type: 'string',
-      validation: Rule => Rule.required(),
+      validation: (Rule) => Rule.required(),
     },
     {
       name: 'storageBucket',
       title: 'Storage Bucket',
       icon: LinkIcon,
       type: 'string',
-      validation: Rule => Rule.required(),
+      validation: (Rule) => Rule.required(),
     },
   ],
   deleteFile: async ({ storedFile, credentials }) => {
@@ -38,7 +35,10 @@ const config: VendorConfiguration = {
         credentials as FirebaseCredentials,
       )
 
-      await firebaseClient.storage().ref(storedFile.firebase?.fullPath).delete()
+      await firebaseClient
+        .storage()
+        .ref(storedFile.firebase?.fullPath)
+        .delete()
 
       return true
     } catch (error: any) {

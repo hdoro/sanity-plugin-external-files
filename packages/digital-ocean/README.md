@@ -23,7 +23,6 @@ With these in hand, fill-in the plugin's configuration form where you'll fill in
 
 I plan on recording a video tutorial going through the process in detail. Until then, reach out if you have questions 😉
 
-
 ## Using
 
 Use the `digital-ocean-files.media` type in your fields. Examples:

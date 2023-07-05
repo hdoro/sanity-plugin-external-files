@@ -54,7 +54,11 @@ const Uploader: React.FC<UploaderProps> = (props) => {
         {props.chosenFile ? (
           <MediaPreview file={props.chosenFile} context="input" />
         ) : (
-          <UploadBox {...uploadProps} vendorConfig={props.vendorConfig} onUploadClick={onUploadClick} />
+          <UploadBox
+            {...uploadProps}
+            vendorConfig={props.vendorConfig}
+            onUploadClick={onUploadClick}
+          />
         )}
         <div
           style={{

@@ -1,4 +1,4 @@
-import {definePlugin} from 'sanity'
+import { definePlugin } from 'sanity'
 import digitalOceanFilesCustomData from './schemas/digital-ocean-files.custom-data'
 import digitalOceanFilesDimensions from './schemas/digital-ocean-files.dimensions'
 import digitalOceanFilesStoredFile from './schemas/digital-ocean-files.storedFile'
@@ -13,11 +13,9 @@ export const digitalOceanFiles = definePlugin(() => {
         digitalOceanFilesCustomData,
         digitalOceanFilesDimensions,
         digitalOceanFilesStoredFile,
-        digitalOceanFilesMedia
-      ]
+        digitalOceanFilesMedia,
+      ],
     },
-    tools: [
-      DigitalOceanFilesTool
-    ]
+    tools: [DigitalOceanFilesTool],
   }
 })

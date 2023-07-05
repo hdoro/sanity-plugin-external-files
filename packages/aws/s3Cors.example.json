@@ -1,25 +1,14 @@
 [
   {
-      "AllowedHeaders": [
-          "*"
-      ],
-      "AllowedMethods": [
-          "POST"
-      ],
-      "AllowedOrigins": [
-          "http://localhost:3333",
-          "https://your-live-studio"
-      ],
-      "ExposeHeaders": []
+    "AllowedHeaders": ["*"],
+    "AllowedMethods": ["POST"],
+    "AllowedOrigins": ["http://localhost:3333", "https://your-live-studio"],
+    "ExposeHeaders": []
   },
   {
-      "AllowedHeaders": [],
-      "AllowedMethods": [
-          "GET"
-      ],
-      "AllowedOrigins": [
-          "*"
-      ],
-      "ExposeHeaders": []
+    "AllowedHeaders": [],
+    "AllowedMethods": ["GET"],
+    "AllowedOrigins": ["*"],
+    "ExposeHeaders": []
   }
 ]

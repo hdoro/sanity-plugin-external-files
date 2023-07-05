@@ -11,7 +11,7 @@ import {
 export const DEFAULT_ACCEPT = ['video/*', 'audio/*']
 
 // @TODO: plugin config
-const { defaultAccept, toolTitle } = {} as any;
+const { defaultAccept, toolTitle } = {} as any
 
 const config: VendorConfiguration = {
   id: 'digital-ocean-files',
@@ -128,7 +128,7 @@ const config: VendorConfiguration = {
         const fileKey = fields?.key || fileName
         const data = {
           ...fields,
-          "Content-Type": file.type,
+          'Content-Type': file.type,
           file,
         }
 
@@ -140,7 +140,7 @@ const config: VendorConfiguration = {
         fetch(url, {
           method: 'POST',
           body: formData,
-          mode: "cors",
+          mode: 'cors',
           signal,
         })
           .then((res) => {

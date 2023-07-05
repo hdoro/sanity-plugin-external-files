@@ -1,6 +1,9 @@
 import { SchemaType } from 'sanity'
 import { VendorConfiguration } from '../types'
-import { getCustomDataFieldKey, getCustomDataTypeKey } from './getCustomDataSchema'
+import {
+  getCustomDataFieldKey,
+  getCustomDataTypeKey,
+} from './getCustomDataSchema'
 import getDimensionsSchema from './getDimensionsSchema'
 
 type CustomField = string | SchemaType

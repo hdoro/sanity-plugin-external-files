@@ -1,4 +1,4 @@
-import pluginConfig from 'config:s3-dam?';
+import pluginConfig from 'config:s3-dam?'
 import { VendorConfiguration } from 'sanity-plugin-external-dam/lib/types'
 import {
   LockIcon,
@@ -8,12 +8,9 @@ import {
   EarthGlobeIcon,
 } from '@sanity/icons'
 
-export const DEFAULT_ACCEPT = [
-  'video/*',
-  'audio/*',
-]
+export const DEFAULT_ACCEPT = ['video/*', 'audio/*']
 
-const { defaultAccept, toolTitle } = pluginConfig ?? {};
+const { defaultAccept, toolTitle } = pluginConfig ?? {}
 
 const config: VendorConfiguration = {
   id: 's3-dam',
@@ -26,28 +23,28 @@ const config: VendorConfiguration = {
       title: 'S3 bucket key',
       icon: LockIcon,
       type: 'string',
-      validation: Rule => Rule.required(),
+      validation: (Rule) => Rule.required(),
     },
     {
       name: 'bucketRegion',
       title: 'S3 bucket region',
       icon: EarthGlobeIcon,
       type: 'string',
-      validation: Rule => Rule.required(),
+      validation: (Rule) => Rule.required(),
     },
     {
       name: 'getSignedUrlEndpoint',
       title: "Endpoint for getting S3's signed URL",
       icon: PinIcon,
       type: 'url',
-      validation: Rule => Rule.required(),
+      validation: (Rule) => Rule.required(),
     },
     {
       name: 'deleteObjectEndpoint',
       title: 'Endpoint for deleting an object in S3',
       icon: TrashIcon,
       type: 'url',
-      validation: Rule => Rule.required(),
+      validation: (Rule) => Rule.required(),
     },
     {
       name: 'secretForValidating',

@@ -30,7 +30,7 @@ export default async function getWaveformData(file: File) {
   if (!file) {
     return
   }
-  
+
   const audioContext = new (window.AudioContext ||
     (window as any).webkitAudioContext)()
 

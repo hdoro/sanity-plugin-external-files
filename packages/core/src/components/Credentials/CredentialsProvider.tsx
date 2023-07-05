@@ -16,18 +16,20 @@ export const CredentialsContext = React.createContext<ContextValue>({
   status: 'loading',
 })
 
-
-const CredentialsProvider = (props: PropsWithChildren<{
-  vendorConfig: VendorConfiguration
-}>) => {
+const CredentialsProvider = (
+  props: PropsWithChildren<{
+    vendorConfig: VendorConfiguration
+  }>,
+) => {
   const { vendorConfig } = props
   const cacheKey = `_${vendorConfig?.id || 'external'}DamSavedCredentials`
   const documentId = `${vendorConfig.id}.credentials`
 
   const sanityClient = useSanityClient()
   const toast = useToast()
-  const [credentials, setCredentials] =
-    React.useState<VendorCredentials | undefined>()
+  const [credentials, setCredentials] = React.useState<
+    VendorCredentials | undefined
+  >()
   const [status, setStatus] = React.useState<CredentialsStatus>('loading')
 
   async function saveCredentials(newCredentials: VendorCredentials) {
@@ -57,7 +59,7 @@ const CredentialsProvider = (props: PropsWithChildren<{
         status: 'success',
       })
       setCredentials(newCredentials)
-      setStatus("success")
+      setStatus('success')
       return true
     } catch (error) {
       toast.push({
@@ -87,7 +89,7 @@ const CredentialsProvider = (props: PropsWithChildren<{
       )
     ) {
       setCredentials(savedCredentials)
-      setStatus("success")
+      setStatus('success')
       return
     }
 
@@ -99,7 +101,7 @@ const CredentialsProvider = (props: PropsWithChildren<{
           return
         }
         setCredentials(doc)
-        setStatus("success")
+        setStatus('success')
       })
       .catch(() => setStatus('missingCredentials'))
   }, [vendorConfig])

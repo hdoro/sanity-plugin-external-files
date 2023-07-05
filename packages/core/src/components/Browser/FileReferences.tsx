@@ -74,7 +74,11 @@ const FileReferences: React.FC<{
                   params={{ id: doc._id }}
                   key={doc._id}
                 >
-                  <Preview layout="default" value={doc} schemaType={schemaType} />
+                  <Preview
+                    layout="default"
+                    value={doc}
+                    schemaType={schemaType}
+                  />
                 </IntentLink>
               ) : (
                 <Box padding={2}>

@@ -67,7 +67,7 @@ const useUpload = ({
         })
 
         return () => {
-          if (typeof cleanUp === "function") {
+          if (typeof cleanUp === 'function') {
             cleanUp()
           }
         }
