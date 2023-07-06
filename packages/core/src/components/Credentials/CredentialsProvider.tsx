@@ -22,7 +22,7 @@ const CredentialsProvider = (
   }>,
 ) => {
   const { vendorConfig } = props
-  const cacheKey = `_${vendorConfig?.id || 'external'}DamSavedCredentials`
+  const cacheKey = `_${vendorConfig?.id || 'external'}FilesSavedCredentials`
   const documentId = `${vendorConfig.id}.credentials`
 
   const sanityClient = useSanityClient()
@@ -34,19 +34,6 @@ const CredentialsProvider = (
 
   async function saveCredentials(newCredentials: VendorCredentials) {
     ;(window as any)[cacheKey] = undefined
-
-    // If one credential is missing in newCredentials, error out
-    if (
-      vendorConfig.credentialsFields.some(
-        (field) => !(field.name in newCredentials),
-      )
-    ) {
-      toast.push({
-        title: 'Missing credentials',
-        status: 'error',
-      })
-      return false
-    }
 
     try {
       await sanityClient.createOrReplace({

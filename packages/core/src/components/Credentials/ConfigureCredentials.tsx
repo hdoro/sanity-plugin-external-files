@@ -1,4 +1,6 @@
 import { UploadIcon } from '@sanity/icons'
+import { Schema } from '@sanity/schema'
+import { ValidationMarker } from '@sanity/types'
 import {
   Button,
   Card,
@@ -10,17 +12,15 @@ import {
   TextInput,
 } from '@sanity/ui'
 import { validateDocument } from '@sanity/validation'
-import Schema from '@sanity/schema'
-import { ValidationMarker } from '@sanity/types'
 import React from 'react'
+import { useClient } from 'sanity'
 import {
   AcceptedCredentialField,
   VendorConfiguration,
   VendorCredentials,
 } from '../../types'
-
+import FormField from '../FormField'
 import { CredentialsContext } from './CredentialsProvider'
-import { FormField } from 'sanity'
 
 const ConfigureCredentials: React.FC<{
   onCredentialsSaved?: (success: boolean) => void
@@ -29,12 +29,14 @@ const ConfigureCredentials: React.FC<{
   const { saveCredentials, credentials } = React.useContext(CredentialsContext)
   const [isLoading, setIsLoading] = React.useState(false)
   const [markers, setMarkers] = React.useState<ValidationMarker[]>([])
+  const hasErrors = markers.some((marker) => marker.level === 'error')
 
   // Form values:
   const [formValues, setFormValues] = React.useState<VendorCredentials>({})
 
   async function submitCredentials(e: React.FormEvent) {
     e.preventDefault()
+    if (hasErrors) return
     setIsLoading(true)
     const success = await saveCredentials(formValues)
     setIsLoading(false)
@@ -75,15 +77,13 @@ const ConfigureCredentials: React.FC<{
     [props.vendorConfig.credentialsFields],
   )
 
-  console.log({ schema, setMarkers, validateDocument })
-
-  // @TODO: validate form
   async function validateForm(values: typeof formValues) {
-    // const newMarkers = await validateDocument(
-    //   { ...values, _type: 'vendorCredentials' } as any,
-    //   schema,
-    // )
-    // setMarkers(newMarkers)
+    const newMarkers = await validateDocument(
+      useClient,
+      { ...values, _type: 'vendorCredentials' } as any,
+      schema,
+    )
+    setMarkers(newMarkers)
   }
 
   React.useEffect(() => {
@@ -117,25 +117,30 @@ const ConfigureCredentials: React.FC<{
         {props.vendorConfig.credentialsFields?.length ? (
           <form style={{ marginTop: '1.5rem' }} onSubmit={submitCredentials}>
             <Stack space={4}>
-              {props.vendorConfig.credentialsFields.map((field) => (
-                <FormField
-                  label={field.title || field.name}
-                  description={field.description}
-                  // @TODO: markers
-                  // markers={markers.filter(
-                  //   (marker) => marker.path[0] === field.name,
-                  // )}
-                  level={0}
-                >
-                  <TextInput
-                    icon={field.icon}
-                    onInput={resolveFieldHandler(field)}
-                    value={formValues[field.name] || ''}
-                    type={field.type === 'number' ? 'number' : 'text'}
-                    disabled={isLoading}
-                  />
-                </FormField>
-              ))}
+              {props.vendorConfig.credentialsFields.map((field) => {
+                const fieldMarkers = markers.filter(
+                  (marker) => marker.path[0] === field.name,
+                )
+                const hasError = fieldMarkers?.some(
+                  (marker) => marker.level === 'error',
+                )
+                return (
+                  <FormField
+                    label={field.title || field.name}
+                    description={field.description}
+                    markers={fieldMarkers}
+                  >
+                    <TextInput
+                      icon={field.icon}
+                      onInput={resolveFieldHandler(field)}
+                      value={formValues[field.name] || ''}
+                      type={field.type === 'number' ? 'number' : 'text'}
+                      disabled={isLoading}
+                      required={hasError}
+                    />
+                  </FormField>
+                )
+              })}
               <Button
                 text={
                   credentials?.apiKey

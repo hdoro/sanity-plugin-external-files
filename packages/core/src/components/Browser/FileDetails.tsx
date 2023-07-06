@@ -25,7 +25,6 @@ import {
   useToast,
 } from '@sanity/ui'
 import { useMachine } from '@xstate/react'
-import { FormField } from 'sanity'
 import React from 'react'
 import formatBytes from '../../scripts/formatBytes'
 import formatSeconds from '../../scripts/formatSeconds'
@@ -37,6 +36,7 @@ import MediaPreview from '../MediaPreview'
 import SpinnerBox from '../SpinnerBox'
 import FileReferences from './FileReferences'
 import fileDetailsMachine from './fileDetailsMachine'
+import FormField from '../FormField'
 
 interface FileDetailsProps {
   onSelect?: (file: SanityUpload) => void
@@ -54,7 +54,7 @@ const AssetInput: React.FC<{
   value: string
   onInput: (e: React.FormEvent<HTMLInputElement>) => void
 }> = (props) => (
-  <FormField label={props.label} description={props.description} level={0}>
+  <FormField label={props.label} description={props.description}>
     <TextInput
       value={props.value}
       placeholder={props.placeholder}
