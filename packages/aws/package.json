@@ -2,12 +2,10 @@
   "name": "sanity-plugin-s3-files",
   "version": "1.0.0-next.0",
   "description": "Store Sanity media files in AWS S3",
-  "main": "lib/index.js",
   "scripts": {
     "clear-lib": "node clearLib.js",
-    "build": "npm run clear-lib && npm run build:tsc",
-    "build:tsc": "tsc --declaration",
-    "dev": "tsc -w",
+    "build": "npm run clear-lib && tsc && tsc --module esnext --outDir build/esm",
+    "dev": "concurrently \"tsc -w\" \"tsc --module esnext --outDir build/esm -w\"",
     "prepublish": "npm run build"
   },
   "repository": {
@@ -30,6 +28,7 @@
     "sanity-plugin-external-files": "workspace:*"
   },
   "devDependencies": {
+    "concurrently": "^8",
     "sanity": "^3.14.1"
   },
   "peerDependencies": {
@@ -38,5 +37,17 @@
   "bugs": {
     "url": "https://github.com/hdoro/sanity-plugin-external-files/issues"
   },
-  "homepage": "https://github.com/hdoro/sanity-plugin-external-files#readme"
+  "homepage": "https://github.com/hdoro/sanity-plugin-external-files#readme",
+  "exports": {
+    ".": {
+      "types": "./build/index.d.ts",
+      "import": "./build/esm/index.js",
+      "require": "./build/index.js",
+      "default": "./build/esm/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./build/index.js",
+  "module": "./build/esm/index.js",
+  "types": "./build/index.d.ts"
 }

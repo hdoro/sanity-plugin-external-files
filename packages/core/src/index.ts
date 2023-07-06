@@ -4,6 +4,7 @@ import ToolIcon from './components/ToolIcon'
 import getStoredFileSchema from './schemas/getStoredFileSchema'
 import getDimensionsSchema from './schemas/getDimensionsSchema'
 import getCustomDataSchema from './schemas/getCustomDataSchema'
+import type { VendorConfiguration } from './types'
 
 export {
   createInput,
@@ -12,4 +13,5 @@ export {
   getStoredFileSchema,
   getDimensionsSchema,
   getCustomDataSchema,
+  VendorConfiguration,
 }

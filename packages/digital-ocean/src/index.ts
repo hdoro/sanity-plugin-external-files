@@ -5,7 +5,7 @@ import digitalOceanFilesStoredFile from './schemas/digital-ocean-files.storedFil
 import digitalOceanFilesMedia from './schemas/digital-ocean-files.media'
 import DigitalOceanFilesTool from './tool'
 
-export const digitalOceanFiles = definePlugin(() => {
+const digitalOceanFiles = definePlugin(() => {
   return {
     name: 'digital-ocean-files',
     schema: {
@@ -19,3 +19,5 @@ export const digitalOceanFiles = definePlugin(() => {
     tools: [DigitalOceanFilesTool],
   }
 })
+
+export { digitalOceanFiles }

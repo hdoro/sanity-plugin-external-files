@@ -2,12 +2,10 @@
   "name": "sanity-plugin-external-files",
   "version": "1.0.0-next.0",
   "description": "Core library for external object storage providers in Sanity.io studio.",
-  "main": "lib/index.js",
   "scripts": {
     "clear-lib": "node clearLib.js",
-    "build": "npm run clear-lib && npm run build:tsc",
-    "build:tsc": "tsc --declaration",
-    "dev": "tsc -w",
+    "build": "npm run clear-lib && tsc && tsc --module esnext --outDir build/esm",
+    "dev": "concurrently \"tsc -w\" \"tsc --module esnext --outDir build/esm -w\"",
     "prepublish": "npm run build"
   },
   "repository": {
@@ -38,6 +36,7 @@
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6",
     "@types/styled-components": "^5.1.26",
+    "concurrently": "^8",
     "react": "^18",
     "react-dom": "^18",
     "sanity": "^3.14.1",
@@ -50,5 +49,17 @@
   "bugs": {
     "url": "https://github.com/hdoro/sanity-plugin-external-files/issues"
   },
-  "homepage": "https://github.com/hdoro/sanity-plugin-external-files#readme"
+  "homepage": "https://github.com/hdoro/sanity-plugin-external-files#readme",
+  "exports": {
+    ".": {
+      "types": "./build/index.d.ts",
+      "import": "./build/esm/index.js",
+      "require": "./build/index.js",
+      "default": "./build/esm/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./build/index.js",
+  "module": "./build/esm/index.js",
+  "types": "./build/index.d.ts"
 }

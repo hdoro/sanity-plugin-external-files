@@ -1,7 +1,7 @@
 const fs = require('fs')
 
 // directory path
-const dir = 'lib'
+const dir = 'build'
 
 // delete directory recursively
 try {
