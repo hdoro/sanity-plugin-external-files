@@ -1,4 +1,5 @@
-import { SanityDocument, BaseSchemaType } from 'sanity'
+import type { Accept } from 'react-dropzone'
+import type { SanityDocument, BaseSchemaType } from 'sanity'
 
 type StrictSanityDocument = Pick<
   SanityDocument,
@@ -24,7 +25,7 @@ export interface AcceptedCredentialField extends Omit<BaseSchemaType, 'type'> {
 export interface VendorConfiguration {
   id: string
   customDataFieldName?: string
-  defaultAccept: string | string[]
+  defaultAccept?: Accept
   toolTitle?: string
   supportsProgress?: boolean
   /**

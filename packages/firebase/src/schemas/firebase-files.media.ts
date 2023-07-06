@@ -7,7 +7,7 @@ export default defineField({
   title: 'Firebase media',
   type: 'object',
   components: {
-    input: Input as any
+    input: Input as any,
   },
   fields: [
     {

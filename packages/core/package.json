@@ -28,7 +28,7 @@
     "@xstate/react": "^3.2.2",
     "mime": "^3.0.0",
     "nanoid": "^4.0.2",
-    "react-dropzone": "^11.3.4",
+    "react-dropzone": "^14.2.3",
     "xstate": "^4.38.0"
   },
   "devDependencies": {

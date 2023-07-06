@@ -7,8 +7,6 @@ import {
   EarthGlobeIcon,
 } from '@sanity/icons'
 
-export const DEFAULT_ACCEPT = ['video/*', 'audio/*']
-
 // @TODO: plugin config
 const { defaultAccept, toolTitle } = {} as any
 
@@ -16,7 +14,7 @@ const { defaultAccept, toolTitle } = {} as any
 const config: VendorConfiguration = {
   id: 's3-files',
   customDataFieldName: 's3',
-  defaultAccept: defaultAccept ?? DEFAULT_ACCEPT,
+  defaultAccept,
   toolTitle: toolTitle ?? 'Videos & audio (S3)',
   credentialsFields: [
     {

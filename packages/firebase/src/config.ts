@@ -2,8 +2,6 @@ import type { VendorConfiguration } from 'sanity-plugin-external-files'
 import { LockIcon, LinkIcon } from '@sanity/icons'
 import getFirebaseClient, { FirebaseCredentials } from './getFirebaseClient'
 
-export const DEFAULT_ACCEPT = ['video/*', 'audio/*']
-
 // @TODO: plugin config
 const { defaultAccept, toolTitle } = {} as any
 
@@ -11,7 +9,7 @@ const { defaultAccept, toolTitle } = {} as any
 const config: VendorConfiguration = {
   id: 'firebase-files',
   customDataFieldName: 'firebase',
-  defaultAccept: defaultAccept ?? DEFAULT_ACCEPT,
+  defaultAccept,
   toolTitle: toolTitle ?? 'Videos & Audio (Firebase)',
   supportsProgress: true,
   credentialsFields: [

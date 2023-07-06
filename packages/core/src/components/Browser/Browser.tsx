@@ -10,24 +10,22 @@ import {
   Inline,
   Spinner,
   Stack,
-  studioTheme,
   Text,
   TextInput,
   ThemeProvider,
   Tooltip,
+  studioTheme,
 } from '@sanity/ui'
 import { useMachine } from '@xstate/react'
 import React from 'react'
-
-import parseAccept from '../../scripts/parseAccept'
 import { useSanityClient } from '../../scripts/sanityClient'
 import { SanityUpload, VendorConfiguration } from '../../types'
 import ConfigureCredentials from '../Credentials/ConfigureCredentials'
 import { CredentialsContext } from '../Credentials/CredentialsProvider'
 import Uploader, { UploaderProps } from '../Uploader/Uploader'
-import browserMachine from './browserMachine'
 import FileDetails from './FileDetails'
 import FilePreview from './FilePreview'
+import browserMachine from './browserMachine'
 
 interface BrowserProps {
   onSelect?: (file: SanityUpload) => void
@@ -48,16 +46,17 @@ const Browser: React.FC<BrowserProps> = (props) => {
   const [state, send] = useMachine(browserMachine, {
     services: {
       fetchFiles: () => {
-        const parsedAccept = parseAccept(props.accept)
+        // const parsedAccept = parseAccept(props.accept)
         let extensionFilter = ''
-        if (typeof parsedAccept === 'string') {
-          extensionFilter = `&& ${getFilterForExtension(parsedAccept)}`
-        } else if (Array.isArray(parsedAccept)) {
-          extensionFilter = `&& (
-            ${parsedAccept.map(getFilterForExtension).join(' || ')}
-            
-          )`
-        }
+        // @TODO: filter files by type
+        // if (typeof parsedAccept === 'string') {
+        //   extensionFilter = `&& ${getFilterForExtension(parsedAccept)}`
+        // } else if (Array.isArray(parsedAccept)) {
+        //   extensionFilter = `&& (
+        //     ${parsedAccept.map(getFilterForExtension).join(' || ')}
+
+        //   )`
+        // }
         return sanityClient.fetch(/* groq */ `
         *[
           _type == "${props.vendorConfig?.id}.storedFile" &&

@@ -8,15 +8,13 @@ import {
   ApiIcon,
 } from '@sanity/icons'
 
-export const DEFAULT_ACCEPT = ['video/*', 'audio/*']
-
 // @TODO: plugin config
 const { defaultAccept, toolTitle } = {} as any
 
 const config: VendorConfiguration = {
   id: 'digital-ocean-files',
   customDataFieldName: 'digitalOcean',
-  defaultAccept: defaultAccept ?? DEFAULT_ACCEPT,
+  defaultAccept,
   toolTitle: toolTitle ?? 'Videos & audio (DigitalOcean)',
   credentialsFields: [
     {
@@ -161,7 +159,8 @@ const config: VendorConfiguration = {
               })
             } else {
               onError({
-                message: 'Ask your developer to check AWS permissions.',
+                message:
+                  'Ask your developer to check DigitalOcean permissions.',
                 name: 'failed-presigned',
               })
             }

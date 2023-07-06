@@ -6,6 +6,7 @@ import useUpload from './useUpload'
 import { MediaFile, SanityUpload, VendorConfiguration } from '../../types'
 import UploadBox from './UploadBox'
 import MediaPreview from '../MediaPreview'
+import { Accept } from 'react-dropzone'
 
 export interface UploaderProps {
   vendorConfig: VendorConfiguration
@@ -15,7 +16,7 @@ export interface UploaderProps {
   /**
    * MIME file type
    */
-  accept?: 'audio/*' | 'video/*' | string | string[]
+  accept?: Accept
   /**
    * Whether or not we should use the file's name when uploading
    */

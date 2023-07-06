@@ -1,18 +1,16 @@
-import React from 'react'
-import { StateFrom } from 'xstate'
-import { useMachine } from '@xstate/react'
-import { DropzoneState, useDropzone } from 'react-dropzone'
-import { useToast } from '@sanity/ui'
 import { SanityImageAssetDocument } from '@sanity/client'
-
-import uploadMachine from './uploadMachine'
-import { UploaderProps } from './Uploader'
-import parseAccept from '../../scripts/parseAccept'
+import { useToast } from '@sanity/ui'
+import { useMachine } from '@xstate/react'
+import React from 'react'
+import { DropzoneState, useDropzone } from 'react-dropzone'
+import { StateFrom } from 'xstate'
+import getBasicFileMetadata from '../../scripts/getBasicMetadata'
+import getFileRef from '../../scripts/getFileRef'
+import { useSanityClient } from '../../scripts/sanityClient'
 import { SanityUpload } from '../../types'
 import { CredentialsContext } from '../Credentials/CredentialsProvider'
-import getFileRef from '../../scripts/getFileRef'
-import getBasicFileMetadata from '../../scripts/getBasicMetadata'
-import { useSanityClient } from '../../scripts/sanityClient'
+import { UploaderProps } from './Uploader'
+import uploadMachine from './uploadMachine'
 
 export interface useUploadReturn {
   dropzone: DropzoneState
@@ -137,7 +135,7 @@ const useUpload = ({
         file: acceptedFiles?.[0],
       })
     },
-    accept: parseAccept(accept),
+    accept,
     // Only allow 1 file to be uploaded
     maxFiles: 1,
   })
