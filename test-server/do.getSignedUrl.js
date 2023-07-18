@@ -16,7 +16,7 @@ const client = new S3Client({
   endpoint: ENDPOINT,
   credentials: {
     accessKeyId: process.env.DO_SPACES_ACCESS_KEY_ID,
-    secretAccessKey: process.env.DO_SPACES_SECRET_KEY,
+    secretAccessKey: process.env.DO_SPACES_SECRET_ACCESS_KEY,
   },
   forcePathStyle: false, // Configures to use subdomain/virtual calling format.
   region: REGION,

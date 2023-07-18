@@ -26,6 +26,7 @@
     "@sanity/icons": "^1",
     "@sanity/ui": "^1",
     "@xstate/react": "^3.2.2",
+    "clipboard": "^2.0.11",
     "mime": "^3.0.0",
     "nanoid": "^4.0.2",
     "react-dropzone": "^14.2.3",

@@ -15,6 +15,7 @@ import {
   Dialog,
   Flex,
   Heading,
+  Inline,
   Spinner,
   Stack,
   Tab,
@@ -25,18 +26,20 @@ import {
   useToast,
 } from '@sanity/ui'
 import { useMachine } from '@xstate/react'
-import React from 'react'
+import ClipboardJs from 'clipboard'
+import React, { useEffect } from 'react'
 import formatBytes from '../../scripts/formatBytes'
 import formatSeconds from '../../scripts/formatSeconds'
 import { useSanityClient } from '../../scripts/sanityClient'
 import { SanityUpload, VendorConfiguration } from '../../types'
+import CopyButton from '../CopyButton'
 import { CredentialsContext } from '../Credentials/CredentialsProvider'
+import FormField from '../FormField'
 import IconInfo from '../IconInfo'
 import MediaPreview from '../MediaPreview'
 import SpinnerBox from '../SpinnerBox'
 import FileReferences from './FileReferences'
 import fileDetailsMachine from './fileDetailsMachine'
-import FormField from '../FormField'
 
 interface FileDetailsProps {
   onSelect?: (file: SanityUpload) => void
@@ -137,6 +140,14 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
 
   const file = state.context.file || props.file
   const isSaving = state.matches('interactions.saving')
+
+  const copyUrlButton = React.useRef<HTMLButtonElement>(null)
+  useEffect(() => {
+    if (!copyUrlButton.current) return
+
+    new ClipboardJs(copyUrlButton.current as HTMLButtonElement)
+  }, [file.fileURL])
+
   return (
     <Dialog
       header={file.title || file.fileName}
@@ -336,6 +347,19 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
                 icon={CalendarIcon}
                 size={2}
               />
+              {file.fileURL && (
+                <Inline space={2}>
+                  <Button
+                    as="a"
+                    href={file.fileURL}
+                    rel="download"
+                    icon={DownloadIcon}
+                    text="Download"
+                    mode="ghost"
+                  />
+                  <CopyButton label="Copy URL" textToCopy={file.fileURL} />
+                </Inline>
+              )}
             </Stack>
           </Stack>
           <Stack space={4} flex={1} sizing="border">

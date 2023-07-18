@@ -1,15 +1,22 @@
 import React from 'react'
-import { Text, Inline } from '@sanity/ui'
+import { Text, Inline, Flex } from '@sanity/ui'
 
-const IconInfo: React.FC<{ text: string; icon: React.FC; size?: number }> = (
-  props,
-) => {
+const IconInfo: React.FC<{
+  text: string
+  icon: React.FC
+  size?: number
+  muted?: boolean
+}> = (props) => {
   const Icon = props.icon
   return (
-    <Inline space={1}>
-      <Icon />
-      <Text size={props.size || 1}>{props.text}</Text>
-    </Inline>
+    <Flex gap={2} align="center" padding={1}>
+      <Text size={props.size || 1} muted={props.muted}>
+        <Icon />
+      </Text>
+      <Text size={props.size || 1} muted={props.muted}>
+        {props.text}
+      </Text>
+    </Flex>
   )
 }
 

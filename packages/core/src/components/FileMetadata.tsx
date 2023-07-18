@@ -20,8 +20,7 @@ const FileMetadata: React.FC<FileMetadataProps> = ({ file }) => {
       <Stack space={2}>
         <Text
           size={1}
-          weight="bold"
-          muted
+          weight="semibold"
           style={{
             wordWrap: 'break-word',
           }}
@@ -50,14 +49,23 @@ const FileMetadata: React.FC<FileMetadataProps> = ({ file }) => {
       </Stack>
       <Inline space={3}>
         {file.duration && (
-          <IconInfo text={formatSeconds(file.duration)} icon={ClockIcon} />
+          <IconInfo
+            text={formatSeconds(file.duration)}
+            icon={ClockIcon}
+            muted
+          />
         )}
         {file.fileSize && (
-          <IconInfo text={formatBytes(file.fileSize)} icon={DownloadIcon} />
+          <IconInfo
+            text={formatBytes(file.fileSize)}
+            icon={DownloadIcon}
+            muted
+          />
         )}
         <IconInfo
           text={new Date(file._createdAt).toISOString().split('T')[0]}
           icon={CalendarIcon}
+          muted
         />
       </Inline>
     </Stack>

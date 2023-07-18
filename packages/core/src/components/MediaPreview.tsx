@@ -1,5 +1,10 @@
 import { blue } from '@sanity/color'
-import { DocumentIcon, ImageIcon, PlayIcon } from '@sanity/icons'
+import {
+  DocumentIcon,
+  DocumentPdfIcon,
+  ImageIcon,
+  PlayIcon,
+} from '@sanity/icons'
 import imageUrlBuilder from '@sanity/image-url'
 import { Box, Card, Spinner } from '@sanity/ui'
 import React from 'react'
@@ -186,10 +191,16 @@ const MediaPreview: React.FC<MediaPreview> = (props) => {
       icon = <ImageIcon />
       break
 
+    case fullFile.contentType?.includes('application/pdf'):
+      mediaType = 'other'
+      allowPlayback &&= false
+      icon = <DocumentPdfIcon fontSize="3.5em" />
+      break
+
     default:
       mediaType = 'other'
       allowPlayback &&= false
-      icon = <DocumentIcon />
+      icon = <DocumentIcon fontSize="3.5em" />
       break
   }
 

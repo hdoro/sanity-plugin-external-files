@@ -33,14 +33,10 @@ const UploadBox: React.FC<UploadBox> = (props) => {
       border
       display="flex"
       {...getRootProps()}
+      tone={isDragReject ? 'critical' : isDragAccept ? 'positive' : 'default'}
       style={{
         minHeight: '300px',
         borderStyle: isDragActive ? 'dashed' : 'solid',
-        background: isDragReject
-          ? red[50].hex
-          : isDragAccept
-          ? green[50].hex
-          : gray[100].hex,
         justifyContent: 'center',
         alignItems: 'center',
         textAlign: 'center',
