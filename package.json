@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "dev": "turbo run dev --parallel",
-    "build": "turbo run build",
+    "build": "turbo run build --force",
     "format": "prettier --write .",
     "update-package-versions": "changeset version"
   },
