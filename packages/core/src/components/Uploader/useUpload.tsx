@@ -24,6 +24,7 @@ const useUpload = ({
   vendorConfig,
   storeOriginalFilename = true,
   onSuccess,
+  removeFile,
 }: UploaderProps): useUploadReturn => {
   const toast = useToast()
   const { credentials } = React.useContext(CredentialsContext)
@@ -134,6 +135,7 @@ const useUpload = ({
         type: 'SELECT_FILE',
         file: acceptedFiles?.[0],
       })
+      removeFile?.()
     },
     accept,
     // Only allow 1 file to be uploaded

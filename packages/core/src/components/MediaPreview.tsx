@@ -14,6 +14,7 @@ import AudioIcon from './AudioIcon'
 import FileMetadata from './FileMetadata'
 import VideoIcon from './VideoIcon'
 import WaveformDisplay from './WaveformDisplay'
+import styled from 'styled-components'
 
 export interface MediaPreview {
   file: MediaFile
@@ -90,6 +91,19 @@ const WrappingCard = ({
     </Card>
   )
 }
+
+const IconWrapper = styled(Box)`
+  > svg {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+    height: auto;
+    max-height: 50%;
+    display: block;
+  }
+`
 
 const MediaPreview: React.FC<MediaPreview> = (props) => {
   const [playing, setPlaying] = React.useState(false)
@@ -182,7 +196,7 @@ const MediaPreview: React.FC<MediaPreview> = (props) => {
           .width(props.context === 'browser' ? 300 : 600)
           .url()
       allowPlayback &&= true
-      icon = <VideoIcon style={{ width: '50%', maxHeight: '70%' }} />
+      icon = <VideoIcon />
       break
 
     case fullFile.contentType?.includes('image/'):
@@ -194,13 +208,13 @@ const MediaPreview: React.FC<MediaPreview> = (props) => {
     case fullFile.contentType?.includes('application/pdf'):
       mediaType = 'other'
       allowPlayback &&= false
-      icon = <DocumentPdfIcon fontSize="3.5em" />
+      icon = <DocumentPdfIcon />
       break
 
     default:
       mediaType = 'other'
       allowPlayback &&= false
-      icon = <DocumentIcon fontSize="3.5em" />
+      icon = <DocumentIcon />
       break
   }
 
@@ -239,19 +253,15 @@ const MediaPreview: React.FC<MediaPreview> = (props) => {
               }}
               tone="primary"
             >
-              <Box
+              <IconWrapper
                 style={{
-                  position: 'absolute',
-                  left: '50%',
-                  top: '50%',
-                  transform: 'translate(-50%,-50%)',
                   color: blue[800].hex,
                   height: mediaType === 'audio' ? '60%' : undefined,
                   width: mediaType === 'audio' ? '90%' : undefined,
                 }}
               >
                 {icon}
-              </Box>
+              </IconWrapper>
             </Card>
           )}
           {allowPlayback && (

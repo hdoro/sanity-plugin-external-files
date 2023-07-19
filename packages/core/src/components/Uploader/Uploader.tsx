@@ -40,7 +40,7 @@ export interface UploaderProps {
 const Uploader: React.FC<UploaderProps> = (props) => {
   const uploadProps = useUpload(props)
   const {
-    dropzone: { inputRef },
+    dropzone: { inputRef, getInputProps },
   } = uploadProps
 
   const onUploadClick = React.useCallback(() => {
@@ -52,6 +52,7 @@ const Uploader: React.FC<UploaderProps> = (props) => {
   return (
     <Container width={2}>
       <Stack space={3}>
+        <input {...getInputProps()} />
         {props.chosenFile ? (
           <MediaPreview file={props.chosenFile} context="input" />
         ) : (

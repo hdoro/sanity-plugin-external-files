@@ -128,3 +128,8 @@ interface VideoMetadata {
 }
 
 export type FileMetadata = AudioMetadata | VideoMetadata
+
+export interface ExternalFileFieldOptions {
+  accept?: Accept
+  storeOriginalFilename?: boolean
+}

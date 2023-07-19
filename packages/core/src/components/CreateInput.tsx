@@ -1,11 +1,14 @@
-import React from 'react'
-import { ObjectInputProps, set, unset } from 'sanity'
-import { SanityUpload, VendorConfiguration } from '../types'
+import { Dialog, ThemeProvider, studioTheme } from '@sanity/ui'
 import { useCallback, useState } from 'react'
-import CredentialsProvider from './Credentials/CredentialsProvider'
-import { Dialog, studioTheme, ThemeProvider } from '@sanity/ui'
 import { createPortal } from 'react-dom'
+import { ObjectInputProps, set, unset } from 'sanity'
+import {
+  ExternalFileFieldOptions,
+  SanityUpload,
+  VendorConfiguration,
+} from '../types'
 import Browser from './Browser/Browser'
+import CredentialsProvider from './Credentials/CredentialsProvider'
 import UploaderWithConfig from './Uploader/UploaderWithConfig'
 
 /**
@@ -17,7 +20,7 @@ export default function createInput(vendorConfig: VendorConfiguration) {
     const {
       accept = vendorConfig?.defaultAccept,
       storeOriginalFilename = true,
-    } = schemaType?.options || {}
+    } = (schemaType?.options || {}) as ExternalFileFieldOptions
 
     const [browserOpen, setBrowserOpen] = useState(false)
     const [uploadedFile, setUploadedFile] = useState<SanityUpload | undefined>()
