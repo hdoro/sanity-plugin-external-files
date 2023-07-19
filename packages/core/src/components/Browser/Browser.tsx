@@ -26,6 +26,7 @@ import Uploader, { UploaderProps } from '../Uploader/Uploader'
 import FileDetails from './FileDetails'
 import FilePreview from './FilePreview'
 import browserMachine from './browserMachine'
+import { Accept } from 'react-dropzone'
 
 interface BrowserProps {
   onSelect?: (file: SanityUpload) => void
@@ -33,12 +34,23 @@ interface BrowserProps {
   vendorConfig: VendorConfiguration
 }
 
-function getFilterForExtension(extension: string) {
-  if (!extension) {
-    return true
+function getFilterForExtension(accept?: Accept) {
+  if (!accept) {
+    return
   }
-  return `contentType match "*${extension.replace(/[\.]/g, '')}*"`
+
+  /** @example ['pdf', 'image/png', '.html'] */
+  const acceptedExtensionsOrMimes = Object.entries(accept).flatMap(
+    ([key, value]) => {
+      return value.map((extension) => `${key.replace('*', extension)}`)
+    },
+  )
+
+  return acceptedExtensionsOrMimes
+    .map((extensionOrMime) => `contentType match "**${extensionOrMime}"`)
+    .join(' || ')
 }
+
 const Browser: React.FC<BrowserProps> = (props) => {
   const { onSelect, accept = props.vendorConfig?.defaultAccept } = props
   const sanityClient = useSanityClient()
@@ -46,23 +58,17 @@ const Browser: React.FC<BrowserProps> = (props) => {
   const [state, send] = useMachine(browserMachine, {
     services: {
       fetchFiles: () => {
-        // const parsedAccept = parseAccept(props.accept)
-        let extensionFilter = ''
-        // @TODO: filter files by type
-        // if (typeof parsedAccept === 'string') {
-        //   extensionFilter = `&& ${getFilterForExtension(parsedAccept)}`
-        // } else if (Array.isArray(parsedAccept)) {
-        //   extensionFilter = `&& (
-        //     ${parsedAccept.map(getFilterForExtension).join(' || ')}
+        const filters = [
+          `_type == "${props.vendorConfig?.schemaPrefix}.storedFile"`,
+          'defined(fileURL)',
+          getFilterForExtension(accept),
+        ]
 
-        //   )`
-        // }
         return sanityClient.fetch(/* groq */ `
-        *[
-          _type == "${props.vendorConfig?.schemaPrefix}.storedFile" &&
-          defined(fileURL)
-          ${extensionFilter}
-        ] | order(_createdAt desc)
+        *[${filters
+          .filter(Boolean)
+          .map((f) => `(${f})`)
+          .join(' && ')}] | order(_createdAt desc)
         `)
       },
     },
