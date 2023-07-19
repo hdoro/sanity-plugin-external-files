@@ -1,6 +1,7 @@
 // Generate plain NodeJS server
 const http = require('http')
 const DigitalOceanGetSignedUrl = require('./do.getSignedUrl')
+const DigitalOceanDeleteObject = require('./do.deleteObject')
 const port = 4444
 
 require('dotenv').config()
@@ -25,6 +26,9 @@ const server = http.createServer(async (request, response) => {
 
       if (request.url.endsWith('do/signed-url')) {
         return await DigitalOceanGetSignedUrl(json, response)
+      }
+      if (request.url.endsWith('do/delete-object')) {
+        return await DigitalOceanDeleteObject(json, response)
       }
     } catch (error) {
       response.statusCode = 500
