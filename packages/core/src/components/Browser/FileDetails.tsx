@@ -66,11 +66,14 @@ const AssetInput: React.FC<{
   </FormField>
 )
 
+const Z_INDEX = 60_000
+
 const FileDetails: React.FC<FileDetailsProps> = (props) => {
   const { closeDialog, vendorConfig } = props
   const toast = useToast()
   const { credentials } = React.useContext(CredentialsContext)
   const sanityClient = useSanityClient()
+  const placement = props.onSelect ? 'input' : 'tool'
   const [state, send] = useMachine(fileDetailsMachine, {
     actions: {
       closeDialog: () => closeDialog(),
@@ -151,7 +154,7 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
   return (
     <Dialog
       header={file.title || file.fileName}
-      zOffset={600000}
+      zOffset={Z_INDEX}
       id="file-details-dialog"
       onClose={() => send('CLOSE')}
       onClickOutside={() => send('CLOSE')}
@@ -191,7 +194,7 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
       {state.matches('interactions.deleting') && (
         <Dialog
           header={'Delete file'}
-          zOffset={600000}
+          zOffset={Z_INDEX}
           id="deleting-file-details-dialog"
           onClose={() => send('CANCEL')}
           onClickOutside={() => send('CANCEL')}
@@ -226,7 +229,7 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
               justifyContent: 'center',
             }}
           >
-            <Stack style={{ textAlign: 'center' }} space={3}>
+            <Stack space={3}>
               {state.matches('interactions.deleting.checkingReferences') && (
                 <>
                   <Heading size={2}>Checking if file can be deleted</Heading>
@@ -236,16 +239,17 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
               {state.matches('interactions.deleting.cantDelete') && (
                 <>
                   <Heading size={2}>File can't be deleted</Heading>
-                  <Text size={2}>
+                  <Text size={2} style={{ marginBottom: '2rem' }}>
                     There are {state.context.references?.length} documents
-                    pointing to this file. Edit or delete them before deleting
-                    this file.
+                    pointing to this file. Remove their references to this file
+                    or delete them before proceeding.
                   </Text>
                   {state.context.file?._id && (
                     <FileReferences
                       fileId={state.context.file._id}
                       references={state.context.references}
                       isLoaded={state.context.referencesLoaded}
+                      placement={placement}
                     />
                   )}
                 </>
@@ -281,7 +285,7 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
       {state.matches('interactions.closing.confirm') && (
         <Dialog
           header={'You have unsaved changes'}
-          zOffset={600000}
+          zOffset={Z_INDEX}
           id="closing-file-details-dialog"
           onClose={() => send('CANCEL')}
           onClickOutside={() => send('CANCEL')}
@@ -436,6 +440,7 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
                 fileId={file._id}
                 references={state.context.references}
                 isLoaded={state.context.referencesLoaded}
+                placement={placement}
               />
             </TabPanel>
           </Stack>

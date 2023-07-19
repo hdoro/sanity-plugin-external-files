@@ -66,20 +66,10 @@ export default function createInput(vendorConfig: VendorConfiguration) {
             createPortal(
               <Dialog
                 header="Select File"
-                zOffset={600000}
                 id="file-browser"
                 onClose={toggleBrowser}
                 onClickOutside={toggleBrowser}
                 width={5}
-                position="fixed"
-                style={{
-                  left: 0,
-                  top: 0,
-                  width: '100%',
-                  height: '100%',
-                  padding: '0 1rem',
-                  boxSizing: 'border-box',
-                }}
               >
                 <Browser
                   vendorConfig={vendorConfig}

@@ -39,10 +39,10 @@ function getFilterForExtension(extension: string) {
   }
   return `contentType match "*${extension.replace(/[\.]/g, '')}*"`
 }
-
 const Browser: React.FC<BrowserProps> = (props) => {
   const { onSelect, accept = props.vendorConfig?.defaultAccept } = props
   const sanityClient = useSanityClient()
+  const placement = props.onSelect ? 'input' : 'tool'
   const [state, send] = useMachine(browserMachine, {
     services: {
       fetchFiles: () => {
@@ -74,7 +74,7 @@ const Browser: React.FC<BrowserProps> = (props) => {
       <Card
         padding={2}
         style={{
-          minHeight: onSelect ? '300px' : '100%',
+          minHeight: placement === 'input' ? '300px' : '100%',
           boxSizing: 'border-box',
         }}
         tone="default"
