@@ -22,8 +22,10 @@ const CredentialsProvider = (
   }>,
 ) => {
   const { vendorConfig } = props
-  const cacheKey = `_${vendorConfig?.id || 'external'}FilesSavedCredentials`
-  const documentId = `${vendorConfig.id}.credentials`
+  const cacheKey = `_${
+    vendorConfig?.schemaPrefix || 'external'
+  }FilesSavedCredentials`
+  const documentId = `${vendorConfig?.schemaPrefix}.credentials`
 
   const sanityClient = useSanityClient()
   const toast = useToast()

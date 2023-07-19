@@ -17,7 +17,7 @@ const getStoredFileSchema = (
   vendorConfig: VendorConfiguration,
   schemaConfig: SchemaConfigOptions = {},
 ) => ({
-  name: `${vendorConfig.id}.storedFile`,
+  name: `${vendorConfig.schemaPrefix}.storedFile`,
   title: schemaConfig.title || 'Media file hosted in external vendor',
   type: 'document',
   fieldsets: [
@@ -95,7 +95,7 @@ const getStoredFileSchema = (
       ? [
           {
             name: getCustomDataFieldKey(vendorConfig),
-            title: `${vendorConfig.id}-exclusive fields`,
+            title: `${vendorConfig.schemaPrefix}-exclusive fields`,
             options: { collapsible: true, collapsed: false },
             type: getCustomDataTypeKey(vendorConfig),
           },

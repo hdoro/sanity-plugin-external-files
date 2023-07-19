@@ -25,13 +25,33 @@ export interface AcceptedCredentialField extends Omit<BaseSchemaType, 'type'> {
 export interface VendorConfiguration {
   id: string
   customDataFieldName?: string
-  defaultAccept?: Accept
   toolTitle?: string
   supportsProgress?: boolean
+
+  /**
+   * Which files to accept in all instances of this media library, by default.
+   *
+   * Can be overwritten on a per-field basis.
+   */
+  defaultAccept?: Accept
+
+  /**
+   * What prefix to use for the plugin's schema.
+   *
+   * Schema types added by the plugin:
+   * - `${PREFIX}.storedFile` - the file stored. Analogous to Sanity's `sanity.imageAsset`.
+   * - `${PREFIX}.media` - the field for the user to select a file. Analogous to Sanity's `image` field.
+   * - `${PREFIX}.dimensions` and `${PREFIX}.custom-data` - internal schemas used by `${PREFIX}.storedFile` to ensure full GraphQL compatibility.
+   *
+   * @default `${plugin.id}` // e.g. `firebase-files`, `s3-files`, `digital-ocean-files`
+   */
+  schemaPrefix: string
+
   /**
    * This plugin currently treats all fields as required
    */
   credentialsFields: AcceptedCredentialField[]
+
   /**
    * Should return true if file successfully deleted or string with error code / name if failed to delete.
    */

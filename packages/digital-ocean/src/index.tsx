@@ -12,10 +12,12 @@ import deleteFile from './deleteFile'
 import { credentialsFields, schemaConfig } from './schema.config'
 import uploadFile from './uploadFile'
 
+const VENDOR_ID = 'digital-ocean-files'
+
 export const digitalOceanFiles = definePlugin((userConfig?: UserConfig) => {
   const config = buildConfig(userConfig)
   return {
-    name: 'digital-ocean-files',
+    name: config.schemaPrefix,
     schema: {
       types: [
         // digital-ocean-files.custom-data
@@ -25,7 +27,7 @@ export const digitalOceanFiles = definePlugin((userConfig?: UserConfig) => {
         // digital-ocean-files.storedFile
         getStoredFileSchema(config, schemaConfig),
         {
-          name: 'digital-ocean-files.media',
+          name: `${config.schemaPrefix}.media`,
           title: 'Digital Ocean media',
           type: 'object',
           components: {
@@ -36,8 +38,7 @@ export const digitalOceanFiles = definePlugin((userConfig?: UserConfig) => {
               name: 'asset',
               title: 'Asset',
               type: 'reference',
-              // @TODO: how to handle schema/id changes?
-              to: [{ type: 'digital-ocean-files.storedFile' }],
+              to: [{ type: `${config.schemaPrefix}.storedFile` }],
               validation: (Rule) => Rule.required(),
             },
           ],
@@ -46,7 +47,7 @@ export const digitalOceanFiles = definePlugin((userConfig?: UserConfig) => {
     },
     tools: [
       {
-        name: 'digital-ocean-files',
+        name: config.schemaPrefix,
         title: config.toolTitle,
         component: () => <StudioTool {...config} />,
         icon: ToolIcon,
@@ -57,9 +58,10 @@ export const digitalOceanFiles = definePlugin((userConfig?: UserConfig) => {
 
 function buildConfig(userConfig: UserConfig = {}): VendorConfiguration {
   return {
-    id: 'digital-ocean-files',
+    id: VENDOR_ID,
     customDataFieldName: 'digitalOcean',
     defaultAccept: userConfig.defaultAccept,
+    schemaPrefix: userConfig.schemaPrefix || VENDOR_ID,
     toolTitle: userConfig.toolTitle ?? 'Media Library (DigitalOcean)',
     credentialsFields,
     deleteFile,
@@ -67,7 +69,7 @@ function buildConfig(userConfig: UserConfig = {}): VendorConfiguration {
   }
 }
 
-interface UserConfig {
+interface UserConfig
+  extends Pick<Partial<VendorConfiguration>, 'defaultAccept' | 'schemaPrefix'> {
   toolTitle?: string
-  defaultAccept?: VendorConfiguration['defaultAccept']
 }

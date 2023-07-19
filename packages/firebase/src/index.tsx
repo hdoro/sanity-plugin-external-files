@@ -12,10 +12,12 @@ import deleteFile from './deleteFile'
 import { credentialsFields, schemaConfig } from './schema.config'
 import uploadFile from './uploadFile'
 
+const VENDOR_ID = 'firebase-files'
+
 export const firebaseFiles = definePlugin((userConfig?: UserConfig) => {
   const config = buildConfig(userConfig)
   return {
-    name: 'firebase-files',
+    name: config.schemaPrefix,
     schema: {
       types: [
         // firebase-files.custom-data
@@ -25,8 +27,7 @@ export const firebaseFiles = definePlugin((userConfig?: UserConfig) => {
         // firebase-files.storedFile
         getStoredFileSchema(config, schemaConfig),
         {
-          // @TODO: how to handle schema/id changes?
-          name: 'firebase-files.media',
+          name: `${config.schemaPrefix}.media`,
           title: 'Firebase media',
           type: 'object',
           components: {
@@ -37,8 +38,7 @@ export const firebaseFiles = definePlugin((userConfig?: UserConfig) => {
               name: 'asset',
               title: 'Asset',
               type: 'reference',
-              // @TODO: how to handle schema/id changes?
-              to: [{ type: 'firebase-files.storedFile' }],
+              to: [{ type: `${config.schemaPrefix}.storedFile` }],
               validation: (Rule) => Rule.required(),
             },
           ],
@@ -47,7 +47,7 @@ export const firebaseFiles = definePlugin((userConfig?: UserConfig) => {
     },
     tools: [
       {
-        name: 'firebase-files',
+        name: config.schemaPrefix,
         title: config.toolTitle,
         component: () => <StudioTool {...config} />,
         icon: ToolIcon,
@@ -58,9 +58,10 @@ export const firebaseFiles = definePlugin((userConfig?: UserConfig) => {
 
 function buildConfig(userConfig: UserConfig = {}): VendorConfiguration {
   return {
-    id: 'firebase-files',
+    id: VENDOR_ID,
     customDataFieldName: 'firebase',
     defaultAccept: userConfig.defaultAccept,
+    schemaPrefix: userConfig.schemaPrefix ?? VENDOR_ID,
     toolTitle: userConfig.toolTitle ?? 'Media Library (Firebase)',
     credentialsFields,
     deleteFile: deleteFile,
@@ -68,7 +69,7 @@ function buildConfig(userConfig: UserConfig = {}): VendorConfiguration {
   }
 }
 
-interface UserConfig {
+interface UserConfig
+  extends Pick<Partial<VendorConfiguration>, 'defaultAccept' | 'schemaPrefix'> {
   toolTitle?: string
-  defaultAccept?: VendorConfiguration['defaultAccept']
 }

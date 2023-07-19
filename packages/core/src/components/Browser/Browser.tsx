@@ -59,7 +59,7 @@ const Browser: React.FC<BrowserProps> = (props) => {
         // }
         return sanityClient.fetch(/* groq */ `
         *[
-          _type == "${props.vendorConfig?.id}.storedFile" &&
+          _type == "${props.vendorConfig?.schemaPrefix}.storedFile" &&
           defined(fileURL)
           ${extensionFilter}
         ] | order(_createdAt desc)
