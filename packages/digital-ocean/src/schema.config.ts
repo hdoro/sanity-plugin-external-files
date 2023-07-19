@@ -6,6 +6,7 @@ import {
   EyeClosedIcon,
   EarthGlobeIcon,
   ApiIcon,
+  FolderIcon,
 } from '@sanity/icons'
 
 export const schemaConfig = {
@@ -42,6 +43,13 @@ export const credentialsFields: VendorConfiguration['credentialsFields'] = [
     icon: TrashIcon,
     type: 'url',
     validation: (Rule) => Rule.required(),
+  },
+  {
+    name: 'folder',
+    title: 'Folder in Space',
+    description: "If none provided, will upload files to the Space's root",
+    icon: FolderIcon,
+    type: 'string',
   },
   {
     name: 'subdomain',
