@@ -12,21 +12,22 @@ import deleteFile from './deleteFile'
 import { credentialsFields, schemaConfig } from './schema.config'
 import uploadFile from './uploadFile'
 
-export const digitalOceanFiles = definePlugin((userConfig?: UserConfig) => {
+export const firebaseFiles = definePlugin((userConfig?: UserConfig) => {
   const config = buildConfig(userConfig)
   return {
-    name: 'digital-ocean-files',
+    name: 'firebase-files',
     schema: {
       types: [
-        // digital-ocean-files.custom-data
+        // firebase-files.custom-data
         getCustomDataSchema(config, schemaConfig),
-        // digital-ocean-files.dimensions
+        // firebase-files.dimensions
         getDimensionsSchema(config),
-        // digital-ocean-files.storedFile
+        // firebase-files.storedFile
         getStoredFileSchema(config, schemaConfig),
         {
-          name: 'digital-ocean-files.media',
-          title: 'Digital Ocean media',
+          // @TODO: how to handle schema/id changes?
+          name: 'firebase-files.media',
+          title: 'Firebase media',
           type: 'object',
           components: {
             input: createInput(config),
@@ -37,7 +38,7 @@ export const digitalOceanFiles = definePlugin((userConfig?: UserConfig) => {
               title: 'Asset',
               type: 'reference',
               // @TODO: how to handle schema/id changes?
-              to: [{ type: 'digital-ocean-files.storedFile' }],
+              to: [{ type: 'firebase-files.storedFile' }],
               validation: (Rule) => Rule.required(),
             },
           ],
@@ -46,7 +47,7 @@ export const digitalOceanFiles = definePlugin((userConfig?: UserConfig) => {
     },
     tools: [
       {
-        name: 'digital-ocean-files',
+        name: 'firebase-files',
         title: config.toolTitle,
         component: () => <StudioTool {...config} />,
         icon: ToolIcon,
@@ -57,13 +58,13 @@ export const digitalOceanFiles = definePlugin((userConfig?: UserConfig) => {
 
 function buildConfig(userConfig: UserConfig = {}): VendorConfiguration {
   return {
-    id: 'digital-ocean-files',
-    customDataFieldName: 'digitalOcean',
+    id: 'firebase-files',
+    customDataFieldName: 'firebase',
     defaultAccept: userConfig.defaultAccept,
-    toolTitle: userConfig.toolTitle ?? 'Media Library (DigitalOcean)',
+    toolTitle: userConfig.toolTitle ?? 'Media Library (Firebase)',
     credentialsFields,
-    deleteFile,
-    uploadFile,
+    deleteFile: deleteFile,
+    uploadFile: uploadFile,
   }
 }
 

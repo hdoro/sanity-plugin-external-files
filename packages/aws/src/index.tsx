@@ -12,21 +12,22 @@ import deleteFile from './deleteFile'
 import { credentialsFields, schemaConfig } from './schema.config'
 import uploadFile from './uploadFile'
 
-export const digitalOceanFiles = definePlugin((userConfig?: UserConfig) => {
+export const s3Files = definePlugin((userConfig?: UserConfig) => {
   const config = buildConfig(userConfig)
+
   return {
-    name: 'digital-ocean-files',
+    name: 's3-files',
     schema: {
       types: [
-        // digital-ocean-files.custom-data
+        // s3-files.custom-data
         getCustomDataSchema(config, schemaConfig),
-        // digital-ocean-files.dimensions
+        // s3-files.dimensions
         getDimensionsSchema(config),
-        // digital-ocean-files.storedFile
+        // s3-files.storedFile
         getStoredFileSchema(config, schemaConfig),
         {
-          name: 'digital-ocean-files.media',
-          title: 'Digital Ocean media',
+          name: 's3-files.media',
+          title: 'S3 media',
           type: 'object',
           components: {
             input: createInput(config),
@@ -37,8 +38,7 @@ export const digitalOceanFiles = definePlugin((userConfig?: UserConfig) => {
               title: 'Asset',
               type: 'reference',
               // @TODO: how to handle schema/id changes?
-              to: [{ type: 'digital-ocean-files.storedFile' }],
-              validation: (Rule) => Rule.required(),
+              to: [{ type: 's3-files.storedFile' }],
             },
           ],
         },
@@ -46,7 +46,7 @@ export const digitalOceanFiles = definePlugin((userConfig?: UserConfig) => {
     },
     tools: [
       {
-        name: 'digital-ocean-files',
+        name: 's3-files',
         title: config.toolTitle,
         component: () => <StudioTool {...config} />,
         icon: ToolIcon,
@@ -55,19 +55,19 @@ export const digitalOceanFiles = definePlugin((userConfig?: UserConfig) => {
   }
 })
 
-function buildConfig(userConfig: UserConfig = {}): VendorConfiguration {
-  return {
-    id: 'digital-ocean-files',
-    customDataFieldName: 'digitalOcean',
-    defaultAccept: userConfig.defaultAccept,
-    toolTitle: userConfig.toolTitle ?? 'Media Library (DigitalOcean)',
-    credentialsFields,
-    deleteFile,
-    uploadFile,
-  }
-}
-
 interface UserConfig {
   toolTitle?: string
   defaultAccept?: VendorConfiguration['defaultAccept']
+}
+
+function buildConfig(userConfig: UserConfig = {}): VendorConfiguration {
+  return {
+    id: 's3-files',
+    customDataFieldName: 's3',
+    defaultAccept: userConfig.defaultAccept,
+    toolTitle: userConfig.toolTitle ?? 'Media Library (S3)',
+    credentialsFields,
+    deleteFile: deleteFile,
+    uploadFile: uploadFile,
+  }
 }
