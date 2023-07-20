@@ -5,7 +5,8 @@
     "dev": "turbo run dev --parallel",
     "build": "turbo run build --force",
     "format": "prettier --write .",
-    "update-package-versions": "changeset version"
+    "update-package-versions": "changeset version",
+    "publish-packages": "changeset version && yarn run build && changeset publish"
   },
   "workspaces": [
     "packages/*"

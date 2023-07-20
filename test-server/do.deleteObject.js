@@ -44,7 +44,7 @@ async function DigitalOceanDeleteObject(body, response) {
       Bucket: BUCKET,
       Key: fileKey,
     })
-    const res = await client.send(command)
+    await client.send(command)
     response.statusCode = 200
     return response.end(JSON.stringify({ message: 'ok' }))
   } catch (error) {

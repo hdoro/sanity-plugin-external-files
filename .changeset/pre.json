@@ -7,5 +7,7 @@
     "sanity-plugin-digital-ocean-files": "0.7.0",
     "sanity-plugin-firebase-files": "0.7.0"
   },
-  "changesets": ["big-kangaroos-kneel"]
+  "changesets": [
+    "big-kangaroos-kneel"
+  ]
 }
