@@ -1,6 +1,7 @@
 import { VendorConfiguration } from 'sanity-plugin-external-files'
+import { S3Credentials } from '.'
 
-const deleteFile: VendorConfiguration['deleteFile'] = async ({
+const deleteFile: VendorConfiguration<S3Credentials>['deleteFile'] = async ({
   storedFile,
   credentials,
 }) => {

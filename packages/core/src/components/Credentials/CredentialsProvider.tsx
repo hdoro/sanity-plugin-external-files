@@ -72,12 +72,13 @@ const CredentialsProvider = (
       cacheKey
     ]
     if (
-      savedCredentials &&
-      vendorConfig.credentialsFields.every(
-        (field) => field.name in savedCredentials,
-      )
+      (savedCredentials &&
+        vendorConfig.credentialsFields.every(
+          (field) => field.name in savedCredentials,
+        )) ||
+      vendorConfig.credentialsFields.length === 0
     ) {
-      setCredentials(savedCredentials)
+      setCredentials(savedCredentials || {})
       setStatus('success')
       return
     }

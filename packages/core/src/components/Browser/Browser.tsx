@@ -119,21 +119,23 @@ const Browser: React.FC<BrowserProps> = (props) => {
                       onClick={() => send('OPEN_UPLOAD')}
                     />
                   )}
-                  <Tooltip
-                    content={
-                      <Box padding={3}>
-                        <Text>Plugin settings</Text>
-                      </Box>
-                    }
-                  >
-                    <Button
-                      icon={CogIcon}
-                      mode="ghost"
-                      tone="default"
-                      fontSize={2}
-                      onClick={() => send('OPEN_SETTINGS')}
-                    />
-                  </Tooltip>
+                  {props.vendorConfig.credentialsFields?.length > 0 && (
+                    <Tooltip
+                      content={
+                        <Box padding={3}>
+                          <Text>Plugin settings</Text>
+                        </Box>
+                      }
+                    >
+                      <Button
+                        icon={CogIcon}
+                        mode="ghost"
+                        tone="default"
+                        fontSize={2}
+                        onClick={() => send('OPEN_SETTINGS')}
+                      />
+                    </Tooltip>
+                  )}
                 </Inline>
               </Flex>
               {state.context.searchTerm ? (

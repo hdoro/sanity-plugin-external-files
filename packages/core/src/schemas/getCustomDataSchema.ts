@@ -1,12 +1,4 @@
-import { SchemaType } from 'sanity'
-import { VendorConfiguration } from '../types'
-
-type CustomField = string | SchemaType
-
-interface SchemaConfigOptions {
-  title?: string
-  customFields?: CustomField[]
-}
+import { SchemaConfigOptions, VendorConfiguration } from '../types'
 
 export const getCustomDataFieldKey = (vendorConfig: VendorConfiguration) =>
   vendorConfig.customDataFieldName ||

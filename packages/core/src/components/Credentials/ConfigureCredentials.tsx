@@ -92,6 +92,8 @@ const ConfigureCredentials: React.FC<{
     }
   }, [formValues])
 
+  if (props.vendorConfig.credentialsFields?.length === 0) return null
+
   return (
     <Card padding={4} border>
       <Stack space={3}>

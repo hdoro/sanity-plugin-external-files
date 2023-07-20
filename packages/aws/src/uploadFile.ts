@@ -1,6 +1,7 @@
 import { VendorConfiguration } from 'sanity-plugin-external-files'
+import { S3Credentials } from '.'
 
-const uploadFile: VendorConfiguration['uploadFile'] = ({
+const uploadFile: VendorConfiguration<S3Credentials>['uploadFile'] = ({
   credentials,
   onError,
   onSuccess,
@@ -18,6 +19,8 @@ const uploadFile: VendorConfiguration['uploadFile'] = ({
     })
   }
 
+  const filePath = [credentials.folder, fileName].filter(Boolean).join('/')
+
   // On cancelling fetch: https://davidwalsh.name/cancel-fetch
   let signal: AbortSignal | undefined
   let controller: AbortController | undefined
@@ -30,7 +33,7 @@ const uploadFile: VendorConfiguration['uploadFile'] = ({
   fetch(endpoint, {
     method: 'POST',
     body: JSON.stringify({
-      fileName,
+      fileName: filePath,
       contentType: file.type,
       secret: credentials.secretForValidating,
     }),
@@ -42,7 +45,7 @@ const uploadFile: VendorConfiguration['uploadFile'] = ({
   })
     .then((response) => response.json())
     .then(({ url, fields }) => {
-      const fileKey = fields?.key || fileName
+      const fileKey = fields?.key || filePath
       const data = {
         bucket: credentials.bucketKey,
         ...fields,

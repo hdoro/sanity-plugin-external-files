@@ -1,5 +1,5 @@
 import type { Accept } from 'react-dropzone'
-import type { SanityDocument, BaseSchemaType } from 'sanity'
+import type { SanityDocument, BaseSchemaType, SchemaType } from 'sanity'
 
 type StrictSanityDocument = Pick<
   SanityDocument,
@@ -22,7 +22,7 @@ export interface AcceptedCredentialField extends Omit<BaseSchemaType, 'type'> {
 /**
  * Necessary to initialize the input & tool on different vendors
  */
-export interface VendorConfiguration {
+export interface VendorConfiguration<Credentials = VendorCredentials> {
   id: string
   customDataFieldName?: string
   toolTitle?: string
@@ -57,7 +57,7 @@ export interface VendorConfiguration {
    */
   deleteFile: (props: {
     storedFile: SanityUpload
-    credentials: VendorCredentials
+    credentials: Credentials
   }) => Promise<true | string>
   /**
    * Function to upload file to
@@ -72,7 +72,7 @@ export interface VendorConfiguration {
     /**
      * Credentials as configured by your plugin.
      */
-    credentials: VendorCredentials
+    credentials: Credentials
     /**
      * Inform users about the progress of the upload
      */
@@ -152,4 +152,11 @@ export type FileMetadata = AudioMetadata | VideoMetadata
 export interface ExternalFileFieldOptions {
   accept?: Accept
   storeOriginalFilename?: boolean
+}
+
+type CustomField = string | SchemaType
+
+export interface SchemaConfigOptions {
+  title?: string
+  customFields?: CustomField[]
 }

@@ -4,6 +4,7 @@ import {
   TrashIcon,
   EyeClosedIcon,
   EarthGlobeIcon,
+  FolderIcon,
 } from '@sanity/icons'
 import { VendorConfiguration } from 'sanity-plugin-external-files'
 
@@ -40,6 +41,14 @@ export const credentialsFields: VendorConfiguration['credentialsFields'] = [
     icon: TrashIcon,
     type: 'url',
     validation: (Rule) => Rule.required(),
+  },
+  {
+    name: 'folder',
+    title: 'Folder in Space',
+    description:
+      "Folder to store files inside the bucket. If none provided, will upload files to the bucket's root (optional)",
+    icon: FolderIcon,
+    type: 'string',
   },
   {
     name: 'secretForValidating',
