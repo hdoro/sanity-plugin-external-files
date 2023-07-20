@@ -6,8 +6,8 @@ import {
   PlayIcon,
 } from '@sanity/icons'
 import imageUrlBuilder from '@sanity/image-url'
-import { Box, Card, Spinner } from '@sanity/ui'
-import React from 'react'
+import { Box, Card, Spinner, Stack } from '@sanity/ui'
+import React, { ReactNode } from 'react'
 import { useSanityClient } from '../scripts/sanityClient'
 import { MediaFile, SanityUpload } from '../types'
 import AudioIcon from './AudioIcon'
@@ -56,8 +56,8 @@ const Player: React.FC<SanityUpload> = (props) => {
 const WrappingCard = ({
   children,
   context,
-  // 16:9 aspect ratio
-  paddingBottom = '56.25%',
+  // 3:1 aspect ratio when none set
+  paddingBottom = '33%',
 }: React.PropsWithChildren<
   Pick<MediaPreview, 'context'> & {
     paddingBottom?: string
@@ -150,7 +150,7 @@ const MediaPreview: React.FC<MediaPreview> = (props) => {
   let mediaType: 'audio' | 'video' | 'image' | 'other'
   let imgUrl: string | undefined
   let allowPlayback = props.context !== 'browser'
-  let icon
+  let icon: ReactNode
   switch (true) {
     case fullFile.contentType?.includes('audio/'):
       mediaType = 'audio'
@@ -203,6 +203,7 @@ const MediaPreview: React.FC<MediaPreview> = (props) => {
       mediaType = 'image'
       allowPlayback &&= false
       icon = <ImageIcon />
+      imgUrl = fullFile.fileURL
       break
 
     case fullFile.contentType?.includes('application/pdf'):
@@ -219,93 +220,84 @@ const MediaPreview: React.FC<MediaPreview> = (props) => {
   }
 
   return (
-    <WrappingCard
-      context={props.context}
-      paddingBottom={
-        fullFile.dimensions
-          ? `${(fullFile.dimensions.height / fullFile.dimensions.width) * 100}%`
-          : undefined
-      }
-    >
-      {playing ? (
-        <Player {...fullFile} />
-      ) : (
-        <>
-          {imgUrl ? (
-            <img
-              style={{
-                width: '100%',
-                borderRadius: '.3rem',
-                height: '100%',
-                objectFit: 'contain',
-                color: 'transparent',
-              }}
-              src={imgUrl}
-              alt={`Video's thumbnail`}
-            />
-          ) : (
-            <Card
-              padding={0}
-              sizing="border"
-              style={{
-                position: 'relative',
-                height: '100%',
-              }}
-              tone="primary"
-            >
-              <IconWrapper
+    <>
+      <WrappingCard
+        context={props.context}
+        paddingBottom={
+          fullFile.dimensions
+            ? `${
+                (fullFile.dimensions.height / fullFile.dimensions.width) * 100
+              }%`
+            : undefined
+        }
+      >
+        {playing ? (
+          <Player {...fullFile} />
+        ) : (
+          <>
+            {imgUrl ? (
+              <img
                 style={{
-                  color: blue[800].hex,
-                  height: mediaType === 'audio' ? '60%' : undefined,
-                  width: mediaType === 'audio' ? '90%' : undefined,
+                  width: '100%',
+                  borderRadius: '.3rem',
+                  height: '100%',
+                  objectFit: 'contain',
+                  color: 'transparent',
                 }}
+                src={imgUrl}
+                alt={`Video's thumbnail`}
+              />
+            ) : (
+              <Card
+                padding={0}
+                sizing="border"
+                style={{
+                  position: 'relative',
+                  height: '100%',
+                }}
+                tone="primary"
               >
-                {icon}
-              </IconWrapper>
-            </Card>
-          )}
-          {allowPlayback && (
-            <button
-              style={{
-                position: 'absolute',
-                left: '50%',
-                top: '50%',
-                transform: 'translate(-50%,-50%)',
-                fontSize: '3rem',
-                width: '1.5em',
-                height: '1.5em',
-                display: 'flex',
-                borderRadius: '50%',
-                justifyContent: 'center',
-                alignItems: 'center',
-                background: 'white',
-                border: '1px solid #ced2d9',
-                boxShadow: '1px 1px 6px rgba(134,144,160,0.2)',
-                cursor: 'pointer',
-              }}
-              onClick={() => setPlaying(true)}
-              aria-label={`Play ${mediaType}`}
-            >
-              <PlayIcon />
-            </button>
-          )}
-          {props.context === 'input' && (
-            <Card
-              padding={4}
-              style={{
-                position: 'absolute',
-                left: 0,
-                bottom: 0,
-                width: '100%',
-                boxSizing: 'border-box',
-              }}
-            >
-              <FileMetadata file={fullFile} />
-            </Card>
-          )}
-        </>
-      )}
-    </WrappingCard>
+                <IconWrapper
+                  style={{
+                    color: blue[800].hex,
+                    height: mediaType === 'audio' ? '60%' : undefined,
+                    width: mediaType === 'audio' ? '90%' : undefined,
+                  }}
+                >
+                  {icon}
+                </IconWrapper>
+              </Card>
+            )}
+            {allowPlayback && (
+              <button
+                style={{
+                  position: 'absolute',
+                  left: '50%',
+                  top: '50%',
+                  transform: 'translate(-50%,-50%)',
+                  fontSize: '3rem',
+                  width: '1.5em',
+                  height: '1.5em',
+                  display: 'flex',
+                  borderRadius: '50%',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  background: 'white',
+                  border: '1px solid #ced2d9',
+                  boxShadow: '1px 1px 6px rgba(134,144,160,0.2)',
+                  cursor: 'pointer',
+                }}
+                onClick={() => setPlaying(true)}
+                aria-label={`Play ${mediaType}`}
+              >
+                <PlayIcon />
+              </button>
+            )}
+          </>
+        )}
+      </WrappingCard>
+      {props.context === 'input' && <FileMetadata file={fullFile} />}
+    </>
   )
 }
 

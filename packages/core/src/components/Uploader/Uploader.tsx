@@ -51,7 +51,7 @@ const Uploader: React.FC<UploaderProps> = (props) => {
 
   return (
     <Container width={2}>
-      <Stack space={3}>
+      <Stack space={4}>
         <input {...getInputProps()} />
         {props.chosenFile ? (
           <MediaPreview file={props.chosenFile} context="input" />
