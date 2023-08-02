@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-s3-files",
-  "version": "1.0.0-next.0",
+  "version": "1.0.0-next.1",
   "description": "Store Sanity media files in AWS S3",
   "scripts": {
     "clear-lib": "node clearLib.js",
@@ -25,7 +25,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@sanity/icons": "^1",
-    "sanity-plugin-external-files": "workspace:*"
+    "sanity-plugin-external-files": "1.0.0-next.1"
   },
   "devDependencies": {
     "concurrently": "^8",

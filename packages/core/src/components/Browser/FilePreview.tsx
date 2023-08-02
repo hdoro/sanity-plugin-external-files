@@ -17,14 +17,13 @@ const FilePreview: React.FC<FilePreviewProps> = ({
   onEdit,
   file,
 }) => {
-  const select = React.useCallback(
-    () => onSelect && onSelect(file),
-    [onSelect, file],
-  )
-  const edit = React.useCallback(() => onEdit && onEdit(file), [onEdit, file])
+  const select = React.useCallback(() => onSelect?.(file), [onSelect, file])
+  const edit = React.useCallback(() => onEdit?.(file), [onEdit, file])
+
   if (!file) {
     return null
   }
+
   return (
     <Card border padding={2} sizing="border" radius={2}>
       <Stack

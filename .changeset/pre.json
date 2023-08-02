@@ -8,6 +8,7 @@
     "sanity-plugin-firebase-files": "0.7.0"
   },
   "changesets": [
-    "big-kangaroos-kneel"
+    "big-kangaroos-kneel",
+    "fair-dingos-rush"
   ]
 }

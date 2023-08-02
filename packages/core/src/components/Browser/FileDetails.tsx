@@ -94,9 +94,12 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
             resolve(context.references)
           }
           try {
-            const references = await sanityClient.fetch('*[references($id)]', {
-              id: context.file?._id,
-            })
+            const references = await sanityClient.fetch(
+              '*[references($id)]{_id, _type, _rev, _updatedAt, _createdAt}',
+              {
+                id: context.file?._id,
+              },
+            )
             resolve(references)
           } catch (error) {
             reject(error)

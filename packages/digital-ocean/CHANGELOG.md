@@ -1,5 +1,13 @@
 # sanity-plugin-digital-ocean-files
 
+## 1.0.0-next.1
+
+### Patch Changes
+
+- fix: proper version resolution
+- Updated dependencies
+  - sanity-plugin-external-files@1.0.0-next.1
+
 ## 1.0.0-next.0
 
 ### Major Changes
