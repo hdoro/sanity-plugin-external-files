@@ -1,3 +1,5 @@
+⚠️ **Poorly documented v3 version in the [feat/sanity-v3 branch](https://github.com/hdoro/sanity-plugin-external-files/tree/feat/sanity-v3)**
+
 # sanity-plugin-external-dam
 
 Series of plugins for working with media files hosted elsewhere inside of Sanity - _currently only audio and video are supported_. Use one of the existing implementations or write your own!
