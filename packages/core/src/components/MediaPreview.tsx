@@ -283,6 +283,7 @@ const MediaPreview: React.FC<MediaPreview> = (props) => {
                   justifyContent: 'center',
                   alignItems: 'center',
                   background: 'white',
+                  color: 'black',
                   border: '1px solid #ced2d9',
                   boxShadow: '1px 1px 6px rgba(134,144,160,0.2)',
                   cursor: 'pointer',
