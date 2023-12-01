@@ -71,6 +71,8 @@ const CredentialsProvider = (
     const savedCredentials: VendorCredentials | undefined = (window as any)[
       cacheKey
     ]
+
+    // If credentials are passed through the plugin's config, no need to store them in Sanity
     if (
       (savedCredentials &&
         vendorConfig.credentialsFields.every(

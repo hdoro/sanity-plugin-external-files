@@ -11,9 +11,7 @@ import {
   Text,
   TextInput,
 } from '@sanity/ui'
-import { validateDocument } from '@sanity/validation'
 import React from 'react'
-import { useClient } from 'sanity'
 import {
   AcceptedCredentialField,
   VendorConfiguration,
@@ -78,12 +76,13 @@ const ConfigureCredentials: React.FC<{
   )
 
   async function validateForm(values: typeof formValues) {
-    const newMarkers = await validateDocument(
-      useClient,
-      { ...values, _type: 'vendorCredentials' } as any,
-      schema,
-    )
-    setMarkers(newMarkers)
+    // @TODO: how to replace the deprecated @sanity/validation package?
+    // const newMarkers = await validateDocument(
+    //   useClient,
+    //   { ...values, _type: 'vendorCredentials' } as any,
+    //   schema,
+    // )
+    // setMarkers(newMarkers)
   }
 
   React.useEffect(() => {

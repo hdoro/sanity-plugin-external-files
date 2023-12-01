@@ -6,10 +6,13 @@
     "build": "turbo run build --force",
     "format": "prettier --write .",
     "update-package-versions": "changeset version",
-    "publish-packages": "changeset version && yarn run build && changeset publish"
+    "publish-packages": "changeset version && yarn run build && changeset publish",
+    "check-versions": "manypkg check",
+    "fix-versions": "manypkg fix"
   },
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "test-studio"
   ],
   "repository": {
     "type": "git",
@@ -17,8 +20,9 @@
   },
   "author": "Henrique Doro <opensource@hdoro.dev>",
   "license": "Apache-2.0",
-  "devDependencies": {
+  "dependencies": {
     "@changesets/cli": "latest",
+    "@manypkg/cli": "latest",
     "prettier": "latest",
     "turbo": "latest",
     "typescript": "latest"
@@ -26,5 +30,6 @@
   "bugs": {
     "url": "https://github.com/hdoro/sanity-plugin-external-files/issues"
   },
-  "homepage": "https://github.com/hdoro/sanity-plugin-external-files#readme"
+  "homepage": "https://github.com/hdoro/sanity-plugin-external-files#readme",
+  "packageManager": "yarn@4.0.2"
 }

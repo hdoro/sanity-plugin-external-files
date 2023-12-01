@@ -117,6 +117,7 @@ export interface DigitalOceanCredentials {
 interface UserConfig
   extends Pick<Partial<VendorConfiguration>, 'defaultAccept' | 'schemaPrefix'> {
   toolTitle?: string
+
   /**
    * @optional
    * Credentials for accessing the DigitalOcean Space.

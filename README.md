@@ -42,7 +42,4 @@ I'm a newbie with collaborating on open-source, so no strict rules here other th
 
 Immense gratitude to Akash Reddy and the folks at Playy.co for sponsoring the initial work for this plugin and helping shape it. You gave me the first opportunity to do paid open-source work and this won't be forgotten 💚
 
-Also shout-out to Daniel, José and the great folks at Burocratik for sponsoring the Sanity V3 upgrade of this plugin.
-
-- Documentar
-- Publicar
+Also shout-out to Daniel, José and the great folks at [Bürocratik](https://burocratik.com/) for sponsoring the Sanity V3 upgrade of this plugin.
