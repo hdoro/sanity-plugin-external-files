@@ -1,18 +1,16 @@
 {
-  "name": "sanity-plugin-external-dam",
-  "version": "0.7.0",
-  "description": "Core library for sanity-plugin-firebase-dam & sanity-plugin-aws-dam.",
-  "main": "lib/index.js",
+  "name": "sanity-plugin-external-files",
+  "version": "1.0.0",
+  "description": "Core library for external object storage providers in Sanity.io studio.",
   "scripts": {
     "clear-lib": "node clearLib.js",
-    "build": "npm run clear-lib && npm run build:tsc",
-    "build:tsc": "tsc --declaration",
-    "dev": "tsc -w",
+    "build": "npm run clear-lib && tsc && tsc --module esnext --outDir build/esm",
+    "dev": "concurrently \"tsc -w\" \"tsc --module esnext --outDir build/esm -w\"",
     "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/hdoro/sanity-plugin-external-dam.git"
+    "url": "git+ssh://git@github.com/hdoro/sanity-plugin-external-files.git"
   },
   "keywords": [
     "sanity.io",
@@ -25,30 +23,45 @@
   "author": "Henrique Doro <opensource@hdoro.dev>",
   "license": "Apache-2.0",
   "dependencies": {
-    "@sanity/base": ">= 2.5.0",
-    "@sanity/icons": ">= 1.0.0",
-    "@sanity/ui": ">= 0.33.9",
-    "@xstate/react": "^1.6.1",
-    "mime": "^2.5.2",
-    "nanoid": "^3.1.25",
-    "react-dropzone": "^11.3.4",
-    "xstate": "^4.23.4"
+    "@sanity/icons": "^1",
+    "@sanity/ui": "^1",
+    "@xstate/react": "^3.2.2",
+    "clipboard": "^2.0.11",
+    "mime": "^3.0.0",
+    "nanoid": "^4.0.2",
+    "react-dropzone": "^14.2.3",
+    "xstate": "^4.38.3"
   },
   "devDependencies": {
-    "@types/mime": "^2.0.3",
-    "@types/react": "^17.0.20",
-    "@types/react-dom": "^17.0.9",
-    "@types/styled-components": "^5.1.14",
-    "@xstate/inspect": "^0.5.0",
-    "typescript": "^4.4.3",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "@types/mime": "^3.0.1",
+    "@types/react": "^18.2.14",
+    "@types/react-dom": "^18.2.6",
+    "@types/styled-components": "^5.1.26",
+    "concurrently": "^8",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "sanity": "^3.20.1",
+    "styled-components": "^6.1.1",
+    "typescript": "^5"
   },
   "peerDependencies": {
-    "styled-components": ">= 5.0.0"
+    "sanity": "^3.14.0",
+    "styled-components": "^5 || ^6"
   },
   "bugs": {
-    "url": "https://github.com/hdoro/sanity-plugin-external-dam/issues"
+    "url": "https://github.com/hdoro/sanity-plugin-external-files/issues"
   },
-  "homepage": "https://github.com/hdoro/sanity-plugin-external-dam#readme"
+  "homepage": "https://github.com/hdoro/sanity-plugin-external-files#readme",
+  "exports": {
+    ".": {
+      "types": "./build/index.d.ts",
+      "import": "./build/esm/index.js",
+      "require": "./build/index.js",
+      "default": "./build/esm/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./build/index.js",
+  "module": "./build/esm/index.js",
+  "types": "./build/index.d.ts"
 }

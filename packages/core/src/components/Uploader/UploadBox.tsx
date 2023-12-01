@@ -1,11 +1,10 @@
+import { CloseIcon, RestoreIcon, UploadIcon } from '@sanity/icons'
+import { Button, Card, Inline, Spinner, Stack, Text } from '@sanity/ui'
 import React from 'react'
-import { Button, Card, Inline, Stack, Text, Spinner } from '@sanity/ui'
-import { gray, red, green } from '@sanity/color'
-import { UploadIcon, CloseIcon, RestoreIcon } from '@sanity/icons'
 
-import { useUploadReturn } from './useUpload'
 import { Heading } from '@sanity/ui'
 import { VendorConfiguration } from '../../types'
+import { useUploadReturn } from './useUpload'
 
 interface UploadBox extends useUploadReturn {
   onUploadClick: () => void
@@ -27,20 +26,36 @@ const UploadBox: React.FC<UploadBox> = (props) => {
   const uploadingStates = ['uploadingToVendor', 'uploadingToSanity']
   const loadingStates = [...metadataStates, ...uploadingStates]
 
+  const rootProps = getRootProps()
+
+  // By default, Sanity's dialogs will capture drag/drop events, breaking the dropzone.
+  // So for UploadBox inside arrays, we need to capture these events first, hence the duplication
+  // of handlers in their captured version.
+  const adjustedRootProps: typeof rootProps = {
+    ...rootProps,
+    onDragEnterCapture: (e) => {
+      rootProps.onDragEnter?.(e)
+    },
+    onDragLeaveCapture: (e) => {
+      rootProps.onDragLeave?.(e)
+    },
+    onDragOverCapture: (e) => {
+      rootProps.onDragOver?.(e)
+    },
+    onDropCapture: (e) => {
+      rootProps.onDrop?.(e)
+    },
+  }
   return (
     <Card
+      {...adjustedRootProps}
       padding={4}
       border
       display="flex"
-      {...getRootProps()}
+      tone={isDragReject ? 'critical' : isDragAccept ? 'positive' : 'default'}
       style={{
         minHeight: '300px',
         borderStyle: isDragActive ? 'dashed' : 'solid',
-        background: isDragReject
-          ? red[50].hex
-          : isDragAccept
-          ? green[50].hex
-          : gray[100].hex,
         justifyContent: 'center',
         alignItems: 'center',
         textAlign: 'center',
@@ -130,8 +145,8 @@ const UploadBox: React.FC<UploadBox> = (props) => {
             {state.value === 'uploadingToVendor' && (
               <>
                 {props.vendorConfig.supportsProgress && (
-                    <Text>{state.context.vendorUploadProgress}%</Text>
-                  )}
+                  <Text>{state.context.vendorUploadProgress}%</Text>
+                )}
                 <Button
                   icon={CloseIcon}
                   fontSize={2}

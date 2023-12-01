@@ -1,8 +1,8 @@
 import { VendorConfiguration } from '../types'
 
 const getDimensionsSchema = (vendorConfig: VendorConfiguration) => ({
-  name: `${vendorConfig.id}.dimensions`,
-  title: `${vendorConfig.toolTitle || vendorConfig.id} dimensions`,
+  name: `${vendorConfig.schemaPrefix}.dimensions`,
+  title: `${vendorConfig.toolTitle || vendorConfig.schemaPrefix} dimensions`,
   type: 'object',
   fields: [
     {

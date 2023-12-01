@@ -1,11 +1,10 @@
 import type { SanityDocument } from '@sanity/client'
 import { Box, Card, Text } from '@sanity/ui'
-import Preview from 'part:@sanity/base/preview'
-import { IntentLink } from 'part:@sanity/base/router'
-import schema from 'part:@sanity/base/schema'
 import React from 'react'
+import { collate, useSchema } from 'sanity'
 import styled from 'styled-components'
 import SpinnerBox from '../SpinnerBox'
+import { DocumentPreview } from '../documentPreview/DocumentPreview'
 
 const Container = styled(Box)`
   * {
@@ -19,14 +18,13 @@ const Container = styled(Box)`
   }
 `
 
-// Code adapted from Robin Pyon's sanity-plugin-media
-// https://github.com/robinpyon/sanity-plugin-media/blob/master/src/components/DocumentList/index.tsx
-// Thanks for paving the way, Robin!
 const FileReferences: React.FC<{
   fileId: string
   references?: SanityDocument[]
   isLoaded: boolean
+  placement: 'input' | 'tool'
 }> = (props) => {
+  const schema = useSchema()
   if (!props.isLoaded) {
     return <SpinnerBox />
   }
@@ -44,23 +42,15 @@ const FileReferences: React.FC<{
     )
   }
 
-  const draftIds = props.references.reduce(
-    (acc: string[], doc: SanityDocument) =>
-      doc._id.startsWith('drafts.') ? acc.concat(doc._id.slice(7)) : acc,
-    [],
-  )
-
-  const filteredDocuments: SanityDocument[] = props.references.filter(
-    (doc: SanityDocument) => !draftIds.includes(doc._id),
-  )
+  const documentPairs = collate(props.references || [])
   return (
     <Container>
-      {filteredDocuments?.map((doc) => {
-        const schemaType = schema.get(doc._type)
+      {documentPairs?.map((documentPair) => {
+        const schemaType = schema.get(documentPair.type)
 
         return (
           <Card
-            key={doc._id}
+            key={documentPair.id}
             marginBottom={2}
             padding={2}
             radius={2}
@@ -68,21 +58,11 @@ const FileReferences: React.FC<{
             style={{ overflow: 'hidden' }}
           >
             <Box>
-              {schemaType ? (
-                <IntentLink
-                  intent="edit"
-                  params={{ id: doc._id }}
-                  key={doc._id}
-                >
-                  <Preview layout="default" value={doc} type={schemaType} />
-                </IntentLink>
-              ) : (
-                <Box padding={2}>
-                  <Text size={1}>
-                    A document of the unknown type <em>{doc._type}</em>
-                  </Text>
-                </Box>
-              )}
+              <DocumentPreview
+                documentPair={documentPair}
+                schemaType={schemaType}
+                placement={props.placement}
+              />
             </Box>
           </Card>
         )

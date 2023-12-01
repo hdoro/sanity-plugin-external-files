@@ -1,7 +1,6 @@
-import React from 'react'
 import { useToast } from '@sanity/ui'
-
-import sanityClient from '../../scripts/sanityClient'
+import React, { PropsWithChildren } from 'react'
+import { useSanityClient } from '../../scripts/sanityClient'
 import { VendorConfiguration, VendorCredentials } from '../../types'
 
 export type CredentialsStatus = 'loading' | 'missingCredentials' | 'success'
@@ -17,35 +16,26 @@ export const CredentialsContext = React.createContext<ContextValue>({
   status: 'loading',
 })
 
-interface CredentialsProviderProps {
-  vendorConfig: VendorConfiguration
-}
-
-const CredentialsProvider: React.FC<CredentialsProviderProps> = (props) => {
+const CredentialsProvider = (
+  props: PropsWithChildren<{
+    vendorConfig: VendorConfiguration
+  }>,
+) => {
   const { vendorConfig } = props
-  const cacheKey = `_${vendorConfig?.id || 'external'}DamSavedCredentials`
-  const documentId = `${vendorConfig.id}.credentials`
+  const cacheKey = `_${
+    vendorConfig?.schemaPrefix || 'external'
+  }FilesSavedCredentials`
+  const documentId = `${vendorConfig?.schemaPrefix}.credentials`
 
+  const sanityClient = useSanityClient()
   const toast = useToast()
-  const [credentials, setCredentials] =
-    React.useState<VendorCredentials | undefined>()
+  const [credentials, setCredentials] = React.useState<
+    VendorCredentials | undefined
+  >()
   const [status, setStatus] = React.useState<CredentialsStatus>('loading')
 
   async function saveCredentials(newCredentials: VendorCredentials) {
     ;(window as any)[cacheKey] = undefined
-
-    // If one credential is missing in newCredentials, error out
-    if (
-      vendorConfig.credentialsFields.some(
-        (field) => !(field.name in newCredentials),
-      )
-    ) {
-      toast.push({
-        title: 'Missing credentials',
-        status: 'error',
-      })
-      return false
-    }
 
     try {
       await sanityClient.createOrReplace({
@@ -58,7 +48,7 @@ const CredentialsProvider: React.FC<CredentialsProviderProps> = (props) => {
         status: 'success',
       })
       setCredentials(newCredentials)
-      setStatus("success")
+      setStatus('success')
       return true
     } catch (error) {
       toast.push({
@@ -81,14 +71,17 @@ const CredentialsProvider: React.FC<CredentialsProviderProps> = (props) => {
     const savedCredentials: VendorCredentials | undefined = (window as any)[
       cacheKey
     ]
+
+    // If credentials are passed through the plugin's config, no need to store them in Sanity
     if (
-      savedCredentials &&
-      vendorConfig.credentialsFields.every(
-        (field) => field.name in savedCredentials,
-      )
+      (savedCredentials &&
+        vendorConfig.credentialsFields.every(
+          (field) => field.name in savedCredentials,
+        )) ||
+      vendorConfig.credentialsFields.length === 0
     ) {
-      setCredentials(savedCredentials)
-      setStatus("success")
+      setCredentials(savedCredentials || {})
+      setStatus('success')
       return
     }
 
@@ -100,7 +93,7 @@ const CredentialsProvider: React.FC<CredentialsProviderProps> = (props) => {
           return
         }
         setCredentials(doc)
-        setStatus("success")
+        setStatus('success')
       })
       .catch(() => setStatus('missingCredentials'))
   }, [vendorConfig])

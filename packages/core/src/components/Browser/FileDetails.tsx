@@ -15,6 +15,7 @@ import {
   Dialog,
   Flex,
   Heading,
+  Inline,
   Spinner,
   Stack,
   Tab,
@@ -25,18 +26,20 @@ import {
   useToast,
 } from '@sanity/ui'
 import { useMachine } from '@xstate/react'
-import DefaultFormField from 'part:@sanity/components/formfields/default'
-import React from 'react'
+import ClipboardJs from 'clipboard'
+import React, { useEffect } from 'react'
 import formatBytes from '../../scripts/formatBytes'
 import formatSeconds from '../../scripts/formatSeconds'
-import sanityClient from '../../scripts/sanityClient'
+import { useSanityClient } from '../../scripts/sanityClient'
 import { SanityUpload, VendorConfiguration } from '../../types'
+import CopyButton from '../CopyButton'
+import { CredentialsContext } from '../Credentials/CredentialsProvider'
+import FormField from '../FormField'
 import IconInfo from '../IconInfo'
 import MediaPreview from '../MediaPreview'
 import SpinnerBox from '../SpinnerBox'
-import fileDetailsMachine from './fileDetailsMachine'
 import FileReferences from './FileReferences'
-import { CredentialsContext } from '../Credentials/CredentialsProvider'
+import fileDetailsMachine from './fileDetailsMachine'
 
 interface FileDetailsProps {
   onSelect?: (file: SanityUpload) => void
@@ -54,23 +57,23 @@ const AssetInput: React.FC<{
   value: string
   onInput: (e: React.FormEvent<HTMLInputElement>) => void
 }> = (props) => (
-  <DefaultFormField
-    label={props.label}
-    description={props.description}
-    level={0}
-  >
+  <FormField label={props.label} description={props.description}>
     <TextInput
       value={props.value}
       placeholder={props.placeholder}
       onInput={props.onInput}
     />
-  </DefaultFormField>
+  </FormField>
 )
+
+const Z_INDEX = 60_000
 
 const FileDetails: React.FC<FileDetailsProps> = (props) => {
   const { closeDialog, vendorConfig } = props
   const toast = useToast()
   const { credentials } = React.useContext(CredentialsContext)
+  const sanityClient = useSanityClient()
+  const placement = props.onSelect ? 'input' : 'tool'
   const [state, send] = useMachine(fileDetailsMachine, {
     actions: {
       closeDialog: () => closeDialog(),
@@ -91,9 +94,12 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
             resolve(context.references)
           }
           try {
-            const references = await sanityClient.fetch('*[references($id)]', {
-              id: context.file?._id,
-            })
+            const references = await sanityClient.fetch(
+              '*[references($id)]{_id, _type, _rev, _updatedAt, _createdAt}',
+              {
+                id: context.file?._id,
+              },
+            )
             resolve(references)
           } catch (error) {
             reject(error)
@@ -140,10 +146,18 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
 
   const file = state.context.file || props.file
   const isSaving = state.matches('interactions.saving')
+
+  const copyUrlButton = React.useRef<HTMLButtonElement>(null)
+  useEffect(() => {
+    if (!copyUrlButton.current) return
+
+    new ClipboardJs(copyUrlButton.current as HTMLButtonElement)
+  }, [file.fileURL])
+
   return (
     <Dialog
       header={file.title || file.fileName}
-      zOffset={600000}
+      zOffset={Z_INDEX}
       id="file-details-dialog"
       onClose={() => send('CLOSE')}
       onClickOutside={() => send('CLOSE')}
@@ -183,7 +197,7 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
       {state.matches('interactions.deleting') && (
         <Dialog
           header={'Delete file'}
-          zOffset={600000}
+          zOffset={Z_INDEX}
           id="deleting-file-details-dialog"
           onClose={() => send('CANCEL')}
           onClickOutside={() => send('CANCEL')}
@@ -218,7 +232,7 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
               justifyContent: 'center',
             }}
           >
-            <Stack style={{ textAlign: 'center' }} space={3}>
+            <Stack space={3}>
               {state.matches('interactions.deleting.checkingReferences') && (
                 <>
                   <Heading size={2}>Checking if file can be deleted</Heading>
@@ -228,16 +242,17 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
               {state.matches('interactions.deleting.cantDelete') && (
                 <>
                   <Heading size={2}>File can't be deleted</Heading>
-                  <Text size={2}>
+                  <Text size={2} style={{ marginBottom: '2rem' }}>
                     There are {state.context.references?.length} documents
-                    pointing to this file. Edit or delete them before deleting
-                    this file.
+                    pointing to this file. Remove their references to this file
+                    or delete them before proceeding.
                   </Text>
                   {state.context.file?._id && (
                     <FileReferences
                       fileId={state.context.file._id}
                       references={state.context.references}
                       isLoaded={state.context.referencesLoaded}
+                      placement={placement}
                     />
                   )}
                 </>
@@ -273,7 +288,7 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
       {state.matches('interactions.closing.confirm') && (
         <Dialog
           header={'You have unsaved changes'}
-          zOffset={600000}
+          zOffset={Z_INDEX}
           id="closing-file-details-dialog"
           onClose={() => send('CANCEL')}
           onClickOutside={() => send('CANCEL')}
@@ -339,6 +354,19 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
                 icon={CalendarIcon}
                 size={2}
               />
+              {file.fileURL && (
+                <Inline space={2}>
+                  <Button
+                    as="a"
+                    href={file.fileURL}
+                    rel="download"
+                    icon={DownloadIcon}
+                    text="Download"
+                    mode="ghost"
+                  />
+                  <CopyButton label="Copy URL" textToCopy={file.fileURL} />
+                </Inline>
+              )}
             </Stack>
           </Stack>
           <Stack space={4} flex={1} sizing="border">
@@ -350,7 +378,6 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
                 label="Details"
                 onClick={() => send({ type: 'OPEN_DETAILS' })}
                 selected={state.matches('tab.details_tab')}
-                space={2}
               />
               <Tab
                 aria-controls="references-panel"
@@ -359,7 +386,6 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
                 label="Used by"
                 onClick={() => send({ type: 'OPEN_REFERENCES' })}
                 selected={state.matches('tab.references_tab')}
-                space={2}
               />
             </TabList>
             <TabPanel
@@ -417,6 +443,7 @@ const FileDetails: React.FC<FileDetailsProps> = (props) => {
                 fileId={file._id}
                 references={state.context.references}
                 isLoaded={state.context.referencesLoaded}
+                placement={placement}
               />
             </TabPanel>
           </Stack>

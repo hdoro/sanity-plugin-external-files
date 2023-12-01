@@ -1,5 +1,5 @@
-import { SanityDocument } from '@sanity/client'
-import { BaseSchemaType } from '@sanity/types'
+import type { Accept } from 'react-dropzone'
+import type { SanityDocument, BaseSchemaType, SchemaType } from 'sanity'
 
 type StrictSanityDocument = Pick<
   SanityDocument,
@@ -22,22 +22,42 @@ export interface AcceptedCredentialField extends Omit<BaseSchemaType, 'type'> {
 /**
  * Necessary to initialize the input & tool on different vendors
  */
-export interface VendorConfiguration {
+export interface VendorConfiguration<Credentials = VendorCredentials> {
   id: string
   customDataFieldName?: string
-  defaultAccept: string | string[]
   toolTitle?: string
   supportsProgress?: boolean
+
+  /**
+   * Which files to accept in all instances of this media library, by default.
+   *
+   * Can be overwritten on a per-field basis.
+   */
+  defaultAccept?: Accept
+
+  /**
+   * What prefix to use for the plugin's schema.
+   *
+   * Schema types added by the plugin:
+   * - `${PREFIX}.storedFile` - the file stored. Analogous to Sanity's `sanity.imageAsset`.
+   * - `${PREFIX}.media` - the field for the user to select a file. Analogous to Sanity's `image` field.
+   * - `${PREFIX}.dimensions` and `${PREFIX}.custom-data` - internal schemas used by `${PREFIX}.storedFile` to ensure full GraphQL compatibility.
+   *
+   * @default `${plugin.id}` // e.g. `firebase-files`, `s3-files`, `digital-ocean-files`
+   */
+  schemaPrefix: string
+
   /**
    * This plugin currently treats all fields as required
    */
   credentialsFields: AcceptedCredentialField[]
+
   /**
    * Should return true if file successfully deleted or string with error code / name if failed to delete.
    */
   deleteFile: (props: {
     storedFile: SanityUpload
-    credentials: VendorCredentials
+    credentials: Credentials
   }) => Promise<true | string>
   /**
    * Function to upload file to
@@ -52,7 +72,7 @@ export interface VendorConfiguration {
     /**
      * Credentials as configured by your plugin.
      */
-    credentials: VendorCredentials
+    credentials: Credentials
     /**
      * Inform users about the progress of the upload
      */
@@ -128,3 +148,15 @@ interface VideoMetadata {
 }
 
 export type FileMetadata = AudioMetadata | VideoMetadata
+
+export interface ExternalFileFieldOptions {
+  accept?: Accept
+  storeOriginalFilename?: boolean
+}
+
+type CustomField = string | SchemaType
+
+export interface SchemaConfigOptions {
+  title?: string
+  customFields?: CustomField[]
+}

@@ -1,23 +1,22 @@
 import React from 'react'
 import { Button, Container, Stack } from '@sanity/ui'
-import { SanityClient } from '@sanity/client'
 import { SearchIcon, UploadIcon, TrashIcon } from '@sanity/icons'
 
 import useUpload from './useUpload'
 import { MediaFile, SanityUpload, VendorConfiguration } from '../../types'
 import UploadBox from './UploadBox'
 import MediaPreview from '../MediaPreview'
+import { Accept } from 'react-dropzone'
 
 export interface UploaderProps {
   vendorConfig: VendorConfiguration
-  sanityClient: SanityClient
   onSuccess: (document: SanityUpload) => void
 
   // CONFIGURATION
   /**
    * MIME file type
    */
-  accept?: 'audio/*' | 'video/*' | string | string[]
+  accept?: Accept
   /**
    * Whether or not we should use the file's name when uploading
    */
@@ -41,7 +40,7 @@ export interface UploaderProps {
 const Uploader: React.FC<UploaderProps> = (props) => {
   const uploadProps = useUpload(props)
   const {
-    dropzone: { inputRef },
+    dropzone: { inputRef, getInputProps },
   } = uploadProps
 
   const onUploadClick = React.useCallback(() => {
@@ -52,11 +51,16 @@ const Uploader: React.FC<UploaderProps> = (props) => {
 
   return (
     <Container width={2}>
-      <Stack space={3}>
+      <Stack space={4}>
+        <input {...getInputProps()} />
         {props.chosenFile ? (
           <MediaPreview file={props.chosenFile} context="input" />
         ) : (
-          <UploadBox {...uploadProps} vendorConfig={props.vendorConfig} onUploadClick={onUploadClick} />
+          <UploadBox
+            {...uploadProps}
+            vendorConfig={props.vendorConfig}
+            onUploadClick={onUploadClick}
+          />
         )}
         <div
           style={{

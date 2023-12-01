@@ -1,24 +1,35 @@
 {
-  "name": "sanity-plugin-external-dam-root",
+  "name": "sanity-plugin-external-files-root",
   "private": true,
   "scripts": {
-    "format": "prettier --write ."
+    "dev": "turbo run dev --parallel",
+    "build": "turbo run build --force --filter=!test-studio",
+    "format": "prettier --write .",
+    "update-package-versions": "changeset version",
+    "publish-packages": "changeset version && yarn run build && changeset publish",
+    "check-versions": "manypkg check",
+    "fix-versions": "manypkg fix"
   },
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "test-studio"
   ],
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/hdoro/sanity-plugin-external-dam.git"
+    "url": "git+ssh://git@github.com/hdoro/sanity-plugin-external-files.git"
   },
   "author": "Henrique Doro <opensource@hdoro.dev>",
   "license": "Apache-2.0",
-  "devDependencies": {
-    "prettier": "^2.4.0",
-    "typescript": "^4.4.3"
+  "dependencies": {
+    "@changesets/cli": "latest",
+    "@manypkg/cli": "latest",
+    "prettier": "latest",
+    "turbo": "latest",
+    "typescript": "latest"
   },
   "bugs": {
-    "url": "https://github.com/hdoro/sanity-plugin-external-dam/issues"
+    "url": "https://github.com/hdoro/sanity-plugin-external-files/issues"
   },
-  "homepage": "https://github.com/hdoro/sanity-plugin-external-dam#readme"
+  "homepage": "https://github.com/hdoro/sanity-plugin-external-files#readme",
+  "packageManager": "yarn@4.0.2"
 }

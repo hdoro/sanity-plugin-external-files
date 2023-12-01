@@ -1,17 +1,16 @@
-import React from 'react'
-import { StateFrom } from 'xstate'
-import { useMachine } from '@xstate/react'
-import { DropzoneState, useDropzone } from 'react-dropzone'
-import { useToast } from '@sanity/ui'
 import { SanityImageAssetDocument } from '@sanity/client'
-
-import uploadMachine from './uploadMachine'
-import { UploaderProps } from './Uploader'
-import parseAccept from '../../scripts/parseAccept'
+import { useToast } from '@sanity/ui'
+import { useMachine } from '@xstate/react'
+import React from 'react'
+import { DropzoneState, useDropzone } from 'react-dropzone'
+import { StateFrom } from 'xstate'
+import getBasicFileMetadata from '../../scripts/getBasicMetadata'
+import getFileRef from '../../scripts/getFileRef'
+import { useSanityClient } from '../../scripts/sanityClient'
 import { SanityUpload } from '../../types'
 import { CredentialsContext } from '../Credentials/CredentialsProvider'
-import getFileRef from '../../scripts/getFileRef'
-import getBasicFileMetadata from '../../scripts/getBasicMetadata'
+import { UploaderProps } from './Uploader'
+import uploadMachine from './uploadMachine'
 
 export interface useUploadReturn {
   dropzone: DropzoneState
@@ -23,12 +22,13 @@ export interface useUploadReturn {
 const useUpload = ({
   accept,
   vendorConfig,
-  sanityClient,
   storeOriginalFilename = true,
   onSuccess,
+  removeFile,
 }: UploaderProps): useUploadReturn => {
   const toast = useToast()
   const { credentials } = React.useContext(CredentialsContext)
+  const sanityClient = useSanityClient()
   const [state, send] = useMachine(uploadMachine, {
     actions: {
       invalidFileToast: () =>
@@ -66,7 +66,7 @@ const useUpload = ({
         })
 
         return () => {
-          if (typeof cleanUp === "function") {
+          if (typeof cleanUp === 'function') {
             cleanUp()
           }
         }
@@ -86,8 +86,8 @@ const useUpload = ({
                 context.videoScreenshot,
                 {
                   source: {
-                    id: `${vendorConfig.id}`,
-                    name: `${vendorConfig.id} (external DAM)`,
+                    id: `${vendorConfig.schemaPrefix}`,
+                    name: `${vendorConfig.schemaPrefix} (external DAM)`,
                   },
                   filename: getFileRef({
                     file: context.file as File,
@@ -101,7 +101,7 @@ const useUpload = ({
           }
           try {
             const document = await sanityClient.create({
-              _type: `${vendorConfig.id}.storedFile`,
+              _type: `${vendorConfig.schemaPrefix}.storedFile`,
               screenshot: screenshot
                 ? {
                     _type: 'image',
@@ -135,8 +135,9 @@ const useUpload = ({
         type: 'SELECT_FILE',
         file: acceptedFiles?.[0],
       })
+      removeFile?.()
     },
-    accept: parseAccept(accept),
+    accept,
     // Only allow 1 file to be uploaded
     maxFiles: 1,
   })

@@ -1,13 +1,12 @@
-import { createMachine, assign } from 'xstate'
-
+import { assign, createMachine } from 'xstate'
+import getWaveformData from '../../scripts/getWaveformData'
 import {
   AudioMetadata,
   FileMetadata,
   SanityUpload,
   VendorUpload,
 } from '../../types'
-import getWaveformData from '../../scripts/getWaveformData'
-import parseAccept from '../../scripts/parseAccept'
+import getBasicFileMetadata from '../../scripts/getBasicMetadata'
 
 interface Context {
   retries: number
@@ -41,13 +40,6 @@ export type UploadEvent =
 const INITIAL_CONTEXT: Context = {
   retries: 0,
   vendorUploadProgress: 0,
-}
-
-function getBasicFileMetadata(file: File) {
-  return {
-    fileSize: file.size,
-    contentType: parseAccept(file.type),
-  }
 }
 
 const uploadMachine = createMachine<Context, UploadEvent>(
@@ -100,7 +92,7 @@ const uploadMachine = createMachine<Context, UploadEvent>(
                         width: videoEl.videoWidth,
                         height: videoEl.videoHeight,
                       },
-                      ...getBasicFileMetadata(context.file as File),
+                      ...getBasicFileMetadata({ file: context.file as File }),
                     },
                   })
                 }, 'image/png')
@@ -153,7 +145,7 @@ const uploadMachine = createMachine<Context, UploadEvent>(
                   metadata: {
                     ...metadata,
                     waveformData,
-                    ...getBasicFileMetadata(context.file),
+                    ...getBasicFileMetadata({ file: context.file }),
                   },
                 })
               } catch (error) {

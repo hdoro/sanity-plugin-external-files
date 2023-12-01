@@ -1,4 +1,6 @@
 import { UploadIcon } from '@sanity/icons'
+import { Schema } from '@sanity/schema'
+import { ValidationMarker } from '@sanity/types'
 import {
   Button,
   Card,
@@ -9,17 +11,13 @@ import {
   Text,
   TextInput,
 } from '@sanity/ui'
-import DefaultFormField from 'part:@sanity/components/formfields/default'
-import { validateDocument } from '@sanity/validation'
-import Schema from '@sanity/schema'
-import { ValidationMarker } from '@sanity/types'
 import React from 'react'
 import {
   AcceptedCredentialField,
   VendorConfiguration,
   VendorCredentials,
 } from '../../types'
-
+import FormField from '../FormField'
 import { CredentialsContext } from './CredentialsProvider'
 
 const ConfigureCredentials: React.FC<{
@@ -29,12 +27,14 @@ const ConfigureCredentials: React.FC<{
   const { saveCredentials, credentials } = React.useContext(CredentialsContext)
   const [isLoading, setIsLoading] = React.useState(false)
   const [markers, setMarkers] = React.useState<ValidationMarker[]>([])
+  const hasErrors = markers.some((marker) => marker.level === 'error')
 
   // Form values:
   const [formValues, setFormValues] = React.useState<VendorCredentials>({})
 
   async function submitCredentials(e: React.FormEvent) {
     e.preventDefault()
+    if (hasErrors) return
     setIsLoading(true)
     const success = await saveCredentials(formValues)
     setIsLoading(false)
@@ -54,7 +54,8 @@ const ConfigureCredentials: React.FC<{
       e.preventDefault()
       setFormValues({
         ...formValues,
-        [field.name]: e.currentTarget.value !== "" ? e.currentTarget.value : undefined,
+        [field.name]:
+          e.currentTarget.value !== '' ? e.currentTarget.value : undefined,
       })
     }
   }
@@ -75,11 +76,13 @@ const ConfigureCredentials: React.FC<{
   )
 
   async function validateForm(values: typeof formValues) {
-    const newMarkers = await validateDocument(
-      { ...values, _type: 'vendorCredentials' } as any,
-      schema,
-    )
-    setMarkers(newMarkers)
+    // @TODO: how to replace the deprecated @sanity/validation package?
+    // const newMarkers = await validateDocument(
+    //   useClient,
+    //   { ...values, _type: 'vendorCredentials' } as any,
+    //   schema,
+    // )
+    // setMarkers(newMarkers)
   }
 
   React.useEffect(() => {
@@ -87,6 +90,8 @@ const ConfigureCredentials: React.FC<{
       validateForm(formValues)
     }
   }, [formValues])
+
+  if (props.vendorConfig.credentialsFields?.length === 0) return null
 
   return (
     <Card padding={4} border>
@@ -113,24 +118,30 @@ const ConfigureCredentials: React.FC<{
         {props.vendorConfig.credentialsFields?.length ? (
           <form style={{ marginTop: '1.5rem' }} onSubmit={submitCredentials}>
             <Stack space={4}>
-              {props.vendorConfig.credentialsFields.map((field) => (
-                <DefaultFormField
-                  label={field.title || field.name}
-                  description={field.description}
-                  markers={markers.filter(
-                    (marker) => marker.path[0] === field.name,
-                  )}
-                  level={0}
-                >
-                  <TextInput
-                    icon={field.icon}
-                    onInput={resolveFieldHandler(field)}
-                    value={formValues[field.name] || ''}
-                    type={field.type === 'number' ? 'number' : 'text'}
-                    disabled={isLoading}
-                  />
-                </DefaultFormField>
-              ))}
+              {props.vendorConfig.credentialsFields.map((field) => {
+                const fieldMarkers = markers.filter(
+                  (marker) => marker.path[0] === field.name,
+                )
+                const hasError = fieldMarkers?.some(
+                  (marker) => marker.level === 'error',
+                )
+                return (
+                  <FormField
+                    label={field.title || field.name}
+                    description={field.description}
+                    markers={fieldMarkers}
+                  >
+                    <TextInput
+                      icon={field.icon}
+                      onInput={resolveFieldHandler(field)}
+                      value={formValues[field.name] || ''}
+                      type={field.type === 'number' ? 'number' : 'text'}
+                      disabled={isLoading}
+                      required={hasError}
+                    />
+                  </FormField>
+                )
+              })}
               <Button
                 text={
                   credentials?.apiKey

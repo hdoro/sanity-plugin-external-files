@@ -1,6 +1,10 @@
-import { SanityUpload } from '../types'
-import getFileRef, { GetFileRefProps } from './getFileRef'
-import { parseExtension } from './parseAccept'
+import mime from 'mime'
+import type { SanityUpload } from '../types'
+import getFileRef, { type GetFileRefProps } from './getFileRef'
+
+export function parseExtension(extension: string) {
+  return mime.getType(extension) || extension
+}
 
 export default function getBasicFileMetadata(
   props: GetFileRefProps,

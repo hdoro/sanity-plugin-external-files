@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid'
-import { UploaderProps } from '../components/Uploader/Uploader'
+import type { UploaderProps } from '../components/Uploader/Uploader'
 
 export type GetFileRefProps = Pick<UploaderProps, 'storeOriginalFilename'> & {
   file: File
