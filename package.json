@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "dev": "turbo run dev --parallel",
-    "build": "turbo run build --force",
+    "build": "turbo run build --force --filter=!test-studio",
     "format": "prettier --write .",
     "update-package-versions": "changeset version",
     "publish-packages": "changeset version && yarn run build && changeset publish",

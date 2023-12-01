@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-external-files",
-  "version": "1.0.0-next.1",
+  "version": "1.0.0",
   "description": "Core library for external object storage providers in Sanity.io studio.",
   "scripts": {
     "clear-lib": "node clearLib.js",

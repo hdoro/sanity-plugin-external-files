@@ -1,7 +1,7 @@
 {
   "name": "test-studio",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "package.json",
   "license": "UNLICENSED",
   "scripts": {
@@ -19,7 +19,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "sanity": "^3.20.1",
-    "sanity-plugin-digital-ocean-files": "1.0.0-next.1",
+    "sanity-plugin-digital-ocean-files": "1.0.0",
     "styled-components": "^6.1.1"
   },
   "devDependencies": {
