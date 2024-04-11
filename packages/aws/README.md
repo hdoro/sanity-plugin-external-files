@@ -12,7 +12,7 @@ Start by installing the plugin:
 
 The rest of the work must be done inside AWS' console. The video below is a full walkthrough, be sure to watch from start to finish to avoid missing small details that are hard to debug.
 
-[![Video screenshot](https://img.youtube.com/vi/Aokoz4j4Dzo/0.jpg)](https://www.youtube.com/watch?v=Aokoz4j4Dzo)
+[![Video screenshot](https://img.youtube.com/vi/O4j2fEDVeVw/0.jpg)](https://www.youtube.com/watch?v=O4j2fEDVeVw)
 
 ### Creating the S3 bucket
 
@@ -28,8 +28,9 @@ If you already have a bucket, make sure to follow the configuration below.
 1. Configure CORS for your bucket to accept the origins your studio will be hosted in (including localhost)
    - Refer to [S3's guide on CORS](https://docs.aws.amazon.com/AmazonS3/latest/userguide/enabling-cors-examples.html) if this is new to you (it was for me too!)
    - You can use the template at [s3Cors.example.json](https://github.com/hdoro/sanity-plugin-external-files/blob/main/packages/aws/s3Cors.example.json)
+   - Be sure to allow CORS for both PUT and POST requests
 
-### Creating the Lambda functions' role for accessing the bucket
+### Creating the Lambda function's role for accessing the bucket
 
 1. Go into the Identity and Access Management (IAM) console
 1. Start by going into the "Access management -> Policies" tab and "Create new Policy"
@@ -53,16 +54,16 @@ If you already have a bucket, make sure to follow the configuration below.
    1. Leave "Step 1: Select trusted entities" as is
    1. Create the role
 
-### Creating the Lambda functions
+### Creating the Lambda function
 
-We'll need to create 2 functions, one for getting signed URLs for posting objects and another for deleting objects. The steps below apply to both:
+You'll need to create a Lambda function, which will create signed URLs for posting objects, and handle object deletion. Follow the steps below:
 
 #### Configuring functions' HTTP access
 
 1. Go into the Lambda console
 1. "Create function"
 1. "Author from scratch"
-1. Runtime: Node.js 14.x or higher
+1. Runtime: Node.js 20.x or higher
 1. Architecture: your call - I'm using x86_64
 1. "Permissions" -> "Change default execution role" -> "Use an existing role"
    - Select the role you created above
@@ -77,19 +78,19 @@ We'll need to create 2 functions, one for getting signed URLs for posting object
 1. Set "content-type" as an "Allowed Headers" and set "Allowed Methods" to "\*".
 1. Save the new configuration
 
-Now we can change the code of each function
+Now we can change the source code of the function:
 
 #### Editing functions' code
 
-Use the templates at [getSignedUrl.example.js](https://github.com/hdoro/sanity-plugin-external-files/blob/main/packages/aws/getSignedUrl.example.js) and [deleteObject.example.js](https://github.com/hdoro/sanity-plugin-external-files/blob/main/packages/aws/deleteObject.example.js).
+💡 Use the template at [lambda.example.mjs](https://github.com/hdoro/sanity-plugin-external-files/blob/main/packages/aws/lambda.example.mjs).
 
-With the functions' URLs in hand - which you can find in each functions' page -, open the plugin's configuration form in the Sanity tool.
+With the functions' URL in hand - which you can find in the Lambda dashboard -, open the plugin's configuration form in the Sanity tool, or modify the plugin's config in `sanity.config`.
 
-There, you'll fill in the bucket key (ex: `my-sanity-bucket`), the bucket region (ex: `ap-south-1`), the URL for both Lambda functions and an optional secret for validating input in functions.
+There, you'll fill in the bucket key (ex: `my-sanity-bucket`), the bucket region (ex: `ap-south-1`), the endpoints for create/delete operations (re-use the URL of the function created above) and an optional secret for validating input in functions.
 
 ## Using
 
-Use the `s3-files.media` type in your fields. Examples:
+Now that everything is configured and you've tested uploading and deleting files via the plugin's studio tool, use the `s3-files.media` type in your schema to reference content from S3. Examples:
 
 ```
 {

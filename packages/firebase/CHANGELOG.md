@@ -1,5 +1,13 @@
 # sanity-plugin-firebase-files
 
+## 1.0.1
+
+### Patch Changes
+
+- Chore: update dependencies
+- Updated dependencies
+  - sanity-plugin-external-files@1.0.1
+
 ## 1.0.0
 
 ### Major Changes

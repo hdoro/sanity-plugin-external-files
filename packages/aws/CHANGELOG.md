@@ -1,5 +1,14 @@
 # sanity-plugin-s3-files
 
+## 1.0.1
+
+### Patch Changes
+
+- Fix: handle updated AWS S3 SDK0, and simplify lambda function
+- Chore: update dependencies
+- Updated dependencies
+  - sanity-plugin-external-files@1.0.1
+
 ## 1.0.0
 
 ### Major Changes

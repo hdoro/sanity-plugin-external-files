@@ -17,7 +17,7 @@ export default function FormField(
           <FormFieldValidationStatus
             validation={props.markers?.map((m) => ({
               level: m.level,
-              message: m.item.message,
+              message: m.message || m.item?.message || '',
               path: m.path,
             }))}
           />

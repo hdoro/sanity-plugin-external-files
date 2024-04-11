@@ -1,5 +1,11 @@
 # sanity-plugin-external-files
 
+## 1.0.1
+
+### Patch Changes
+
+- Chore: update dependencies
+
 ## 1.0.0
 
 ### Major Changes

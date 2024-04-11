@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-external-files",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Core library for external object storage providers in Sanity.io studio.",
   "scripts": {
     "clear-lib": "node clearLib.js",
@@ -23,8 +23,6 @@
   "author": "Henrique Doro <opensource@hdoro.dev>",
   "license": "Apache-2.0",
   "dependencies": {
-    "@sanity/icons": "^1",
-    "@sanity/ui": "^1",
     "@xstate/react": "^3.2.2",
     "clipboard": "^2.0.11",
     "mime": "^3.0.0",
@@ -33,16 +31,25 @@
     "xstate": "^4.38.3"
   },
   "devDependencies": {
+    "@sanity/types": "^3.37.2",
+    "@sanity/client": "^6.15.11",
+    "@sanity/color": "^3.0.6",
+    "@sanity/schema": "^3.37.2",
+    "@sanity/icons": "^2.11.8",
+    "@sanity/image-url": "^1.0.2",
+    "@sanity/ui": "^2.1.2",
     "@types/mime": "^3.0.1",
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6",
-    "@types/styled-components": "^5.1.26",
+    "@types/styled-components": "^5.1.34",
     "concurrently": "^8",
+    "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "sanity": "^3.20.1",
-    "styled-components": "^6.1.1",
-    "typescript": "^5"
+    "react-rx": "^2.1.3",
+    "sanity": "^3.37.2",
+    "styled-components": "^6.1.8",
+    "typescript": "^5.4.5"
   },
   "peerDependencies": {
     "sanity": "^3.14.0",

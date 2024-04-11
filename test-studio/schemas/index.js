@@ -22,6 +22,11 @@ const testSchema = {
       },
     },
     {
+      name: 's3Root',
+      title: 'Root S3 file',
+      type: 's3-files.media',
+    },
+    {
       name: 'inObject',
       type: 'object',
       fields: [

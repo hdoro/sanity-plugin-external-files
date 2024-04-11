@@ -1,14 +1,18 @@
 [
   {
     "AllowedHeaders": ["*"],
-    "AllowedMethods": ["POST"],
+    "AllowedMethods": ["POST", "PUT"],
     "AllowedOrigins": ["http://localhost:3333", "https://your-live-studio"],
     "ExposeHeaders": []
   },
   {
     "AllowedHeaders": [],
     "AllowedMethods": ["GET"],
-    "AllowedOrigins": ["*"],
+    "AllowedOrigins": [
+      "http://localhost:3333",
+      "https://your-live-studio",
+      "https://your-site.com"
+    ],
     "ExposeHeaders": []
   }
 ]

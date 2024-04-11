@@ -16,6 +16,8 @@ const deleteFile: VendorConfiguration<S3Credentials>['deleteFile'] = async ({
       body: JSON.stringify({
         fileKey: storedFile.s3?.key,
         secret: credentials.secretForValidating,
+        bucketKey: credentials.bucketKey,
+        bucketRegion: credentials.bucketRegion,
       }),
       headers: {
         'Content-Type': 'application/json',

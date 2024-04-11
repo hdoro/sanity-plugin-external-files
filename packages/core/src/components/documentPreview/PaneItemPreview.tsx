@@ -40,7 +40,7 @@ export function PaneItemPreview(props: PaneItemPreviewProps) {
     (isRecord(value.title) && isValidElement(value.title)) ||
     isString(value.title) ||
     isNumber(value.title)
-      ? value.title
+      ? (value.title as string | number | React.ReactElement)
       : null
 
   // NOTE: this emits sync so can never be null

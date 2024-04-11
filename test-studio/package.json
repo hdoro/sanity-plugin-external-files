@@ -1,7 +1,7 @@
 {
   "name": "test-studio",
   "private": true,
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "package.json",
   "license": "UNLICENSED",
   "scripts": {
@@ -18,9 +18,11 @@
     "@sanity/vision": "^3.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "sanity": "^3.20.1",
-    "sanity-plugin-digital-ocean-files": "1.0.0",
-    "styled-components": "^6.1.1"
+    "sanity": "^3.37.2",
+    "sanity-plugin-digital-ocean-files": "1.0.1",
+    "sanity-plugin-external-files": "1.0.1",
+    "sanity-plugin-s3-files": "1.0.1",
+    "styled-components": "^6.1.8"
   },
   "devDependencies": {
     "@types/react": "latest",

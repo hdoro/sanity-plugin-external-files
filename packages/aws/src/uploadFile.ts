@@ -11,7 +11,9 @@ const uploadFile: VendorConfiguration<S3Credentials>['uploadFile'] = ({
   if (
     !credentials ||
     typeof credentials.getSignedUrlEndpoint !== 'string' ||
-    typeof credentials.bucketKey !== 'string'
+    typeof credentials.bucketKey !== 'string' ||
+    !URL.canParse(credentials.getSignedUrlEndpoint) ||
+    !credentials.bucketKey
   ) {
     onError({
       name: 'missing-credentials',
@@ -36,6 +38,8 @@ const uploadFile: VendorConfiguration<S3Credentials>['uploadFile'] = ({
       fileName: filePath,
       contentType: file.type,
       secret: credentials.secretForValidating,
+      bucketKey: credentials.bucketKey,
+      bucketRegion: credentials.bucketRegion,
     }),
     headers: {
       'Content-Type': 'application/json',
@@ -45,25 +49,60 @@ const uploadFile: VendorConfiguration<S3Credentials>['uploadFile'] = ({
   })
     .then((response) => response.json())
     .then(({ url, fields }) => {
+      if (!url || !URL.canParse(url)) {
+        onError({
+          message:
+            "Ask your developer to rectify the AWS Lambda function that returns the asset's pre-signed url.",
+          name: 'incorrect-presigned',
+        })
+      }
+
       const fileKey = fields?.key || filePath
-      const data = {
-        bucket: credentials.bucketKey,
-        ...fields,
-        'Content-Type': file.type,
-        file,
+      let presignedPromise: Promise<Response>
+
+      /** ===================================
+       * OLDER VERSION OF THE LAMBDA FUNCTION
+       *
+       * the presigned URLs generated with the old `aws-sdk` returned a `fields` object
+       * and expected a POST request with those fields in the `formData`
+       */
+      if (fields) {
+        const data = {
+          bucket: credentials.bucketKey,
+          ...fields,
+          'Content-Type': file.type,
+          file,
+        }
+
+        const formData = new FormData()
+        for (const name in data) {
+          formData.append(name, data[name])
+        }
+        presignedPromise = fetch(url, {
+          method: 'POST',
+          body: formData,
+          mode: 'cors',
+          signal,
+        })
+      } else {
+        /** ====================================
+         * NEWER VERSIONS OF THE LAMBDA FUNCTION
+         *
+         * `@aws-sdk/s3-request-presigner` returns a single URL string and expects PUT requests with
+         * the file to be uploaded as the binary body. It also requires an explicit `Content-Type` header.
+         */
+        presignedPromise = fetch(url, {
+          method: 'PUT',
+          body: file,
+          mode: 'cors',
+          headers: {
+            'Content-Type': file.type,
+          },
+          signal,
+        })
       }
 
-      const formData = new FormData()
-      for (const name in data) {
-        formData.append(name, data[name])
-      }
-
-      fetch(url, {
-        method: 'POST',
-        body: formData,
-        mode: 'cors',
-        signal,
-      })
+      presignedPromise
         .then((res) => {
           if (res.ok) {
             onSuccess({
@@ -90,8 +129,12 @@ const uploadFile: VendorConfiguration<S3Credentials>['uploadFile'] = ({
         })
     })
     .catch((error) => {
-      console.log({ presignedUrlFailure: error })
-      onError(error)
+      onError({
+        message: 'Ask your developer to check the AWS Lambda function.',
+        name: 'failed-presigned',
+        cause: error?.cause,
+        stack: error?.stack,
+      })
     })
   return () => {
     try {
