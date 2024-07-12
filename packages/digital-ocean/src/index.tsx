@@ -14,7 +14,7 @@ import uploadFile from './uploadFile'
 
 const VENDOR_ID = 'digital-ocean-files'
 
-export const digitalOceanFiles = definePlugin((userConfig?: UserConfig) => {
+export const digitalOceanFiles: any = definePlugin((userConfig?: UserConfig) => {
   const config = buildConfig(userConfig)
   return {
     name: config.schemaPrefix,
