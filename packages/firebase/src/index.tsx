@@ -14,7 +14,7 @@ import uploadFile from './uploadFile'
 
 const VENDOR_ID = 'firebase-files'
 
-export const firebaseFiles: any = definePlugin((userConfig?: UserConfig) => {
+export const firebaseFiles = definePlugin((userConfig?: UserConfig) => {
   const config = buildConfig(userConfig)
   return {
     name: config.schemaPrefix,

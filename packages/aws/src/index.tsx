@@ -14,7 +14,7 @@ import uploadFile from './uploadFile'
 
 const VENDOR_ID = 's3-files'
 
-export const s3Files: any = definePlugin((userConfig?: UserConfig) => {
+export const s3Files = definePlugin((userConfig?: UserConfig) => {
   const config = buildConfig(userConfig)
 
   return {
