@@ -18,7 +18,6 @@ export default {
         }
 
         if (['PUT', 'DELETE'].includes(method)) {
-
             const auth = request.headers.get("Authorization");
             const expectedAuth = `Bearer ${env.SECRET}`;
 
@@ -26,7 +25,6 @@ export default {
                 return response(401, { message: 'Unauthorized' }, request, env.ALLOWED_ORIGINS);
             }
         }
-
 
         if (method === "PUT") {
             const url = new URL(request.url);
@@ -43,67 +41,15 @@ export default {
         }
 
         return response(400, { message: 'Invalid request' }, request, env.ALLOWED_ORIGINS);
-
-
-
-        /*const { secret } = body;
-
-        if (typeof env.SECRET !== 'undefined' && secret !== env.SECRET) {
-            return response(401, {
-                message: 'Unauthorized',
-            }, request, env.ALLOWED_ORIGINS);
-        }
-
-        // Get R2 bucket (assuming you've set the R2 bucket binding in your worker environment)
-        const bucket = env.R2_BUCKET; // Replace R2_BUCKET with your actual binding name
-
-        // SIGNED URL CREATION 
-        if ('fileName' in body) {
-            const { contentType, fileName } = body;
-
-            const objectKey =
-                fileName ||
-                `${getRandomKey()}-${getRandomKey()}-${contentType || 'unknown-type'}`;
-
-            try {
-                const signedUrl = await createSignedUrl(bucket, 'PUT', contentType);
-                return response(200, { url: signedUrl }, request, env.ALLOWED_ORIGINS);
-            } catch (error) {
-                return response(500, {
-                    message: 'Failed creating signed URL',
-                    error,
-                }, request, env.ALLOWED_ORIGINS);
-            }
-        }
-
-        if (request.method)
-
-            // OBJECT DELETION 
-            if ('fileKey' in body) {
-                const { fileKey } = body;
-
-                try {
-                    await bucket.delete(fileKey);
-                    return response(200, { message: 'success' }, request, env.ALLOWED_ORIGINS);
-                } catch (error) {
-                    return response(500, {
-                        message: 'Failed deleting file',
-                        fileKey,
-                    }, request, env.ALLOWED_ORIGINS);
-                }
-            }
-
-        return response(400, {
-            message: 'Invalid request',
-        }, request, env.ALLOWED_ORIGINS);*/
     },
 };
 
 /**
-         * Helper function to return a JSON response
-         * @param {number} statusCode
-         * @param {Object} body
-         */
+ * ## `response`
+ * Helper function to return a JSON response
+ * @param {number} statusCode
+ * @param {Object} body
+ */
 function response(statusCode: number, body: Object, request: Request, ALLOWED_ORIGINS: string[]): Response {
 
     const origin = request.headers.get('Origin') || '';
@@ -119,32 +65,3 @@ function response(statusCode: number, body: Object, request: Request, ALLOWED_OR
         headers: headers,
     });
 }
-
-/**
- * Generate a random key for file naming
- 
-function getRandomKey() {
-    return Math.random().toFixed(10).replace('0.', '');
-}*/
-
-/**
- * Create a signed URL for R2
- * @param {R2Bucket} bucket - The R2 bucket instance
- * @param {string} method - The HTTP method (e.g., 'PUT', 'GET')
- * @param {string} contentType - The content type of the file
- * @returns {string} - The signed URL
- 
-async function createSignedUrl(bucket: R2Bucket, method:, contentType) {
-    const headers = {
-        'Content-Type': contentType,
-    };
-    const expiration = Math.floor(Date.now() / 1000) + 60 * 5; // 5 minutes expiration
-
-    const signature = await bucket.createSignedUrl({
-        method,
-        headers,
-        expires: expiration,
-    });
-
-    return signature;
-}*/
