@@ -1,126 +1,127 @@
-# Sanity.io plugin for storing large files in Cloudflare R2
+## [`Sanity.io`](https://sanity.io) - [`Cloudflare R2`](https://www.cloudflare.com/de-de/developer-platform/r2/)
 
-Allows uploading, referencing and deleting files to DigitalOcean directly from your Sanity studio. Is a flavor of [sanity-plugin-external-files](https://github.com/hdoro/sanity-plugin-external-files).
+Allows uploading, referencing and deleting files to Cloudflare R2 directly from your Sanity studio. Is a flavor of [sanity-plugin-external-files](https://github.com/hdoro/sanity-plugin-external-files).
 
 ![Screenshot of the plugin](https://raw.githubusercontent.com/hdoro/sanity-plugin-external-files/main/screenshots.png)
 
-## Installing
+## Why Cloudflare?
 
-Start by installing the plugin:
+- **Cost-effective**: Cloudflare R2 is a cost-effective solution for storing large files. You only pay for what you use. No egress fees.
+- **Fast**: Cloudflare R2 is built on Cloudflare's global network, making it fast to upload and download files.
+- **Secure**: Cloudflare R2 is built on Cloudflare's security-first architecture, making it secure by default.
+- **Simplicity**: Cloudflare R2 is easy to set up and use.
+
+## Using the plugin
+
+1. [Configure Cloudflare R2 Bucket](#configuring-the-cloudflare-r2-bucket)
+2. [Configure Sanity Studio](#configuring-sanity-studio)
+
+## Configuring the Cloudflare R2 Bucket
+
+1. Create Cloudflare Account [here](https://dash.cloudflare.com/sign-up)
+2. Create a new R2 Bucket (e. g. `sanity-media`)
+3. Either [use the R2.dev public domain](#cloudflare-r2-bucket-with-r2dev-public-domain) or [add your custom domain](#cloudflare-r2-bucket-with-custom-public-domain)
+4. Deploy the Cloudflare Worker [as described below](#deploy-cloudflare-worker)
+5. Add the worker URL to your plugin configuration (`workerUrl`)
+6. Add the R2 Bucket URL (either R2.dev subdomain or custom domain) to your plugin configuration (`url`)
+
+### Deploy Cloudflare Worker
+
+The plugin requires a Cloudflare Worker to handle the file uploads and deletions. You can find the code for the worker in the `worker` directory of this repository.
+This is required because Sanity Studio doesn't support any server-side logic.
+
+1. Install the [Wrangler CLI](https://developers.cloudflare.com/workers/cli-wrangler/install-update)
+2. Login to your Cloudflare account by running `wrangler login`
+3. `git clone` this repository (`git clone https://github.com/hdoro/sanity-plugin-external-files`)
+4. `cd` into the `worker` directory (`cd packages/cloudflare-r2/worker`)
+5. Adjust the `wrangler.toml` file and configure `ALLOWED_ORIGINS` and `bucket_name` to match your setup
+6. Add `SECRET` as Cloudflare Secret as described [here](https://developers.cloudflare.com/workers/configuration/secrets/#adding-secrets-to-your-project) (e. g. `SECRET=your-secret`)
+7. Run `wrangler publish` to deploy the worker
+8. Copy the worker URL from the output and add it to your plugin configuration
+
+### Cloudflare R2 Bucket with R2.dev Public Domain
+
+1. Login to your Cloudflare account [here](https://dash.cloudflare.com/)
+2. Go to "R2" and either create a new bucket or choose your existing one (e. g. `sanity-media`)
+3. Go to "Settings" and choose "R2.dev subdomain"
+4. Hit "Enable"
+
+### Cloudflare R2 Bucket with Custom Public Domain
+
+1. Login to your Cloudflare account [here](https://dash.cloudflare.com/)
+2. Go to "Website" and choose "Add domain" (e. g. `example.com`)
+3. Follow the instructions to add your domain
+4. Go to "R2" and either create a new bucket or choose your existing one (e. g. `sanity-media`)
+5. Go to "Settings" and choose "Custom domain"
+6. Add your custom domain (or subdomain) by entering it and follow the instructions to add the necessary DNS records
+
+## Configuring Sanity Studio
+
+1. Install the plugin `sanity-plugin-cloudflare-r2-files` by running:
 
 ```bash
 npm i sanity-plugin-cloudflare-r2-files
-# or yarn add / pnpm i
+yarn add sanity-plugin-cloudflare-r2-files
+pnpm i sanity-plugin-cloudflare-r2-files
 ```
 
-Then, include the plugin in your `sanity.config.(js|ts)`:
+2. Include the plugin in your `sanity.config.(js|ts)`:
 
 ```js
-import { digitalOceanFiles } from 'sanity-plugin-digital-ocean-files'
+import { cloudflareR2Files } from 'sanity-plugin-cloudflare-r2-files'
 import { defineConfig } from 'sanity'
 
 export default defineConfig({
-  // ...
   plugins: [
-    digitalOceanFiles({
+    cloudflareR2Files({
       toolTitle: 'Media Library',
-      // If you want to restrict file types library-wide:
-      // defaultAccept: {
-      //   'application/pdf': ['pdf'],
-      //   'video/*': ['mp4', 'mov', 'webm'],
-      // },
-
-      // 2 ways to set credentials, one being through code
       credentials: {
-        bucketName: 'my-space-name',
-        // ...
+        url: 'https://<random>.r2.dev',
+        workerUrl: 'https://<worker>.<user>.workers.dev'
       },
     }),
-    // ...
   ],
 })
 ```
 
-And use its `digital-ocean-files.media` type in schemas you want to use DigitalOcean files from:
+3. And use its `cloudflare-r2-files.media` type in schemas you want to use Cloudflare R2 files from:
 
 ```js
-// Example of usage in a Sanity schema
 export default {
   name: 'caseStudy',
   type: 'document',
   fields: [
-    // ...
     {
       name: 'featuredVideo',
-      type: 'digital-ocean-files.media',
+      type: 'cloudflare-r2-files.media',
       options: {
-        // Optional: set which file types are accepted in a field
         accept: {
           'video/*': ['mp4', 'webm', 'mov'],
         },
-
-        // Optional: obfuscate original file names
-        storeOriginalFilename: false,
       },
     },
   ],
 }
 ```
 
-**Note:** if you've customized `schemaPrefix` in your plugin's configuration, the schema name will be `${schemaPrefix}.media` instead of `digital-ocean-files.media`.
-
-## Configuring the DigitalOcean Space
-
-The rest of the work must be done inside DigitalOcean's console:
-
-- Create a _public_ Digital Ocean Space (or use an existing one)
-- Configure CORS for your Space to accept the origins your studio will be hosted in (including localhost)
-  - Refer to [DigitalOcean's guide on CORS on Spaces](https://docs.digitalocean.com/products/spaces/how-to/configure-cors/) if this is new to you (it was for me too!)
-- To use the Spaces API, you need to [create an access key and secret key](https://docs.digitalocean.com/products/spaces/how-to/manage-access/#access-keys) for your Space from the [API page in the control panel](https://cloud.digitalocean.com/settings/api/tokens).
-- Create server endpoints for creating the pre-signed URLs we'll use to post objects to DigitalOcean and deleting objects
-  - **The implementation is up to you:** use traditional serverless functions like AWS Lambda, API routes from metaframeworks like NextJS, Remix and SvelteKit, traditional stateful servers like Express or even write these in other languages.
-  - As long as they return the pre-signed URL and delete the requested object, they're valid.
-  - For a minimal Javascript example, refer to [do.getSignedUrl.js](https://github.com/hdoro/sanity-plugin-external-files/blob/main/test-server/do.getSignedUrl) and [do.deleteObject.js](https://github.com/hdoro/sanity-plugin-external-files/blob/main/test-server/do.deleteObject.js)
-
-With these in hand, fill-in the plugin's configuration form where you'll fill in the bucket key (ex: `my-sanity-bucket`), the Space region (ex: `nyc3`), the URL for both server endpoints and an secret for validating input in functions. See below:
-
-## Adding configuration to the plugin
-
-You can add the configuration via code in the `credentials` of the `digitalOceanFiles` plugin function or inside of the studio inside the settings dialog. You can also do a mix of both if you want the convenience of code-hosted values with the security of Sanity-stored values. For example:
-
-```js
-digitalOceanFiles({
-  // Store public-facing info in code, which will show up in the JS bundle
-  credentials: {
-    bucketName: 'my-space-name',
-    folder: 'custom-assets/folder',
-    subdomain: undefined,
-
-    // But leave sensitive info like `getSignedUrlEndpoint`, `deleteObjectEndpoint` and `secret` to be stored as a private document in the Sanity dataset
-  },
-}),
-```
-
-Of course, if you're making strong security guarantees in your endpoints, you can store these credentials in code without an issue.
-
 ## Data structure & querying
 
-Each media item is a Sanity document that holds information of the object stored in DigitalOcean, like its `fileURL`, `contentType` and `fileSize`. It's analogous to Sanity's `sanity.imageAsset` and `sanity.fileAsset`: they're pointers to the actual blob, not the files themselves.
+Each media item is a Sanity document that holds information of the object stored in Cloudflare R2, like its `fileURL`, `contentType` and `fileSize`. It's analogous to Sanity's `sanity.imageAsset` and `sanity.fileAsset`: they're pointers to the actual blob, not the files themselves.
 
-These files' type is `digital-ocean-files.storedFile` (or `${schemaPrefix}.media` if you've customized `schemaPrefix`).
+These files' type is `cloudflare-r2-files.storedFile`.
 
 When selected by other document types, media is stored as references to these file documents. You can get the URL of the actual assets by following references in GROQ:
 
 ```groq
 *[_type == 'caseStudy'] {
   ...,
-  // Example of fetching the file in a `featuredVideo` field
+  
   featuredVideo-> {
     fileSize,
     fileURL,
-    digitalOcean {
-      key,
-      originURL,
+    cloudflareR2 {
+      fileKey,
+      baseUrl,
     },
   },
 }
@@ -128,4 +129,4 @@ When selected by other document types, media is stored as references to these fi
 
 ## Contributing, roadmap & acknowledgments
 
-Refer to [sanity-plugin-external-files](https://github.com/hdoro/sanity-plugin-external-files) for those :)
+Refer to [sanity-plugin-external-files](https://github.com/hdoro/sanity-plugin-external-files) for those.

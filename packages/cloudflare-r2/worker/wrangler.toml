@@ -1,0 +1,10 @@
+name = "sanity-cloudflare-r2-worker"
+main = "index.ts" 
+compatibility_date = "2024-08-24"
+
+[[r2_buckets]]
+binding = "R2_BUCKET"
+bucket_name = "sanity-media"
+
+[vars]
+ALLOWED_ORIGINS = ["http://localhost:3333", "https://sanity-studio.com"]

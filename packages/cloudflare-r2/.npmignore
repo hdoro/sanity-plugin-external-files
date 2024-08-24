@@ -1,7 +1,7 @@
 .git
 .yarn
 src/*
-clearLib.js
+clear.js
 .prettierignore
 .prettierrc
 tsconfig.json

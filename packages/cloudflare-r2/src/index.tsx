@@ -12,7 +12,7 @@ import deleteFile from './deleteFile'
 import { credentialsFields, schemaConfig } from './schema.config'
 import uploadFile from './uploadFile'
 
-const VENDOR_ID = 'cloudflare-r2'
+const VENDOR_ID = 'cloudflare-r2-files'
 
 export const cloudflareR2Files = definePlugin((userConfig?: UserConfig) => {
     const config = buildConfig(userConfig)
@@ -84,25 +84,12 @@ function buildConfig(userConfig: UserConfig = {}): VendorConfiguration {
 
 export interface CloudflareR2Credentials {
     /** 
-     * ## `bucketName`
-     * - ID of the R2 Bucket in Cloudflare 
-     * - Example: `sanity-media`
+     * ## `workerUrl`
+     * - URL of the Cloudflare Worker that handles the signed URL requests for uploading files to the R2 Bucket.
+     * - Should accept PUT, DELETE and OPTIONS requests.
+     * - Example: `https://<worker>.<user>.workers.dev`
      */
-    bucketName?: string
-
-    /** 
-     * ## `getSignedUrlEndpoint`
-     * - HTTPS endpoint that returns signed URLs for uploading objects from the browser 
-     * - Example:
-     */
-    getSignedUrlEndpoint?: string
-
-    /**
-     * ## `deleteObjectEndpoint`
-     * - HTTPS endpoint for deleting an object in R2 Bucket 
-     * - Example: 
-     */
-    deleteObjectEndpoint?: string
+    workerUrl?: string
 
     /** 
      * ## `url`
@@ -145,7 +132,7 @@ interface UserConfig
      * If empty, the user will be prompted to enter credentials when they first open the media library.
      *
      * This configuration can be partial: credentials not provided here will be prompted to be stored inside of Sanity.
-     * For example, you may want to store the public-facing `bucketName` in the JS bundle, but keep `secret` in the Sanity dataset.
+     * For example, you may want to store the public-facing `url` in the JS bundle, but keep `secret` in the Sanity dataset.
      */
     credentials?: Partial<CloudflareR2Credentials>
 }

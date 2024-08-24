@@ -2,9 +2,7 @@ import {
     ApiIcon,
     EyeClosedIcon,
     FolderIcon,
-    LockIcon,
-    PinIcon,
-    TrashIcon
+    PinIcon
 } from '@sanity/icons'
 import {
     SchemaConfigOptions,
@@ -13,51 +11,38 @@ import {
 
 export const schemaConfig: SchemaConfigOptions = {
     title: 'Media file hosted in Cloudflare R2 Bucket',
-    customFields: ['key', 'bucket', 'region', 'originURL'],
+    customFields: ['fileKey', 'baseUrl'],
 }
 
 export const credentialsFields: VendorConfiguration['credentialsFields'] = [
     {
-        name: 'bucketName',
-        title: 'Cloudflare R2 Bucket name',
-        description: 'ID of the R2 (bucket) in Cloudflare',
-        icon: LockIcon,
-        type: 'string',
-        validation: (Rule) => Rule.required(),
-    },
-    {
-        name: 'getSignedUrlEndpoint',
-        title:
-            'HTTPS endpoint that returns signed URLs for uploading objects from the browser',
+        name: 'workerUrl',
+        title: 'Cloudflare Worker URL',
+        description:
+            'URL of the Cloudflare Worker that handles the signed URL requests for uploading files to the R2 Bucket.',
         icon: PinIcon,
         type: 'url',
         validation: (Rule) => Rule.required(),
     },
     {
-        name: 'deleteObjectEndpoint',
-        title: 'HTTPS endpoint for deleting an object in Space',
-        icon: TrashIcon,
-        type: 'url',
-        validation: (Rule) => Rule.required(),
-    },
-    {
         name: 'folder',
-        title: 'Folder in Cloudflare R2 Bucket',
+        title: 'Folder',
         description:
-            "Folder to store files inside the R2 Bucket. If none provided, will upload files to the R2 Bucket's root.",
+            "Folder to store files inside the R2 Bucket. If none provided, will upload files to the R2 Bucket's root. Creates one if it doesn't exist.",
         icon: FolderIcon,
         type: 'string',
     },
     {
         name: 'url',
-        title: 'Public Url of the bucket. Either enable R2.dev Subdomain or configure custom domain.',
-        description: "If none provided, will fallback to DigitalOcean's default",
+        title: 'Public URL',
+        description: 'Public Url of the bucket. Either enable R2.dev Subdomain or configure custom domain.',
         icon: ApiIcon,
         type: 'url',
     },
     {
         name: 'secret',
-        title: 'Secret for validating the signed URL request (optional)',
+        title: 'Secret',
+        description: 'Secret for validating the signed URL request (optional)',
         icon: EyeClosedIcon,
         type: 'string',
     },

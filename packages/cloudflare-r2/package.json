@@ -1,10 +1,10 @@
 {
     "name": "sanity-plugin-cloudflare-r2-files",
-    "version": "0.0.1",
+    "version": "0.0.9",
     "description": "Store Sanity media files in Cloudflare R2 Bucket",
     "scripts": {
-        "clear-lib": "node clearLib.js",
-        "build": "npm run clear-lib && tsc && tsc --module esnext --outDir build/esm",
+        "clear": "node clear.js",
+        "build": "npm run clear && tsc && tsc --module esnext --outDir build/esm",
         "dev": "concurrently \"tsc -w\" \"tsc --module esnext --outDir build/esm -w\"",
         "prepublish": "npm run build"
     },
