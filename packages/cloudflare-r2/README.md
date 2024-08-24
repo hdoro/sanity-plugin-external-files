@@ -11,12 +11,12 @@ Allows uploading, referencing and deleting files to Cloudflare R2 directly from 
 - **Secure**: Cloudflare R2 is built on Cloudflare's security-first architecture, making it secure by default.
 - **Simplicity**: Cloudflare R2 is easy to set up and use.
 
-## Using the plugin
+## Configuring Plugin
 
 1. [Configure Cloudflare R2 Bucket](#configuring-the-cloudflare-r2-bucket)
 2. [Configure Sanity Studio](#configuring-sanity-studio)
 
-## Configuring the Cloudflare R2 Bucket
+## Configuring Cloudflare
 
 1. Create Cloudflare Account [here](https://dash.cloudflare.com/sign-up)
 2. Create a new R2 Bucket (e. g. `sanity-media`)
@@ -25,7 +25,7 @@ Allows uploading, referencing and deleting files to Cloudflare R2 directly from 
 5. Add the worker URL to your plugin configuration (`workerUrl`)
 6. Add the R2 Bucket URL (either R2.dev subdomain or custom domain) to your plugin configuration (`url`)
 
-### Deploy Cloudflare Worker
+#### Deploy Cloudflare Worker
 
 The plugin requires a Cloudflare Worker to handle the file uploads and deletions. You can find the code for the worker in the `worker` directory of this repository.
 This is required because Sanity Studio doesn't support any server-side logic.
@@ -39,14 +39,14 @@ This is required because Sanity Studio doesn't support any server-side logic.
 7. Run `wrangler publish` to deploy the worker
 8. Copy the worker URL from the output and add it to your plugin configuration
 
-### Cloudflare R2 Bucket with R2.dev Public Domain
+#### Cloudflare R2 Bucket with R2.dev Public Domain
 
 1. Login to your Cloudflare account [here](https://dash.cloudflare.com/)
 2. Go to "R2" and either create a new bucket or choose your existing one (e. g. `sanity-media`)
 3. Go to "Settings" and choose "R2.dev subdomain"
 4. Hit "Enable"
 
-### Cloudflare R2 Bucket with Custom Public Domain
+#### Cloudflare R2 Bucket with Custom Public Domain
 
 1. Login to your Cloudflare account [here](https://dash.cloudflare.com/)
 2. Go to "Website" and choose "Add domain" (e. g. `example.com`)
@@ -55,7 +55,7 @@ This is required because Sanity Studio doesn't support any server-side logic.
 5. Go to "Settings" and choose "Custom domain"
 6. Add your custom domain (or subdomain) by entering it and follow the instructions to add the necessary DNS records
 
-## Configuring Sanity Studio
+#### Configuring Sanity Studio
 
 1. Install the plugin `sanity-plugin-cloudflare-r2-files` by running:
 
