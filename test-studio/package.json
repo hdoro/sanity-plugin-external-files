@@ -19,7 +19,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "sanity": "^3.58.0",
-    "sanity-plugin-cloudflare-r2-files": "workspace:*",
+    "sanity-plugin-r2-files": "workspace:*",
     "sanity-plugin-digital-ocean-files": "workspace:*",
     "sanity-plugin-external-files": "workspace:*",
     "sanity-plugin-s3-files": "workspace:*",

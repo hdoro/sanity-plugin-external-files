@@ -11,6 +11,7 @@ List of vendors currently supported:
 - AWS S3 -> [sanity-plugin-s3-files](https://github.com/hdoro/sanity-plugin-external-files/tree/main/packages/aws)
 - Google Firebase -> [sanity-plugin-firebase-files](https://github.com/hdoro/sanity-plugin-external-files/tree/main/packages/firebase)
 - DigitalOcean Spaces -> [sanity-plugin-digital-ocean-files](https://github.com/hdoro/sanity-plugin-external-files/tree/main/packages/digital-ocean)
+- Cloudflare R2 -> [sanity-plugin-r2-files](https://github.com/hdoro/sanity-plugin-external-files/tree/main/packages/cloudflare-r2)
 
 Use one of the existing implementations or write your own!
 
@@ -31,12 +32,32 @@ That said, I'm willing to develop it further given the interest and resources. H
   - This actually doesn't involve much code on the plugin side. It'd be more about providing a blessed path for implementing webhooks in a simpler way by developers.
   - If you already have this demand, just take a look at your used plugin's schema and try to build a handler for new files in your vendor that creates documents in Sanity following that schema.
 - Previews for PDFs and other file types
-- **New vendors**
-  - I'd love to suport [Cloudflare's R2 Storage](https://blog.cloudflare.com/introducing-r2-object-storage/) & Supabase
+- **New vendors**, such as Supabase and Storj.io
 
 ## Contributing
 
-I'm a newbie with collaborating on open-source, so no strict rules here other than **being respectful and considerate**.
+To get the project working locally:
+
+1. Install dependencies with `pnpm i` from the root directory
+   - pnpm@9.11 or higher is required - refer to [their installation guide](https://pnpm.io/installation)
+   - This project uses [Turborepo](https://turbo.build/repo) as a monorepo manager. From a single dev command you'll be working across all packages and the test studio.
+2. Populate the test studio's `.env` file with your keys, following the `.env.example` file.
+   - You'll need to create or select a Sanity project
+   - For each vendor, you'll need to create a bucket and get the keys to connect to it
+3. Run `pnpm dev` from the root directory to start the studio and the development servers for all packages.
+4. Open the test studio at `http://localhost:3333`
+   - You may need to adjust `test-studio/sanity.config.js` to include a new vendor or remove others while testing a specific one.
+
+Any changes in the plugins or core package will be picked up by the test studio, with some level of hot module reloading.
+
+On rules of conduct, I'm a newbie with collaborating on open-source, so no strict rules here other than **being respectful and considerate**.
+
+### Cutting new releases
+
+1. Run `pnpm run build` to build the packages to ensure builds are working and there are no Typescript errors
+2. Bump the packages' versions via [changesets](https://github.com/changesets/changesets) by running `pnpm run changeset`
+3. Run `pnpm run update-package-versions` to ensure all packages' versions are correctly updated
+4. Run `pnpm run publish-packages` to publish the packages
 
 ## Acknowledgments
 

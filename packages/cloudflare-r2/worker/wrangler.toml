@@ -1,4 +1,4 @@
-name = "sanity-cloudflare-r2-worker"
+name = "sanity-r2-worker"
 main = "index.ts" 
 compatibility_date = "2024-08-24"
 

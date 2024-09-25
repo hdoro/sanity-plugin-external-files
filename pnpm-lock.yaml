@@ -220,15 +220,15 @@ importers:
       sanity:
         specifier: ^3.58.0
         version: 3.58.0(@types/node@22.7.1)(@types/react@18.3.9)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
-      sanity-plugin-cloudflare-r2-files:
-        specifier: workspace:*
-        version: link:../packages/cloudflare-r2
       sanity-plugin-digital-ocean-files:
         specifier: workspace:*
         version: link:../packages/digital-ocean
       sanity-plugin-external-files:
         specifier: workspace:*
         version: link:../packages/core
+      sanity-plugin-r2-files:
+        specifier: workspace:*
+        version: link:../packages/cloudflare-r2
       sanity-plugin-s3-files:
         specifier: workspace:*
         version: link:../packages/aws

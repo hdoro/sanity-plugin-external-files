@@ -57,18 +57,17 @@ This is required because Sanity Studio doesn't support any server-side logic.
 
 ## Configuring Sanity Studio
 
-1. Install the plugin `sanity-plugin-cloudflare-r2-files` by running:
+1. Install the plugin `sanity-plugin-r2-files` by running:
 
 ```bash
-npm i sanity-plugin-cloudflare-r2-files
-yarn add sanity-plugin-cloudflare-r2-files
-pnpm i sanity-plugin-cloudflare-r2-files
+npm i sanity-plugin-r2-files
+# or yarn / pnpm / bun
 ```
 
 2. Include the plugin in your `sanity.config.(js|ts)`:
 
 ```js
-import { cloudflareR2Files } from 'sanity-plugin-cloudflare-r2-files'
+import { cloudflareR2Files } from 'sanity-plugin-r2-files'
 import { defineConfig } from 'sanity'
 
 export default defineConfig({
@@ -84,7 +83,7 @@ export default defineConfig({
 })
 ```
 
-3. And use its `cloudflare-r2-files.media` type in schemas you want to use Cloudflare R2 files from:
+3. And use its `r2-files.media` type in schemas you want to use Cloudflare R2 files from:
 
 ```js
 export default {
@@ -93,7 +92,7 @@ export default {
   fields: [
     {
       name: 'featuredVideo',
-      type: 'cloudflare-r2-files.media',
+      type: 'r2-files.media',
       options: {
         accept: {
           'video/*': ['mp4', 'webm', 'mov'],
@@ -108,7 +107,7 @@ export default {
 
 Each media item is a Sanity document that holds information of the object stored in Cloudflare R2, like its `fileURL`, `contentType` and `fileSize`. It's analogous to Sanity's `sanity.imageAsset` and `sanity.fileAsset`: they're pointers to the actual blob, not the files themselves.
 
-These files' type is `cloudflare-r2-files.storedFile`.
+These files' type is `r2-files.storedFile`.
 
 When selected by other document types, media is stored as references to these file documents. You can get the URL of the actual assets by following references in GROQ:
 

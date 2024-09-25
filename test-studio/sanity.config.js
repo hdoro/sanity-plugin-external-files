@@ -1,6 +1,6 @@
 import {visionTool} from '@sanity/vision'
 import {defineConfig} from 'sanity'
-import {cloudflareR2Files} from 'sanity-plugin-cloudflare-r2-files'
+import {cloudflareR2Files} from 'sanity-plugin-r2-files'
 import {digitalOceanFiles} from 'sanity-plugin-digital-ocean-files'
 import {s3Files} from 'sanity-plugin-s3-files'
 import {structureTool} from 'sanity/structure'

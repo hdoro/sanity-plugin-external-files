@@ -5,6 +5,7 @@
     "dev": "turbo run dev --parallel",
     "build": "turbo run build --force --filter=!test-studio",
     "format": "prettier --write .",
+    "changeset": "changeset",
     "update-package-versions": "changeset version",
     "publish-packages": "changeset version && yarn run build && changeset publish",
     "check-versions": "manypkg check",

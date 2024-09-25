@@ -1,6 +1,6 @@
 {
-  "name": "sanity-plugin-cloudflare-r2-files",
-  "version": "0.1.1",
+  "name": "sanity-plugin-r2-files",
+  "version": "0.1.0",
   "description": "Store Sanity media files in Cloudflare R2 Bucket",
   "scripts": {
     "clear": "node clearLib.js",

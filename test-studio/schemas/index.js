@@ -11,7 +11,7 @@ const testSchema = {
     {
       name: 'cloudflareR2',
       title: 'Cloudflare R2 File',
-      type: 'cloudflare-r2-files.media',
+      type: 'r2-files.media',
     },
     {
       name: 'videoOnly',

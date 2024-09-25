@@ -12,7 +12,7 @@ import deleteFile from './deleteFile'
 import { credentialsFields, schemaConfig } from './schema.config'
 import uploadFile from './uploadFile'
 
-const VENDOR_ID = 'cloudflare-r2-files'
+const VENDOR_ID = 'r2-files'
 
 export const cloudflareR2Files = definePlugin((userConfig?: UserConfig) => {
   const config = buildConfig(userConfig)
@@ -20,11 +20,11 @@ export const cloudflareR2Files = definePlugin((userConfig?: UserConfig) => {
     name: config.schemaPrefix,
     schema: {
       types: [
-        // cloudflare-r2-files.custom-data
+        // r2-files.custom-data
         getCustomDataSchema(config, schemaConfig),
-        // cloudflare-r2-files.dimensions
+        // r2-files.dimensions
         getDimensionsSchema(config),
-        // cloudflare-r2-files.storedFile
+        // r2-files.storedFile
         getStoredFileSchema(config, schemaConfig),
         {
           name: `${config.schemaPrefix}.media`,

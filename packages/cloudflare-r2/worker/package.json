@@ -1,5 +1,5 @@
 {
-  "name": "sanity-cloudflare-r2-worker",
+  "name": "sanity-r2-worker",
   "version": "0.0.1",
   "main": "dist/index.js",
   "devDependencies": {
