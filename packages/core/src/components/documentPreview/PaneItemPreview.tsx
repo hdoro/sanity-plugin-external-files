@@ -3,8 +3,9 @@
 import { PreviewValue } from '@sanity/types'
 import { Inline } from '@sanity/ui'
 import { isNumber, isString } from 'lodash'
-import React, { isValidElement } from 'react'
-import { useMemoObservable } from 'react-rx'
+import React, { isValidElement, useMemo } from 'react'
+import { useObservable } from 'react-rx'
+import type { Observable } from 'rxjs'
 import type { SanityDocument, SchemaType } from 'sanity'
 import {
   DocumentPresence,
@@ -45,17 +46,17 @@ export function PaneItemPreview(props: PaneItemPreviewProps) {
 
   // NOTE: this emits sync so can never be null
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const { draft, published, isLoading } =
-    useMemoObservable<PaneItemPreviewState>(
-      () =>
-        getPreviewStateObservable(
-          props.documentPreviewStore,
-          schemaType,
-          value._id,
-          title,
-        ),
-      [props.documentPreviewStore, schemaType, value._id, title],
-    )!
+  const previewObservable = useMemo<Observable<PaneItemPreviewState>>(
+    () =>
+      getPreviewStateObservable(
+        props.documentPreviewStore,
+        schemaType,
+        value._id,
+        title,
+      ),
+    [props.documentPreviewStore, schemaType, value._id, title],
+  )!
+  const { draft, published, isLoading } = useObservable(previewObservable) || {}
 
   const status = isLoading ? null : (
     <Inline space={4}>
