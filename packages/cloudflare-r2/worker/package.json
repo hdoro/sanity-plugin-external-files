@@ -1,17 +1,17 @@
 {
-    "name": "sanity-cloudflare-r2-worker",
-    "version": "0.0.1",
-    "main": "dist/index.js",
-    "devDependencies": {
-        "@cloudflare/workers-types": "^4.20240314.0",
-        "esbuild": "^0.20.2",
-        "fast-xml-parser": "^4.3.6",
-        "typescript": "^5.4.2",
-        "wrangler": "3.22.1"
-    },
-    "private": true,
-    "scripts": {
-        "dev": "wrangler dev",
-        "deploy": "wrangler deploy"
-    }
+  "name": "sanity-cloudflare-r2-worker",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240314.0",
+    "esbuild": "^0.20.2",
+    "fast-xml-parser": "^4.3.6",
+    "typescript": "^5.4.2",
+    "wrangler": "3.22.1"
+  },
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  }
 }
