@@ -11,3 +11,4 @@ lerna-debug.log
 .DS_STORE
 .turbo
 .env
+.wrangler

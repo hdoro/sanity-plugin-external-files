@@ -1,0 +1,8 @@
+.git
+.yarn
+src/*
+clear.js
+.prettierignore
+.prettierrc
+tsconfig.json
+node_modules
