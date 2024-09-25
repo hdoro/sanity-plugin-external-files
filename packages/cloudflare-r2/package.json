@@ -5,8 +5,7 @@
   "scripts": {
     "clear": "node clearLib.js",
     "build": "npm run clear && tsc && tsc --module esnext --outDir build/esm",
-    "dev": "concurrently \"tsc -w\" \"tsc --module esnext --outDir build/esm -w\"",
-    "prepublish": "npm run build"
+    "dev": "concurrently \"tsc -w\" \"tsc --module esnext --outDir build/esm -w\""
   },
   "repository": {
     "type": "git",
