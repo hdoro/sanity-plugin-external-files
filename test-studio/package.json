@@ -15,15 +15,15 @@
     "sanity"
   ],
   "dependencies": {
-    "@sanity/vision": "^3.0.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "sanity": "^3.37.2",
-    "sanity-plugin-cloudflare-r2-files": "^0.0.9",
-    "sanity-plugin-digital-ocean-files": "1.0.1",
-    "sanity-plugin-external-files": "1.0.1",
-    "sanity-plugin-s3-files": "1.0.1",
-    "styled-components": "^6.1.8"
+    "@sanity/vision": "^3.58.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "sanity": "^3.58.0",
+    "sanity-plugin-cloudflare-r2-files": "workspace:*",
+    "sanity-plugin-digital-ocean-files": "workspace:*",
+    "sanity-plugin-external-files": "workspace:*",
+    "sanity-plugin-s3-files": "workspace:*",
+    "styled-components": "^6.1.13"
   },
   "devDependencies": {
     "@types/react": "latest",

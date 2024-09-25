@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-cloudflare-r2-files",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Store Sanity media files in Cloudflare R2 Bucket",
   "scripts": {
     "clear": "node clearLib.js",
@@ -27,18 +27,18 @@
   ],
   "license": "Apache-2.0",
   "dependencies": {
-    "@sanity/icons": "^2.11.8",
-    "sanity-plugin-external-files": "1.0.1"
+    "@sanity/icons": "^3.4.0",
+    "sanity-plugin-external-files": "1.0.2"
   },
   "devDependencies": {
-    "concurrently": "^8",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "sanity": "^3.37.2",
-    "styled-components": "^6.1.8"
+    "concurrently": "^9.0.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "sanity": "^3.58.0",
+    "styled-components": "^6.1.13"
   },
   "peerDependencies": {
-    "sanity": "^3.14.0",
+    "sanity": "^3.50.0",
     "styled-components": "^5 || ^6"
   },
   "bugs": {

@@ -10,10 +10,6 @@
     "check-versions": "manypkg check",
     "fix-versions": "manypkg fix"
   },
-  "workspaces": [
-    "packages/*",
-    "test-studio"
-  ],
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/hdoro/sanity-plugin-external-files.git"
@@ -21,14 +17,15 @@
   "author": "Henrique Doro <opensource@hdoro.dev>",
   "license": "Apache-2.0",
   "dependencies": {
-    "@changesets/cli": "^2.27.1",
-    "@manypkg/cli": "^0.21.3",
-    "prettier": "^3.2.5",
-    "turbo": "^1.13.2",
-    "typescript": "^5.4.5"
+    "@changesets/cli": "^2.27.8",
+    "@manypkg/cli": "^0.21.4",
+    "prettier": "^3.3.3",
+    "turbo": "^2.1.2",
+    "typescript": "^5.6.2"
   },
   "bugs": {
     "url": "https://github.com/hdoro/sanity-plugin-external-files/issues"
   },
-  "homepage": "https://github.com/hdoro/sanity-plugin-external-files#readme"
+  "homepage": "https://github.com/hdoro/sanity-plugin-external-files#readme",
+  "packageManager": "pnpm@9.11.0"
 }
