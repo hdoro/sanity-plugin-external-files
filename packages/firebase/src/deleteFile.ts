@@ -8,10 +8,7 @@ const deleteFile: VendorConfiguration['deleteFile'] = async ({
   try {
     const firebaseClient = getFirebaseClient(credentials as FirebaseCredentials)
 
-    await firebaseClient
-      .storage()
-      .ref(storedFile.firebase?.fullPath)
-      .delete()
+    await firebaseClient.storage().ref(storedFile.firebase?.fullPath).delete()
 
     return true
   } catch (error: any) {

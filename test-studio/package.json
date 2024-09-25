@@ -1,38 +1,38 @@
 {
-    "name": "test-studio",
-    "private": true,
-    "version": "1.0.2",
-    "main": "package.json",
-    "license": "UNLICENSED",
-    "scripts": {
-        "dev": "sanity dev",
-        "start": "sanity start",
-        "build": "sanity build",
-        "deploy": "sanity deploy",
-        "deploy-graphql": "sanity graphql deploy"
-    },
-    "keywords": [
-        "sanity"
-    ],
-    "dependencies": {
-        "@sanity/vision": "^3.0.0",
-        "react": "^18.2.0",
-        "react-dom": "^18.2.0",
-        "sanity": "^3.37.2",
-        "sanity-plugin-cloudflare-r2-files": "^0.0.9",
-        "sanity-plugin-digital-ocean-files": "1.0.1",
-        "sanity-plugin-external-files": "1.0.1",
-        "sanity-plugin-s3-files": "1.0.1",
-        "styled-components": "^6.1.8"
-    },
-    "devDependencies": {
-        "@types/react": "latest",
-        "typescript": "latest"
-    },
-    "prettier": {
-        "semi": false,
-        "printWidth": 100,
-        "bracketSpacing": false,
-        "singleQuote": true
-    }
+  "name": "test-studio",
+  "private": true,
+  "version": "1.0.2",
+  "main": "package.json",
+  "license": "UNLICENSED",
+  "scripts": {
+    "dev": "sanity dev",
+    "start": "sanity start",
+    "build": "sanity build",
+    "deploy": "sanity deploy",
+    "deploy-graphql": "sanity graphql deploy"
+  },
+  "keywords": [
+    "sanity"
+  ],
+  "dependencies": {
+    "@sanity/vision": "^3.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "sanity": "^3.37.2",
+    "sanity-plugin-cloudflare-r2-files": "^0.0.9",
+    "sanity-plugin-digital-ocean-files": "1.0.1",
+    "sanity-plugin-external-files": "1.0.1",
+    "sanity-plugin-s3-files": "1.0.1",
+    "styled-components": "^6.1.8"
+  },
+  "devDependencies": {
+    "@types/react": "latest",
+    "typescript": "latest"
+  },
+  "prettier": {
+    "semi": false,
+    "printWidth": 100,
+    "bracketSpacing": false,
+    "singleQuote": true
+  }
 }
