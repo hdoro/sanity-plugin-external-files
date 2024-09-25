@@ -157,27 +157,35 @@ const MediaPreview: React.FC<MediaPreview> = (props) => {
       allowPlayback &&= true
       icon = (
         <>
-          <AudioIcon
+          <div
             style={{
-              width: '50%',
-              maxHeight: '70%',
               position: 'absolute',
               left: '50%',
               top: '50%',
               transform: 'translate(-50%,-50%)',
-              zIndex: 0,
-              color:
-                fullFile && 'waveformData' in fullFile
-                  ? blue[100].hex
-                  : blue[800].hex,
+              zIndex: 1,
+              background: 'white',
+              borderRadius: '50%',
+              width: '1.5em',
+              height: '1.5em',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
             }}
-          />
+          >
+            <AudioIcon
+              style={{
+                width: '60%',
+                color: blue[800].hex,
+              }}
+            />
+          </div>
           {fullFile.waveformData && (
             <WaveformDisplay
               waveformData={fullFile.waveformData}
               style={{
-                zIndex: 1,
-                position: 'relative',
+                zIndex: 0,
+                position: 'absolute',
                 height: '100%',
               }}
               colorHue="blue"
@@ -258,11 +266,20 @@ const MediaPreview: React.FC<MediaPreview> = (props) => {
                 tone="primary"
               >
                 <IconWrapper
-                  style={{
-                    color: blue[800].hex,
-                    height: mediaType === 'audio' ? '60%' : undefined,
-                    width: mediaType === 'audio' ? '90%' : undefined,
-                  }}
+                  style={
+                    mediaType === 'audio'
+                      ? {
+                          height: '60%',
+                          width: '90%',
+                          position: 'absolute',
+                          left: '50%',
+                          top: '50%',
+                          transform: 'translate(-50%,-50%)',
+                        }
+                      : {
+                          color: blue[800].hex,
+                        }
+                  }
                 >
                   {icon}
                 </IconWrapper>
