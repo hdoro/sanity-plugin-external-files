@@ -21,7 +21,10 @@ const uploadFile: VendorConfiguration<S3Credentials>['uploadFile'] = ({
     })
   }
 
-  const filePath = [credentials.folder, fileName].filter(Boolean).join('/')
+  const filePath = [credentials.folder, fileName]
+    .filter(Boolean)
+    .join('/')
+    .replace(/\s/g, '-')
 
   // On cancelling fetch: https://davidwalsh.name/cancel-fetch
   let signal: AbortSignal | undefined
