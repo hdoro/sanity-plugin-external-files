@@ -19,6 +19,14 @@ const uploadFile: VendorConfiguration<CloudflareR2Credentials>['uploadFile'] =
     const url = `${endpoint}/${filePath}`
     const authToken = credentials.secret
 
+    // On cancelling fetch: https://davidwalsh.name/cancel-fetch
+    let signal: AbortSignal | undefined
+    let controller: AbortController | undefined
+    try {
+      controller = new AbortController()
+      signal = controller.signal
+    } catch (error) {}
+
     // Upload file to Cloudflare R2
     // By sending a PUT request to the Cloudflare Worker
     fetch(url, {
@@ -29,6 +37,7 @@ const uploadFile: VendorConfiguration<CloudflareR2Credentials>['uploadFile'] =
       },
       body: file,
       mode: 'cors',
+      signal,
     }).then((response: Response) => {
       if (response.ok) {
         onSuccess({
@@ -46,7 +55,13 @@ const uploadFile: VendorConfiguration<CloudflareR2Credentials>['uploadFile'] =
       }
     })
 
-    return () => {}
+    return () => {
+      try {
+        if (controller?.abort) {
+          controller.abort()
+        }
+      } catch (error) {}
+    }
   }
 
 export default uploadFile
