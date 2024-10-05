@@ -28,6 +28,7 @@ export default function createInput(vendorConfig: VendorConfiguration) {
     const updateValue = useCallback(
       (document: SanityUpload) => {
         const patchValue = {
+          _key: crypto.randomUUID(),
           _type: schemaType.name,
           asset: {
             _type: 'reference',
