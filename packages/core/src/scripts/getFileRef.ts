@@ -15,10 +15,10 @@ export default function getFileRef({
   if (storeOriginalFilename) {
     // Even when using the original file name, we need to provide a unique identifier for it.
     // Else most vendors' storage offering will re-utilize the same file for 2 different uploads with the same file name, replacing the previous upload.
-    return `${new Date().toISOString().replace(/\:/g, '-')}-${file.name}`
+    return `${new Date().toISOString().replace(/[:.]/g, "-")}-${file.name}`
   }
 
-  return `${new Date().toISOString().replace(/\:/g, '-')}-${nanoid(6)}.${
+  return `${new Date().toISOString().replace(/[:.]/g, "-")}-${nanoid(6)}.${
     file.name.split('.').slice(-1)[0]
   }`
 }
